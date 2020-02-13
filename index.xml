@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phantom</title>
+    <link>https://phantommmm.github.io/</link>
+    <description>Recent content on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Wed, 12 Feb 2020 13:39:23 +0800</lastBuildDate>
+    
+        <atom:link href="https://phantommmm.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于</title>
+      <link>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</guid>
+      
+        <description>&lt;h2 id=&#34;关于内容&#34;&gt;关于内容&lt;/h2&gt;
+&lt;p&gt;本博客发布的部分内容，可能并不能称之为文章，因为这些内容大多是本人学习过程的笔记。&lt;/p&gt;
+&lt;p&gt;若文章内容有误或读者有好的建议，欢迎通过邮件或qq联系我。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;邮件：&lt;/strong&gt; &lt;a href=&#34;mailto:15521010551@163.com&#34;&gt;15521010551@163.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;qq：&lt;/strong&gt; 897388824&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>用户态和内核态</title>
+      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      
+        <description>&lt;h2 id=&#34;用户态和内核态&#34;&gt;用户态和内核态&lt;/h2&gt;
+&lt;p&gt;内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的&lt;/p&gt;
+&lt;p&gt;用户态（User Mode）：运行用户程序（用户自己编写的程序）&lt;/p&gt;
+&lt;h2 id=&#34;用户态和内核态的切换&#34;&gt;&lt;strong&gt;用户态和内核态的切换&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;当运行用户程序时，大部分时间是运行在用户态。&lt;/p&gt;
+&lt;p&gt;当需要内核态的操作或资源时，切换到内核态。&lt;/p&gt;
+&lt;p&gt;1.系统调用：如read(),write()访问系统资源。&lt;/p&gt;
+&lt;p&gt;2.异常：当cpu在执行运行在用户态下的程序时，发生了一些没有预知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关进程中，也就是切换到了内核态，如缺页异常。&lt;/p&gt;
+&lt;p&gt;3.外围设备的中断：当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号，这时CPU会暂停执行下一条即将要执行的指令而转到与中断信号对应的处理程序去执行，如果前面执行的指令时用户态下的程序，那么转换的过程自然就会是 由用户态到内核态的切换。&lt;/p&gt;
+&lt;p&gt;如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后边的操作等。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>虚拟内存</title>
+      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
+      
+        <description>&lt;h3 id=&#34;虚拟内存&#34;&gt;虚拟内存&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;页：&lt;/strong&gt; 将进程划分的块，对应的大小就叫页面大小&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;页框：&lt;/strong&gt; 将内存划分的块&lt;/p&gt;
+&lt;p&gt;一个页里有一个页框，理论上，页和页框的大小相同&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;页表：&lt;/strong&gt; 页和页框一一对应的关系表，存放在内存中，通过页表能查找到哪个页对应哪个页框&lt;/p&gt;
+&lt;h4 id=&#34;为什么要有虚拟内存&#34;&gt;&lt;strong&gt;为什么要有虚拟内存？&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;物理内存：物理地址即实际内存地址&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.因为机器物理内存是有限的，当有多个进程要执行的时候，都要给4G内存，当机器内存小的时候，这很快就分配完了，于是没有得到分配资源的进程就只能等待，当一个进程执行完了以后，再将等待的进程装入内存。这种频繁的装入内存的操作是很没效率的。
+2.由于指令都是直接访问物理内存的，那么我这个进程就可以修改其他进程的数据，甚至会修改内核地址空间的数据，这是我们不想看到的
+3.因为内存是随机分配的，所以程序运行的地址也是不正确的。
+&lt;strong&gt;虚拟内存：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每个进程得到一个4G虚拟内存，（可以当作是每个进程认为自己拥有4G的空间，但实际上，在虚拟内存对应的物理内存上，可能只对应一点点的物理内存，即实际使用了多少内存就对应多少物理内存）&lt;/p&gt;
+&lt;p&gt;进程得到的这4G虚拟内存是一个  &lt;strong&gt;连续的地址空间（这也只是进程认为），而实际上，它通常是被分隔成多个物理内存碎片，还有一部分存储在外部磁盘存储器上，在需要时进行数据交换。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;进程访问一个内存地址，会发生&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.每次我要访问地址空间上的某一个地址，都需要把虚拟地址翻译为实际物理内存地址
+2.所有进程共享这整一块物理内存，每个进程只把自己目前需要的虚拟地址空间映射到物理内存上
+3.进程需要知道哪些地址空间上的数据在物理内存上，哪些不在（可能这部分存储在磁盘上），还有在物理内存上的哪里，这就需要通过页表来记录
+4.页表的每一个表项分两部分，第一部分记录此页是否在物理内存上，第二部分记录物理内存页的地址（如果在的话）
+5.当进程访问某个虚拟地址的时候，就会先去看页表，如果发现对应的数据不在物理内存上，就会发生缺页异常
+6.缺页异常的处理过程，操作系统立即阻塞该进程，并将硬盘里对应的页换入内存，然后使该进程就绪，如果内存已经满了，没有空地方了，那就找一个页覆盖，至于具体覆盖的哪个页，就需要看操作系统的页面置换算法是怎么设计的了。&lt;/p&gt;
+&lt;p&gt;内存被分为大小相等的多个块,称为页(Page).每个页都是一段连续的地址。&lt;/p&gt;
+&lt;p&gt;对于进程来看,逻辑上貌似有很多内存空间，其中一部分对应物理内存上的一块(称为页框，通常页和页框大小相等)，还有一些没加载在内存中的对应在硬盘上。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;虚拟内存实际上可以比物理内存大。&lt;/p&gt;
+&lt;p&gt;虚拟内存和物理内存的匹配是通过页表实现，页表存在MMU中。&lt;/p&gt;
+&lt;p&gt;页表中每个项通常为32位，既4byte,除了存储虚拟地址和页框地址之外，还会存储一些标志位，比如是否缺页，是否修改过，写保护等。&lt;/p&gt;
+&lt;p&gt;可以把MMU想象成一个接收虚拟地址项返回物理地址的方法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;进程中的内核地址空间（1G）直接映射到物理内存，即所有的进程都共享这1G内核空间，只有3G用户内存是进程私有的&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;为什么需要区分用户空间和内核空间&#34;&gt;&lt;strong&gt;为什么需要区分用户空间和内核空间？&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;在 CPU 的所有指令中，有些指令是非常危险的，如果错用，将导致系统崩溃，比如清内存、设置时钟等。如果允许所有的程序都可以使用这些指令，那么系统崩溃的概率将大大增加。
+所以，CPU 将指令分为特权指令和非特权指令，对于那些危险的指令，只允许操作系统及其相关模块使用，普通应用程序只能使用那些不会造成灾难的指令。比如 Intel 的 CPU 将特权等级分为 4 个级别：Ring0~Ring3。
+其实 Linux 系统只使用了 Ring0 和 Ring3 两个运行级别(Windows 系统也是一样的)。当进程运行在 Ring3 级别时被称为运行在用户态，而运行在 Ring0 级别时被称为运行在内核态。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;当进程运行在内核空间时就处于内核态，而进程运行在用户空间时则处于用户态。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1.我们的cpu想访问虚拟地址所在的虚拟页(VP3)，根据页表，找出页表中第三条的值.判断有效位。 如果有效位为1，DRMA缓存命中，根据物理页号，找到物理页当中的内容，返回。
+2.若有效位为0，参数缺页异常，调用内核缺页异常处理程序。内核通过页面置换算法选择一个页面作为被覆盖的页面，将该页的内容刷新到磁盘空间当中。然后把VP3映射的磁盘文件缓存到该物理页上面。然后页表中第三条，有效位变成1，第二部分存储上了可以对应物理内存页的地址的内容。
+3.缺页异常处理完毕后，返回中断前的指令，重新执行，此时缓存命中，执行1。
+4.将找到的内容映射到告诉缓存当中，CPU从告诉缓存中获取该值，结束。&lt;/p&gt;
+&lt;h4 id=&#34;总结&#34;&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;当每个进程创建的时候，内核会为进程分配4G的虚拟内存，当进程还没有开始运行时，这只是一个内存布局。实际上并不立即就把虚拟内存对应位置的程序数据和代码（比如.text .data段）拷贝到物理内存中，只是建立好虚拟内存和磁盘文件之间的映射就好（叫做存储器映射）。这个时候数据和代码还是在磁盘上的。当运行到对应的程序时，进程去寻找页表，发现页表中地址没有存放在物理内存上，而是在磁盘上，于是发生缺页异常，于是将磁盘上的数据拷贝到物理内存中。&lt;/p&gt;
+&lt;p&gt;另外在进程运行过程中，要通过malloc来动态分配内存时，也只是分配了虚拟内存，即为这块虚拟内存对应的页表项做相应设置，当进程真正访问到此数据时，才引发缺页异常。&lt;/p&gt;
+&lt;p&gt;可以认为虚拟空间都被映射到了磁盘空间中（事实上也是按需要映射到磁盘空间上，通过mmap，mmap是用来建立虚拟空间和磁盘空间的映射关系的）&lt;/p&gt;
+&lt;h4 id=&#34;优点&#34;&gt;&lt;strong&gt;优点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;1.既然每个进程的内存空间都是一致而且固定的（32位平台下都是4G），所以链接器在链接可执行文件时，可以设定内存地址，而不用去管这些数据最终实际内存地址，这交给内核来完成映射关系
+2.当不同的进程使用同一段代码时，比如库文件的代码，在物理内存中可以只存储一份这样的代码，不同进程只要将自己的虚拟内存映射过去就好了，这样可以节省物理内存
+3.在程序需要分配连续空间的时候，只需要在虚拟内存分配连续空间，而不需要物理内存时连续的，实际上，往往物理内存都是断断续续的内存碎片。这样就可以有效地利用我们的物理内存&lt;/p&gt;
+&lt;h3 id=&#34;为什么会出现分段分页&#34;&gt;为什么会出现分段、分页？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;为了更好的管理计算机内存&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;之前的问题&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;某个程序大小是10M，然后，就需要有&lt;strong&gt;连续的&lt;/strong&gt;10M内存空间才能把这个程序装载到内存里面。如果无法找到连续的10M内存，就无法把这个程序装载进内存里面，程序也就无法得到运行。&lt;/p&gt;
+&lt;h4 id=&#34;1地址空间不隔离&#34;&gt;1.地址空间不隔离。&lt;/h4&gt;
+&lt;p&gt;只能操作连续的地址空间，一旦不小心操作了其它地址空间则程序出错。&lt;/p&gt;
+&lt;p&gt;假设我有两个程序，一个是程序A，一个是程序B。程序A在内存中的地址假设是0x00000000~0x00000099，程序B在内存中的地址假设是0x00000100~x00000199。那么假设你在程序A中，本来想操作地址0x00000050，不小心手残操作了地址0x00000150，那么，不好的事情或许会发生。你影响了程序A也就罢了，你把程序B也搞了一顿。&lt;/p&gt;
+&lt;h4 id=&#34;2程序运行时地址不确定&#34;&gt;2.程序运行时地址不确定&lt;/h4&gt;
+&lt;p&gt;每次装载进程序的内存位置发生改变时，用户无法及时更改操作。&lt;/p&gt;
+&lt;p&gt;因为我们程序每次要运行的时候，都是需要装载到内存中的，假设你在程序中写死了要操作某个地址的内存，例如你要地址0x00000010。但是问题来了，你能够保证你操作的地址0x00000010真的就是你原来想操作的那个位置吗？很可能程序第一次装载进内存的位置是0x00000000~0x00000099，而程序第二次运行的时候，这个程序装载进内存的位置变成了0x00000200~0x00000299，而你操作的0x00000010地址压根就不是属于这个程序所占有的内存。&lt;/p&gt;
+&lt;h4 id=&#34;3内存使用率低下&#34;&gt;3.内存使用率低下&lt;/h4&gt;
+&lt;p&gt;举个例子，假设你写了3个程序，其中程序A大小为10M，程序B为70M，程序C的大小为30M你的计算机的内存总共有100M。&lt;/p&gt;
+&lt;p&gt;这三个程序加起来有110M，显然这三个程序是无法同时存在于内存中的。&lt;/p&gt;
+&lt;p&gt;并且最多只能够同时运行两个程序。可能是这样的，程序A占有的内存空间是0x00000000～0x00000009，程序B占有的内存空间是0x00000010～0x00000079。假设这个时候程序C要运行该怎么做？可以把其中的一个程序换出到磁盘上，然后再把程序C装载到内存中。假设是把程序A换出，那么程序C还是无法装载进内存中，因为内存中空闲的连续区域有两块，一块是原来程序A占有的那10M，还有就是从0x00000080～0x00000099这20M，所以，30M的程序C无法装载进内存中。那么，唯一的办法就是把程序B换出，保留程序A，但是，此时会有60M的内存无法利用起来，很浪费对吧。&lt;/p&gt;
+&lt;h3 id=&#34;分段存储管理&#34;&gt;分段存储管理&lt;/h3&gt;
+&lt;p&gt;将一个程序分成代码段、数据段、堆栈段等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;把虚拟地址空间映射到了物理地址空间，并且你写的程序操作的是虚拟地址&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;解决上面1.2问题， &lt;strong&gt;分段机制映射的是一片连续的物理内存&lt;/strong&gt; ，无法解决问题3.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;分页存储管理&#34;&gt;分页存储管理&lt;/h3&gt;
+&lt;p&gt;将这些段，例如代码段分成均匀的小块，然后这些给这些小块编号，然后就可以放到内存中去，由于编号了的，所以也不怕顺序乱&lt;/p&gt;
+&lt;p&gt;分页仍然是 &lt;strong&gt;把虚拟地址空间映射到了物理地址空间&lt;/strong&gt; 但是粒度更小，单位不是整个程序，而是某个“页”。&lt;/p&gt;
+&lt;p&gt;分页，它的虚拟地址空间仍然是连续的，但是，每一页映射后的物理地址就不一定是连续的了。&lt;/p&gt;
+&lt;h3 id=&#34;分页和分段的区别&#34;&gt;&lt;strong&gt;分页和分段的区别&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;主要区别：粒度大小&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;a)&lt;/strong&gt;  页是信息的物理单位，分页是为实现离散分配方式，以消减内存的外零头，提高内存的利用率；或者说，分页仅仅是由于系统管理的需要，而不是用户的需要（也是对用户透明的）。&lt;/p&gt;
+&lt;p&gt;段是信息的逻辑单位，它含有一组其意义相对完整的信息（比如数据段、代码段和堆栈段等）。分段的目的是为了能更好的满足用户的需要（用户也是可以使用的）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b)&lt;/strong&gt;  页的大小固定且由系统确定，把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的，因而一个系统只能有一种大小的页面。段的长度却不固定，决定于用户所编写的程序，通常由编辑程序在对源程序进行编辑时，根据信息的性质来划分。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c)&lt;/strong&gt;  分页的作业地址空间是一维的，即单一的线性空间，程序员只须利用一个记忆符（线性地址的16进制表示），即可表示一地址。&lt;/p&gt;
+&lt;p&gt;分段的作业地址空间是二维的，程序员在标识一个地址时，既需给出段名（比如数据段、代码段和堆栈段等），又需给出段内地址。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;d)&lt;/strong&gt;  页和段都有存储保护机制。但存取权限不同：段有读、写和执行三种权限；而页只有读和写两种权限。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>进程与线程</title>
+      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
+      
+        <description>&lt;h2 id=&#34;进程和线程&#34;&gt;&lt;strong&gt;进程和线程&lt;/strong&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;基本概念&#34;&gt;基本概念&lt;/h3&gt;
+&lt;h4 id=&#34;串行&#34;&gt;&lt;strong&gt;串行&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;多个任务执行，一个执行完再执行另外一个。&lt;/p&gt;
+&lt;h4 id=&#34;并发concurrency&#34;&gt;&lt;strong&gt;并发(concurrency)&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;多个线程在单个核心运行，同一时间一个线程运行，系统不停切换线程，看起来像同时运行，实际上是线程不停切换。&lt;/p&gt;
+&lt;p&gt;即一个指令 和另一个指令交错执行，操作系统实现这种交错执行的机制称为：上下文切换。&lt;/p&gt;
+&lt;p&gt;上下文是指操作系统保持跟踪进程或线程运行所需的所有状态信息，如寄存器文件的当前值、主存内容等&lt;/p&gt;
+&lt;h4 id=&#34;并行parallelism&#34;&gt;&lt;strong&gt;并行（parallelism）&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;每个线程分配给独立的核心，线程同时运行。&lt;/p&gt;
+&lt;h4 id=&#34;总结&#34;&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;1、单CPU中进程只能是并发，多CPU计算机中进程可以并行。
+2、单CPU单核中线程只能并发，单CPU多核中线程可以并行。
+3、无论是并发还是并行，使用者来看，看到的是多进程，多线程。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;举例：单CPU4核 可以并行4个线程&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;进程&#34;&gt;&lt;strong&gt;进程&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;进程指正在运行的程序。确切的来说，当一个程序进入内存运行，即变成一个进程，进程是处于运行过程中的程序，并且具有一定独立功能。&lt;/p&gt;
+&lt;h3 id=&#34;线程&#34;&gt;&lt;strong&gt;线程&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;线程是进程中的一个执行单元，负责当前进程中程序的执行，一个进程中至少有一个线程。一个进程中是可以有多个线程的，这个应用程序也可以称之为多线程程序。&lt;/p&gt;
+&lt;p&gt;进程是&lt;strong&gt;操作系统&lt;/strong&gt;资源分配的基本单位，而线程是&lt;strong&gt;CPU&lt;/strong&gt;任务调度和执行的基本单位&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;关系&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一个线程可以创建和撤销另一个线程;同一个进程中的多个线程之间可以并发执行.相对进程而言，线程是一个更加接近于执行体的概念，它可以与同进程中的其他线程共享数据，但拥有自己的栈空间，拥有独立的执行序列。&lt;/p&gt;
+&lt;h4 id=&#34;区别&#34;&gt;&lt;strong&gt;区别&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;主要差别在于它们是不同的操作系统资源管理方式。&lt;/p&gt;
+&lt;p&gt;进程有独立的地址空间，一个进程崩溃后，在保护模式下不会对其它进程产生影响，而线程只是一个进程中的不同执行路径。线程有自己的&lt;strong&gt;堆栈和局部变量&lt;/strong&gt;，但线程之间没有单独的地址空间，一个线程死掉就等于整个进程死掉，所以多进程的程序要比多线程的程序健壮，但在进程切换时，耗费资源较大，效率要差一些。但对于一些要求同时进行并且又要共享某些变量的并发操作，只能用线程，不能用进程。&lt;/p&gt;
+&lt;p&gt;每个进程都有独立的代码和数据空间（程序上下文），程序之间的切换会有较大的开销；线程可以看做轻量级的进程，&lt;strong&gt;同一类线程共享代码和数据空间&lt;/strong&gt;（堆），每个线程都有自己独立的&lt;strong&gt;运行栈和程序计数器（PC）&lt;/strong&gt;，线程之间切换的开销小。&lt;/p&gt;
+&lt;p&gt;在操作系统中能同时运行多个进程（程序）；而在同一个进程（程序）中有多个线程同时执行（通过CPU调度，在每个时间片中只有一个线程执行）&lt;/p&gt;
+&lt;h4 id=&#34;优缺点&#34;&gt;&lt;strong&gt;优缺点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;线程和进程在使用上各有优缺点：线程执行开销小，但不利于资源的管理和保护；而进程正相反。同时，线程适合于在SMP机器上运行，而进程则可以跨机器迁移。&lt;/p&gt;
+&lt;h3 id=&#34;进程通信ipc&#34;&gt;进程通信（IPC）&lt;/h3&gt;
+&lt;p&gt;不同进程间交换数据必须通过内核,在内核中开辟一块缓冲区，进程1把数据从用户空间 拷到内核缓冲区，进程2再从内核缓冲区把数据读走，内核提供的这种机制称为进程间通信。&lt;/p&gt;
+&lt;h4 id=&#34;socket套接字&#34;&gt;Socket套接字&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;套接字属性&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;int socket( int domain, int type, int ptotocol);&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;domain指明 通信域：unix域，IPv4,IPv6等&lt;/p&gt;
+&lt;p&gt;type指明 通信类型：udp tcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Unix套接字与因特网套接字（tcp udp）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;domain 设置为AF_UNIX实现unxi通信。&lt;/p&gt;
+&lt;p&gt;unix套接口可以实现进程间传递&lt;strong&gt;描述字&lt;/strong&gt;，如文件、管道、有名管道及套接口等。&lt;/p&gt;
+&lt;p&gt;unix套接字只能用于&lt;strong&gt;同一个计算机&lt;/strong&gt;的进程间进行通信，速度是tcp套接口速度2倍，因为unix域套接字仅仅进行&lt;strong&gt;数据复制&lt;/strong&gt;，不会执行在网络协议栈中需要处理的添加、删除报文头、计算校验和、计算报文顺序等复杂操作，因而在单机的进程间通信中，更加推荐使用Unix域套接字。&lt;/p&gt;
+&lt;p&gt;unix通信流程和tcp相似，只是指定通信域时不同。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;服务器端&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt; 首先服务器应用程序用系统调用&lt;code&gt;socket&lt;/code&gt;来创建一个套接字，它是系统分配给该服务器进程的类似文件描述符的资源，它不能与其他的进程共享。&lt;/p&gt;
+&lt;p&gt;  接下来，服务器进程会给套接字起个名字，我们使用系统调用&lt;code&gt;bind&lt;/code&gt;来给套接字命名。然后服务器进程就开始等待客户连接到这个套接字。&lt;/p&gt;
+&lt;p&gt;  然后，系统调用&lt;code&gt;listen&lt;/code&gt;来创建一个队列并将其用于存放来自客户的进入连接。&lt;/p&gt;
+&lt;p&gt;  最后，服务器通过系统调用&lt;code&gt;accept&lt;/code&gt;来接受客户的连接。它会创建一个与原有的命名套接不同的新套接字，这个套接字只用于与这个特定客户端进行通信，而命名套接字（即原先的套接字）则被保留下来继续处理来自其他客户的连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;客户端&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt; 基于&lt;code&gt;socket&lt;/code&gt;的客户端比服务器端简单，同样，客户应用程序首先调用&lt;code&gt;socket&lt;/code&gt;来创建一个未命名的套接字，然后将服务器的命名套接字作为一个地址来调用&lt;code&gt;connect&lt;/code&gt;与服务器建立连接。&lt;/p&gt;
+&lt;p&gt;  一旦连接建立，我们就可以像使用底层的文件描述符那样用套接字来实现双向数据的通信。&lt;/p&gt;
+&lt;h4 id=&#34;管道匿名管道&#34;&gt;管道（匿名管道）&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.半双工（数据只能在一个方向上流动）单向通信，具有固定的读端和写端。&lt;/p&gt;
+&lt;p&gt;2.只能用于具有情缘关系的进程之间的通信（父子进程或兄弟进程之间）&lt;/p&gt;
+&lt;p&gt;初始化 int pipe(int pipefd[2]);&lt;/p&gt;
+&lt;p&gt;调用pipe函数，在内核中开辟一块缓冲区用来进行进程间通信，这块&lt;strong&gt;缓冲区&lt;/strong&gt;即为&lt;strong&gt;管道&lt;/strong&gt;，包含一个&lt;strong&gt;读端&lt;/strong&gt;和一个&lt;strong&gt;写端&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;参数pipefd[2]一个指向读端一个指向写端，管道对于用户程序就是一个文件，可以通过read(pipefd [0])；或者write(pipefd [1])进行操作。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;管道通信步骤&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.父进程创建管道，得到两个文件描述符指向管道的两端&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2.利用fork函数创建出子进程，则子进程也得到两个文件描述符指向同一管道&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;3.父进程关闭读端（pipe[0]）,子进程关闭写端pipe[1]，则此时父进程可以往管道中进行写操作，子进程可以从管道中读，从而实现了通过管道的进程间通信。（一端关闭，一端打开实现进程间通信）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;说明&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为管道通信是单向的，在上面的例子中我们是通过子进程写父进程来读，如果想要同时父进程写而子进程来读，就需要再打开另外的管道；&lt;/p&gt;
+&lt;p&gt;管道的读写端通过打开的&lt;strong&gt;文件描述符&lt;/strong&gt;来传递,因此要通信的两个进程必须从它们的公共祖先那里继承管道的件描述符。 上面的例子是父进程把文件描述符传给子进程之后父子进程之 间通信,也可以父进程fork两次,把文件描述符传给两个子进程,然后两个子进程之间通信, 总之 需要通过fork传递文件描述符使两个进程都能访问同一管道,它们才能通信。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;特殊情况&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;如果所有指向管道写端的文件描述符都关闭了,而仍然有进程从管道的读端读数据,那么管道中剩余的数据都被读取后,再次read会返回0,就像读到文件末尾一样&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果有指向管道写端的文件描述符没关闭，而持有管道写端的进程也没有向管道中写数据,这时有进程从管道读端读数据,那么管道中剩余的数据都被读取后,再次read会阻塞,直到管道中有数据可读了才读取数据并返回。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果所有指向管道读端的文件描述符都关闭了,这时有进程指向管道的写端write,那么该进程会收到信号SIGPIPE,通常会导致进程异常终止。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果有指向管道读端的文件描述符没关闭,而持有管道读端的进程也没有从管道中读数据,这时有进程向管道写端写数据,那么在管道被写满时再write会阻塞,直到管道中有空位置了才写入数据并返回。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;命名管道fifo&#34;&gt;命名管道FIFO&lt;/h4&gt;
+&lt;p&gt;解决管道中只有血缘关系的进程才能进行通信。&lt;/p&gt;
+&lt;p&gt;提供一个&lt;strong&gt;路径名&lt;/strong&gt;与之关联，以FIFO的文件形式存储于文件系统中。只要进程访问该路径，就能够通过FIFO相互通信。FIFO先进先出，第一个写入管道的数据被首先读出。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FIFO创建&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;int mknod(const char *path,mode_t mod,dev_t dev);&lt;/p&gt;
+&lt;p&gt;int mkfifo(const char *path,mode_t mode);&lt;/p&gt;
+&lt;p&gt;path为创建的命名管道的全路径名&lt;/p&gt;
+&lt;p&gt;mod为管道的模 指明存取权限&lt;/p&gt;
+&lt;p&gt;dev为设备值，取决于文件创建的种类&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;命名管道&lt;/strong&gt;创建后是一个位于硬盘上的文件，需要调用open()将其打开，&lt;strong&gt;管道&lt;/strong&gt;为内存上的特殊文件，无需打开。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;消息队列&#34;&gt;消息队列&lt;/h4&gt;
+&lt;p&gt;消息队列存放在内核中，一个消息队列由一个标识符队列ID标识，提供了一个进程向另一个进程发送数据块的方法。接受进程可以接受不同类型的数据结构。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.具有特定的格式，独立存放在内存中。&lt;/p&gt;
+&lt;p&gt;2.允许一个或多个进程向它写入或读取消息。&lt;/p&gt;
+&lt;p&gt;3.随机查询，可以按照消息的类型读取，不用遵循FIFO&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;创建&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 创建或打开消息队列：成功返回队列ID，失败返回-1
+int msgget(key_t，key, int flag);
+// 添加消息：成功返回0，失败返回-1
+int msgsnd(int msqid, const void *ptr, size_t size, int flag);
+// 读取消息：成功返回消息数据的长度，失败返回-1
+int msgrcv(int msqid, void *ptr, size_t size, long type,int flag);
+// 控制消息队列：成功返回0，失败返回-1
+int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;信号量&#34;&gt;信号量&lt;/h4&gt;
+&lt;p&gt;信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.用于进程间同步，若要在进程间传递数据需要结合共享内存。&lt;/p&gt;
+&lt;p&gt;2.信号量是一个整数，基于操作系统的PV操作，程序对信号量的操作都是原子操作。&lt;/p&gt;
+&lt;p&gt;3.每次对信号量的PV操作不仅限于对信号量值加1或减1，而且可以加减任意正整数。&lt;/p&gt;
+&lt;p&gt;4.支持信号量组。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果一个进程需要访问共享资源，操作如下：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.测试控制该资源的信号量。&lt;/p&gt;
+&lt;p&gt;2.若信号量大于0，则访问该资源，并将信号量-1。&lt;/p&gt;
+&lt;p&gt;3.若小于等于0，则进程进入休眠状态，直至值大于0，才被唤醒。&lt;/p&gt;
+&lt;p&gt;4.进程不再使用共享资源时，将信号量+1。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;创建&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 创建或获取一个信号量组：若成功返回信号量集ID，失败返回-1
+int semget(key_t key, int num_sems, int sem_flags); num_sems指定信号量数目 几乎总是为1
+// 对信号量组进行操作，改变信号量的值：成功返回0，失败返回-1
+int semop(int semid, struct sembuf semoparray[], size_t numops);  
+// 控制信号量的相关信息
+int semctl(int semid, int sem_num, int cmd, ...);
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;共享内存&#34;&gt;共享内存&lt;/h4&gt;
+&lt;p&gt;指多个进程共享一个给定的存储区，允许多个进程同时访问数据，在写入数据时另外一个进程可以立即获得最新数据，会造成同步问题。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.是最快的IPC，因为直接对内存进行存取。&lt;/p&gt;
+&lt;p&gt;2.通常是&lt;strong&gt;信号量+共享内存&lt;/strong&gt;一起使用，信号量用于同步问题。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 创建或获取一个共享内存：成功返回共享内存ID，失败返回-1
+int shmget(key_t key, size_t size, int flag);
+// 连接共享内存到当前进程的地址空间：成功返回指向共享内存的指针，失败返回-1
+void *shmat(int shm_id, const void *addr, int flag);
+// 断开与共享内存的连接：成功返回0，失败返回-1
+int shmdt(void *addr); 
+// 控制共享内存的相关信息：成功返回0，失败返回-1
+int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当一段共享内存被创建以后，它并不能被任何进程访问。必须使用&lt;code&gt;shmat&lt;/code&gt;函数连接该共享内存到当前进程的地址空间，连接成功后把共享内存区对象映射到调用进程的地址空间，随后可像本地空间一样访问。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;shmdt&lt;/code&gt;函数是用来断开&lt;code&gt;shmat&lt;/code&gt;建立的连接的。注意，这并不是从系统中删除该共享内存，只是当前进程不能再访问该共享内存而已。&lt;/p&gt;
+&lt;h4 id=&#34;五种通讯方式区别&#34;&gt;五种通讯方式区别&lt;/h4&gt;
+&lt;p&gt;1.管道：速度慢，容量有限，只有父子进程能通讯&lt;/p&gt;
+&lt;p&gt;2.FIFO：任何进程间都能通讯，但速度慢&lt;/p&gt;
+&lt;p&gt;3.消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题&lt;/p&gt;
+&lt;p&gt;4.信号量：不能传递复杂消息，只能用来同步&lt;/p&gt;
+&lt;p&gt;5.共享内存区：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了同一进程内的一块内存&lt;/p&gt;
+&lt;h4 id=&#34;文件锁&#34;&gt;文件锁&lt;/h4&gt;
+&lt;p&gt;Linux内核支持的文件锁包括&lt;strong&gt;劝告锁&lt;/strong&gt;和&lt;strong&gt;强制锁&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;多个进程可以同时对一个文件加共享锁（读锁），而当有一个进程对文件加了排他锁（写锁）时，那么其它进程无权对该文件加任何锁，直到排他锁释放。&lt;/p&gt;
+&lt;p&gt;不论是使用劝告锁还是强制锁，都是同时使用共享锁和排写锁。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;是否满足请求&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;当前加上的锁&lt;/strong&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;共享锁&lt;/td&gt;
+&lt;td&gt;排他锁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;无&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;是&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;共享锁&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;是&lt;/td&gt;
+&lt;td&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;排他锁&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;劝告锁&#34;&gt;&lt;strong&gt;劝告锁&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;劝告锁是一种协同工作的锁。对于这一种锁来说，内核只提供&lt;strong&gt;加锁&lt;/strong&gt;以及&lt;strong&gt;检测文件是否已经加锁&lt;/strong&gt;的手段，但是内核并不参与锁的控制和协调。&lt;/p&gt;
+&lt;p&gt;也就是说，如果有进程不遵守“游戏规则”，不检查目标文件是否已经由别的进程加了锁就往其中写入数据，那么内核是不会加以阻拦的。因此，劝告锁并不能阻止进程对文件的访问，而只能依靠各个进程&lt;strong&gt;自觉在访问文件之前检查该文件&lt;/strong&gt;是否已经被其他进程加锁来实现并发控制。进程需要事先对锁的状态做一个约定，并根据锁的当前状态和相互关系来确定其他进程是否能对文件执行指定的操作。从这点上来说，劝告锁的工作方式与使用信号量保护临界区的方式非常类似。&lt;/p&gt;
+&lt;p&gt;劝告锁可以对文件的任意一个部分进行加锁，也可以对整个文件进行加锁，甚至可以对文件将来增大的部分也进行加锁。由于进程可以选择对文件的某个部分进行加锁，所以&lt;strong&gt;一个进程&lt;/strong&gt;可以获得&lt;strong&gt;关于某个文件不同部分的多个锁&lt;/strong&gt;。&lt;/p&gt;
+&lt;h5 id=&#34;强制锁&#34;&gt;&lt;strong&gt;强制锁&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;每当有系统调用 open()、read() 以及write() 发生的时候，内核都要检查并确保这些系统调用不会违反在所访问文件上加的强制锁约束。有进程不遵守游戏规则，硬要往加了锁的文件中写入内容，内核就会加以阻拦。&lt;/p&gt;
+&lt;p&gt;如果一个文件已经被加上了共享锁，那么其他进程再对这个文件进行写操作就会被内核阻止；&lt;/p&gt;
+&lt;p&gt;如果一个文件已经被加上了排他锁，那么其他进程再对这个文件进行读取或者写操作就会被内核阻止。&lt;/p&gt;
+&lt;p&gt;如果其他进程试图访问一个已经加有强制锁的文件，进程行为取决于所执行的操作模式和文件锁的类型，如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;当前锁类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;阻塞读&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;阻塞写&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;非阻塞读&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;非阻塞写&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;读锁&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;正常读取数据&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;阻塞&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;正常读取数据&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;EAGAIN&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;写锁&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;阻塞&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;阻塞&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;EAGAIN&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;EAGAIN&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;系统调用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;int flock(int fd,int operation) 对整个文件加锁&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;fd标识文件描述符，operation指定加锁类型。通常情况下flock()获取锁失败会阻塞进程，可以将 LOCK_NB 和 LOCK_SH 或者 LOCK_EX 联合使用，就不会阻塞进程。&lt;/p&gt;
+&lt;p&gt;*&lt;em&gt;int fcntl(int fd,int cmd,struct flock &lt;em&gt;lock) 对记录进行加锁&lt;/em&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;fd标识文件描述符，cmd指定要进行的锁操作,flock指定锁类型等。&lt;/p&gt;
+&lt;h3 id=&#34;缓冲区&#34;&gt;缓冲区&lt;/h3&gt;
+&lt;h4 id=&#34;用户进程缓冲区&#34;&gt;用户进程缓冲区&lt;/h4&gt;
+&lt;p&gt;每个用户进程都维护一个用户进程缓冲区&lt;/p&gt;
+&lt;p&gt;程序在读取文件时，会先申请一块内存数组，称为buffer，然后每次调用read，读取设定字节长度的数据，写入buffer。（用较小的次数填满buffer）。之后的程序都是从buffer中获取数据，当buffer使用完后，在进行下一次调用，填充buffer。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;目的是为了减少系统调用次数，从而降低操作系统在用户态与内核态切换所耗费的时间和资源&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;内核缓冲区&#34;&gt;内核缓冲区&lt;/h4&gt;
+&lt;p&gt;当一个用户进程要从磁盘读取数据时，内核一般不直接读磁盘，而是将内核缓冲区中的数据复制到进程缓冲区中。&lt;/p&gt;
+&lt;p&gt;但若是内核缓冲区中没有数据，内核会把对数据块的请求，加入到请求队列，然后把请求用户进程挂起（基本不占CPU资源），为其它用户进程提供服务。&lt;/p&gt;
+&lt;p&gt;等到系统进程将数据已经读取到内核缓冲区时，把内核缓冲区中的数据读取到用户进程中，才会通知进程，当然不同的io模型，在调度和使用内核缓冲区的方式上有所不同。&lt;/p&gt;
+&lt;p&gt;你可以认为，read是把数据从内核缓冲区复制到进程缓冲区。write是把进程缓冲区复制到内核缓冲区。&lt;/p&gt;
+&lt;p&gt;当然，write并不一定导致内核的写动作，比如os可能会把内核缓冲区的数据积累到一定量后，再一次写入。这也就是为什么断电有时会导致数据丢失。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;内核缓冲区，是为了在OS级别，减少对磁盘的读写次数，提高磁盘IO效率，优化磁盘写操作。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;java-io读写流程&#34;&gt;java IO读写流程&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;（1）客户端请求&lt;/p&gt;
+&lt;p&gt;Linux通过网卡，读取客户断的请求数据，将数据读取到内核缓冲区。&lt;/p&gt;
+&lt;p&gt;（2）获取请求数据&lt;/p&gt;
+&lt;p&gt;服务器从内核缓冲区读取数据到Java进程缓冲区。&lt;/p&gt;
+&lt;p&gt;（1）服务器端业务处理&lt;/p&gt;
+&lt;p&gt;Java服务端在自己的用户空间中，处理客户端的请求。&lt;/p&gt;
+&lt;p&gt;（2）服务器端返回数据&lt;/p&gt;
+&lt;p&gt;Java服务端已构建好的响应，从用户缓冲区写入系统缓冲区。&lt;/p&gt;
+&lt;p&gt;（3）发送给客户端&lt;/p&gt;
+&lt;p&gt;Linux内核通过网络 I/O ，将内核缓冲区中的数据，写入网卡，网卡通过底层的通讯协议，会将数据发送给目标客户端。&lt;/p&gt;
+&lt;h5 id=&#34;cpu分配&#34;&gt;CPU分配&lt;/h5&gt;
+&lt;p&gt;JAVA使用抢占式分配：优先让优先级高的线程使用 CPU，如果线程的优先级相同，那么会随机选择一个(线程随机性)。&lt;/p&gt;
+&lt;p&gt;实际上，CPU(中央处理器)使用抢占式调度模式在多个线程间进行着高速的切换。对于CPU的一个核而言，某个时刻，只能执行一个线程，而 CPU的在多个线程间切换速度相对我们的感觉要快，看上去就是在同一时刻运行。&lt;/p&gt;
+&lt;p&gt;其实，多线程程序并不能提高程序的运行速度，但能够提高程序运行效率，让CPU的使用率更高。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>进程通信</title>
+      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</guid>
+      
+        <description>&lt;h2 id=&#34;五种主要的io模型&#34;&gt;&lt;strong&gt;五种主要的IO模型&lt;/strong&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;同步阻塞io-blocking-io&#34;&gt;同步阻塞IO （Blocking IO）&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;（1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统进程将用户线程所需的系统资源写入内核缓冲区）。很多时候，数据在一开始还没有到达（比如，还没有收到一个完整的Socket数据包），这个时候kernel就要等待足够的数据到来。&lt;/p&gt;
+&lt;p&gt;（2）当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）从开始IO读的read系统调用开始，用户线程就进入阻塞状态。一直到kernel返回结果后，用户线程才解除block的状态，重新运行起来。&lt;/p&gt;
+&lt;p&gt;所以，blocking IO的特点就是在内核进行IO执行的两个阶段，用户线程都被block了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BIO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;程序简单，在阻塞等待数据期间，用户线程挂起。用户线程基本不会占用 CPU 资源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BIO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一般情况下，会为每个连接配套一条独立的线程，或者说一条线程维护一个连接成功的IO流的读写。在并发量小的情况下，这个没有什么问题。但是，当在高并发的场景下，服务器需要大量的线程来维护大量的网络连接，内存、线程切换开销会非常巨大。因此，基本上，BIO模型在高并发场景下是不可用的。&lt;/p&gt;
+&lt;h3 id=&#34;同步非阻塞nionone-blocking-io&#34;&gt;&lt;strong&gt;同步非阻塞NIO（None Blocking IO）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;（1）在内核数据没有准备好的阶段，用户线程发起IO请求时，立即返回。用户线程需要不断地发起IO系统调用，直到获取到资源。&lt;/p&gt;
+&lt;p&gt;（2）内核数据到达后，用户线程发起系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）用户线程才解除block的状态，重新运行起来。经过多次的尝试，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;应用程序的线程需要不断的进行 I/O 系统调用，轮询数据是否已经准备好，如果没有准备好，继续轮询，直到完成系统调用为止。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每次发起的 IO 系统调用，在内核的等待数据过程中可以立即返回。用户线程不会阻塞，实时性较好。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;需要不断的重复发起IO系统调用，这种不断的轮询，将会不断地询问内核，这将占用大量的 CPU 时间，系统资源利用率较低。&lt;/p&gt;
+&lt;p&gt;总之，NIO模型在高并发场景下，也是不可用的。一般 Web 服务器不使用这种 IO 模型。一般很少直接使用这种模型，而是在其他IO模型中使用非阻塞IO这一特性。java的实际开发中，也不会涉及这种IO模型。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;  Java NIO（New IO） 不是IO模型中的NIO模型，而是另外的一种模型，叫做IO多路复用模型（ IO multiplexing ）。&lt;/p&gt;
+&lt;h3 id=&#34;io多路复用模型io-multiplexing&#34;&gt;&lt;strong&gt;IO多路复用模型(I/O multiplexing）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;服务器复用同一线程 接受 多个客户端请求线程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;用户线程轮询&amp;mdash;》系统内核select/epoll 轮询 数据是否准备好&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列。&lt;/p&gt;
+&lt;p&gt;在这种模式中，首先不是进行read系统调动，而是进行select/epoll系统调用。当然，这里有一个前提，需要将目标网络连接，提前注册到select/epoll的可查询socket列表中。然后，才可以开启整个的IO多路复用模型的读流程。&lt;/p&gt;
+&lt;p&gt;（1）进行select/epoll系统调用，查询可以读的连接。kernel会查询所有select的可查询socket列表，当任何一个socket中的数据准备好了，select就会返回。&lt;/p&gt;
+&lt;p&gt;当用户进程调用了select，那么整个线程会被block（阻塞掉）。&lt;/p&gt;
+&lt;p&gt;（2）用户线程获得了目标连接后，发起read系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）用户线程才解除block的状态，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;IO多路复用模型，建立在操作系统kernel内核能够提供的多路分离系统调用select/epoll基础之上的。多路复用IO需要用到两个系统调用（system call）， 一个select/epoll查询调用，一个是IO的读取调用。&lt;/p&gt;
+&lt;p&gt;和NIO模型相似，多路复用IO需要轮询。负责select/epoll查询调用的线程，需要不断的进行select/epoll轮询，查找出可以进行IO操作的连接。&lt;/p&gt;
+&lt;p&gt;另外，多路复用IO模型与前面的NIO模型，是有关系的。对于每一个可以查询的socket，一般都设置成为non-blocking模型。只是这一点，对于用户程序是透明的（不感知）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;用select/epoll的优势在于，它可以同时处理成千上万个连接（用户请求）。与一条线程维护一个连接相比，I/O多路复用技术的最大优势是：系统不必创建线程，也不必维护这些线程，从而大大减小了系统的开销。&lt;/p&gt;
+&lt;p&gt;多个连接的情况下，不会有连接被阻塞，select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列&lt;/p&gt;
+&lt;p&gt;Java的NIO（new IO）技术，使用的就是IO多路复用模型。在linux系统上，使用的是epoll系统调用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本质上，select/epoll系统调用，属于同步IO，也是阻塞IO。都需要在读写事件就绪后，自己负责进行读写，也就是说这个读写过程是阻塞的。&lt;/p&gt;
+&lt;h3 id=&#34;信号驱动io&#34;&gt;信号驱动IO&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;允许Socket进行信号驱动IO,并注册一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。&lt;/p&gt;
+&lt;h3 id=&#34;异步io模型asynchronous-io&#34;&gt;&lt;strong&gt;异步IO模型（asynchronous IO）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;kernel的数据准备是将（请求数据）从网络物理设备（网卡）读取到内核缓冲区；kernel的数据复制是将数据从内核缓冲区拷贝到用户程序空间的缓冲区。&lt;/p&gt;
+&lt;p&gt;（1）当用户线程调用了read系统调用，立刻就可以开始去做其它的事，用户线程不阻塞。&lt;/p&gt;
+&lt;p&gt;（2）内核（kernel）就开始了IO的第一个阶段：准备数据。当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存）。&lt;/p&gt;
+&lt;p&gt;（3）kernel会给用户线程发送一个信号（signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。&lt;/p&gt;
+&lt;p&gt;（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。&lt;/p&gt;
+&lt;h4 id=&#34;异步io模型的特点&#34;&gt;&lt;strong&gt;异步IO模型的特点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;在内核kernel的等待数据和复制数据的两个阶段，用户线程都不是block(阻塞)的。用户线程需要接受kernel的IO操作完成的事件，或者说注册IO操作完成的回调函数，到操作系统的内核。所以说，异步IO有的时候，也叫做信号驱动 IO 。&lt;/p&gt;
+&lt;h4 id=&#34;异步io模型缺点&#34;&gt;&lt;strong&gt;异步IO模型缺点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;需要完成事件的注册与传递，这里边需要底层操作系统提供大量的支持，去做大量的工作。&lt;/p&gt;
+&lt;p&gt;目前来说， Windows 系统下通过 IOCP 实现了真正的异步 I/O。但是，就目前的业界形式来说，Windows 系统，很少作为百万级以上或者说高并发应用的服务器操作系统来使用。&lt;/p&gt;
+&lt;p&gt;而在 Linux 系统下，异步IO模型在2.6版本才引入，目前并不完善。所以，这也是在 Linux 下，实现高并发网络编程时都是以 IO 复用模型模式为主。&lt;/p&gt;
+&lt;h3 id=&#34;零拷贝&#34;&gt;零拷贝&lt;/h3&gt;
+&lt;p&gt;指的是内核空间与用户空间之间零次拷贝&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;好处&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;减少甚至完全避免不必要的CPU拷贝，从而让CPU解脱出来去执行其他的任务&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;减少内存带宽的占用&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通常零拷贝技术还能够减少用户空间和操作系统内核空间之间的上下文切换&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;dma直接内存访问&#34;&gt;&lt;strong&gt;DMA&lt;/strong&gt;:直接内存访问&lt;/h4&gt;
+&lt;p&gt;DMA是允许外设组件将I/O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。&lt;/p&gt;
+&lt;p&gt;而用户空间与内核空间之间的数据传输并没有类似DMA这种可以不需要CPU参与的传输工具，因此用户空间与内核空间之间的数据传输是需要CPU全程参与的。&lt;/p&gt;
+&lt;p&gt;所也就有了通过零拷贝技术来减少和避免不必要的CPU数据拷贝过程。&lt;/p&gt;
+&lt;h4 id=&#34;传统io&#34;&gt;&lt;strong&gt;传统IO&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;通过read()将数据放入缓冲区buffer,再通过write输出。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/6.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/7.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;JVM发出read() 系统调用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS上下文切换到内核模式（第一次上下文切换）并将数据读取到内核空间缓冲区(DMA引擎中执行)。(第一次拷贝：hardware —-&amp;gt; kernel buffer）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS内核然后将数据复制到用户空间缓冲区（CPU拷贝）(第二次拷贝: kernel buffer ——&amp;gt; user buffer)，然后read系统调用返回。而系统调用的返回又会导致一次内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;JVM处理代码逻辑并发送write（）系统调用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS上下文切换到内核模式(第三次上下文切换)并从用户空间缓冲区复制数据到内核空间缓冲区（CPU拷贝）(第三次拷贝: user buffer ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本例中的socket buffer就是kernel buffer（user buffer ——&amp;gt; socket buffer）&lt;/p&gt;
+&lt;p&gt;socket buffer：内核中与该socket连接有关的缓冲区 每个socket被创建后都会分配一个输入缓冲区和一个输出缓冲区&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;write系统调用返回，导致内核空间到用户空间的再次上下文切换(第四次上下文切换)。将内核空间缓冲区中的数据写到hardware(第四次拷贝: kernel buffer ——&amp;gt; hardware)。(DMA拷贝)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;（socket buffer ——&amp;gt; protocol engine）本例中的 protocol engine就是hardware&lt;/p&gt;
+&lt;p&gt;这次拷贝是一个独立且异步的过程。&lt;/p&gt;
+&lt;p&gt;Q：你可能会问独立和异步这是什么意思？难道是调用会在数据被传输前返回？
+A：事实上调用的返回并不保证数据被传输；它甚至不保证传输的开始。它只是意味着将我们要发送的数据放入到了一个待发送的队列中，在我们之前可能有许多数据包在排队。除非驱动器或硬件实现优先级环或队列，否则数据是以先进先出的方式传输的。&lt;/p&gt;
+&lt;p&gt;总的来说，传统的I/O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。显然从内核空间到用户空间内存的复制是完全不必要的，所以，我们能不能直接从hardware读取数据到kernel buffer后，再从kernel buffer写到目标地点不就好了。注意，不同的操作系统对零拷贝的实现各不相同。在这里我们介绍linux下的零拷贝实现。&lt;/p&gt;
+&lt;h4 id=&#34;sendfile&#34;&gt;sendfile&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/8.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。通过DMA将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard driver ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后再将数据从内核空间缓冲区拷贝到内核中与socket相关的缓冲区中(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。（socket buffer才能将数据传递给协议引擎）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过sendfile实现的零拷贝I/O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。
+你可能会说操作系统仍然需要在内核内存空间中复制数据（kernel buffer —&amp;gt;socket buffer）。 是的，但从操作系统的角度来看，这已经是零拷贝，因为没有数据从内核空间复制到用户空间。&lt;/p&gt;
+&lt;p&gt;Q：但通过是这里还是存在着一次CPU拷贝操作，即，kernel buffer ——&amp;gt; socket buffer。是否有办法将该拷贝操作也取消掉了？
+A：有的。但这需要底层操作系统的支持。从Linux 2.4版本开始，操作系统底层提供了scatter/gather这种DMA的方式来从内核空间缓冲区中将数据直接读取到协议引擎中，而无需将内核空间缓冲区中的数据再拷贝一份到内核空间socket相关联的缓冲区中。&lt;/p&gt;
+&lt;h4 id=&#34;带有dma收集拷贝scattergather功能的sendfile&#34;&gt;带有DMA收集拷贝（scatter/gather）功能的sendfile&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/9.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;没有数据拷贝到socket缓冲区。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;取而代之的是只有相应的描述符信息会被拷贝到相应的socket缓冲区当中。该描述符包含了两方面的信息：a) kernel buffer的内存地址；b) kernel buffer的偏移量。&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;DMA gather copy根据socket缓冲区中描述符提供的位置和偏移量信息直接将内核空间缓冲区中的数据拷贝到协议引擎上(第二次拷贝: kernel buffer ——&amp;gt; protocol engine（可以看出是目标文件）)，这样就避免了最后一次CPU数据拷贝。&lt;/p&gt;
+&lt;p&gt;带有DMA收集拷贝功能的sendfile实现的I/O只使用了2次用户空间与内核空间的上下文切换，以及2次数据的拷贝，而且这2次的数据拷贝都是非CPU拷贝。这样一来我们就实现了最理想的零拷贝I/O传输了，不需要任何一次的CPU拷贝，以及最少的上下文切换。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;sendfile零拷贝消除了所有内核空间缓冲区与用户空间缓冲区之间的数据拷贝过程，因此sendfile零拷贝I/O的实现是完成在内核空间中完成的，这对于应用程序来说就无法对数据进行操作了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决:通过mmap实现的零拷贝 只有使用mmap的kernel buffer内核缓冲区才是在用户空间和内核空间是共享的&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/10.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;发出mmap系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;mmap系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接着用户空间和内核空间共享这个缓冲区，而不需要将数据从内核空间拷贝到用户空间。因为用户空间和内核空间共享了这个缓冲区数据，所以用户空间就可以像在操作自己缓冲区中数据一般操作这个由内核空间共享的缓冲区数据。&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;发出write系统调用，导致用户空间到内核空间的上下文切换(第三次上下文切换)。将数据从内核空间缓冲区拷贝到内核空间socket相关联的缓冲区(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。
+\4. write系统调用返回，导致内核空间到用户空间的上下文切换(第四次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过mmap实现的零拷贝I/O进行了4次用户空间与内核空间的上下文切换，以及3次数据拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。明显，它与传统I/O相比仅仅少了1次内核空间缓冲区和用户空间缓冲区之间的CPU拷贝。&lt;/p&gt;
+&lt;p&gt;这样的好处是，我们可以将整个文件或者整个文件的一部分映射到内存当中，用户直接对内存中对文件进行操作，然后是由操作系统来进行相关的页面请求并将内存的修改写入到文件当中。我们的应用程序只需要处理内存的数据，这样可以实现非常迅速的I/O操作。&lt;/p&gt;
+&lt;h2 id=&#34;java-nio中的bytebuffer&#34;&gt;Java NIO中的ByteBuffer&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;HeapByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;调用ByteBuffer.allocate()时使用。它被称为堆，因为它保存在JVM的堆空间中，因此您可以获得所有优势，如GC支持和缓存优化。 但是，它不是页面对齐的，这意味着如果您需要通过JNI与本地代码交谈，JVM将不得不复制到对齐的缓冲区空间。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;DirectByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在调用ByteBuffer.allocateDirect（）时使用。 JVM将使用malloc（）在堆空间之外分配内存空间。 因为它不是由JVM管理的，所以你的内存空间是页面对齐的，不受GC影响，这使得它成为处理本地代码的完美选择。 然而，你要C程序员一样，自己管理这个内存，必须自己分配和释放内存来防止内存泄漏。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MappedByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在调用FileChannel.map（）时使用。 与DirectByteBuffer类似，这也是JVM堆外部的情况。&lt;/p&gt;
+&lt;p&gt;它基本上作为OS mmap（）系统调用的包装函数，以便代码直接操作映射的物理内存数据。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>进程通信 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="进程通信" />
+<meta property="og:description" content="五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/" />
+<meta property="article:published_time" content="2020-02-12T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-02-12T13:39:23+08:00" />
+<meta itemprop="name" content="进程通信">
+<meta itemprop="description" content="五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统">
+<meta itemprop="datePublished" content="2020-02-12T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-12T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="6445">
+
+
+
+<meta itemprop="keywords" content="进程通信," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="进程通信"/>
+<meta name="twitter:description" content="五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">进程通信</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-02-12" class="post-time">
+          2020-02-12
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"> 操作系统 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#五种主要的io模型">五种主要的IO模型</a>
+      <ul>
+        <li><a href="#同步阻塞io-blocking-io">同步阻塞IO （Blocking IO）</a></li>
+        <li><a href="#同步非阻塞nionone-blocking-io">同步非阻塞NIO（None Blocking IO）</a></li>
+        <li><a href="#io多路复用模型io-multiplexing">IO多路复用模型(I/O multiplexing）</a></li>
+        <li><a href="#信号驱动io">信号驱动IO</a></li>
+        <li><a href="#异步io模型asynchronous-io">异步IO模型（asynchronous IO）</a></li>
+        <li><a href="#零拷贝">零拷贝</a></li>
+      </ul>
+    </li>
+    <li><a href="#java-nio中的bytebuffer">Java NIO中的ByteBuffer</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h2 id="五种主要的io模型"><strong>五种主要的IO模型</strong></h2>
+<h3 id="同步阻塞io-blocking-io">同步阻塞IO （Blocking IO）</h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/1.jpg?raw=true" alt=""></p>
+<p>（1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统进程将用户线程所需的系统资源写入内核缓冲区）。很多时候，数据在一开始还没有到达（比如，还没有收到一个完整的Socket数据包），这个时候kernel就要等待足够的数据到来。</p>
+<p>（2）当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。</p>
+<p>（3）从开始IO读的read系统调用开始，用户线程就进入阻塞状态。一直到kernel返回结果后，用户线程才解除block的状态，重新运行起来。</p>
+<p>所以，blocking IO的特点就是在内核进行IO执行的两个阶段，用户线程都被block了。</p>
+<p><strong>BIO的优点</strong></p>
+<p>程序简单，在阻塞等待数据期间，用户线程挂起。用户线程基本不会占用 CPU 资源。</p>
+<p><strong>BIO的缺点</strong></p>
+<p>一般情况下，会为每个连接配套一条独立的线程，或者说一条线程维护一个连接成功的IO流的读写。在并发量小的情况下，这个没有什么问题。但是，当在高并发的场景下，服务器需要大量的线程来维护大量的网络连接，内存、线程切换开销会非常巨大。因此，基本上，BIO模型在高并发场景下是不可用的。</p>
+<h3 id="同步非阻塞nionone-blocking-io"><strong>同步非阻塞NIO（None Blocking IO）</strong></h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/2.jpg?raw=true" alt=""></p>
+<p>（1）在内核数据没有准备好的阶段，用户线程发起IO请求时，立即返回。用户线程需要不断地发起IO系统调用，直到获取到资源。</p>
+<p>（2）内核数据到达后，用户线程发起系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。</p>
+<p>（3）用户线程才解除block的状态，重新运行起来。经过多次的尝试，用户线程终于真正读取到数据，继续执行。</p>
+<p><strong>NIO的特点</strong></p>
+<p>应用程序的线程需要不断的进行 I/O 系统调用，轮询数据是否已经准备好，如果没有准备好，继续轮询，直到完成系统调用为止。</p>
+<p><strong>NIO的优点</strong></p>
+<p>每次发起的 IO 系统调用，在内核的等待数据过程中可以立即返回。用户线程不会阻塞，实时性较好。</p>
+<p><strong>NIO的缺点</strong></p>
+<p>需要不断的重复发起IO系统调用，这种不断的轮询，将会不断地询问内核，这将占用大量的 CPU 时间，系统资源利用率较低。</p>
+<p>总之，NIO模型在高并发场景下，也是不可用的。一般 Web 服务器不使用这种 IO 模型。一般很少直接使用这种模型，而是在其他IO模型中使用非阻塞IO这一特性。java的实际开发中，也不会涉及这种IO模型。</p>
+<p><strong>注意：</strong>  Java NIO（New IO） 不是IO模型中的NIO模型，而是另外的一种模型，叫做IO多路复用模型（ IO multiplexing ）。</p>
+<h3 id="io多路复用模型io-multiplexing"><strong>IO多路复用模型(I/O multiplexing）</strong></h3>
+<p><strong>服务器复用同一线程 接受 多个客户端请求线程</strong></p>
+<p><strong>用户线程轮询&mdash;》系统内核select/epoll 轮询 数据是否准备好</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/3.jpg?raw=true" alt=""></p>
+<p>select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列。</p>
+<p>在这种模式中，首先不是进行read系统调动，而是进行select/epoll系统调用。当然，这里有一个前提，需要将目标网络连接，提前注册到select/epoll的可查询socket列表中。然后，才可以开启整个的IO多路复用模型的读流程。</p>
+<p>（1）进行select/epoll系统调用，查询可以读的连接。kernel会查询所有select的可查询socket列表，当任何一个socket中的数据准备好了，select就会返回。</p>
+<p>当用户进程调用了select，那么整个线程会被block（阻塞掉）。</p>
+<p>（2）用户线程获得了目标连接后，发起read系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。</p>
+<p>（3）用户线程才解除block的状态，用户线程终于真正读取到数据，继续执行。</p>
+<p><strong>多路复用IO的特点</strong></p>
+<p>IO多路复用模型，建立在操作系统kernel内核能够提供的多路分离系统调用select/epoll基础之上的。多路复用IO需要用到两个系统调用（system call）， 一个select/epoll查询调用，一个是IO的读取调用。</p>
+<p>和NIO模型相似，多路复用IO需要轮询。负责select/epoll查询调用的线程，需要不断的进行select/epoll轮询，查找出可以进行IO操作的连接。</p>
+<p>另外，多路复用IO模型与前面的NIO模型，是有关系的。对于每一个可以查询的socket，一般都设置成为non-blocking模型。只是这一点，对于用户程序是透明的（不感知）。</p>
+<p><strong>多路复用IO的优点</strong></p>
+<p>用select/epoll的优势在于，它可以同时处理成千上万个连接（用户请求）。与一条线程维护一个连接相比，I/O多路复用技术的最大优势是：系统不必创建线程，也不必维护这些线程，从而大大减小了系统的开销。</p>
+<p>多个连接的情况下，不会有连接被阻塞，select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列</p>
+<p>Java的NIO（new IO）技术，使用的就是IO多路复用模型。在linux系统上，使用的是epoll系统调用。</p>
+<p><strong>多路复用IO的缺点</strong></p>
+<p>本质上，select/epoll系统调用，属于同步IO，也是阻塞IO。都需要在读写事件就绪后，自己负责进行读写，也就是说这个读写过程是阻塞的。</p>
+<h3 id="信号驱动io">信号驱动IO</h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/4.jpg?raw=true" alt=""></p>
+<p>允许Socket进行信号驱动IO,并注册一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。</p>
+<h3 id="异步io模型asynchronous-io"><strong>异步IO模型（asynchronous IO）</strong></h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/5.jpg?raw=true" alt=""></p>
+<p>kernel的数据准备是将（请求数据）从网络物理设备（网卡）读取到内核缓冲区；kernel的数据复制是将数据从内核缓冲区拷贝到用户程序空间的缓冲区。</p>
+<p>（1）当用户线程调用了read系统调用，立刻就可以开始去做其它的事，用户线程不阻塞。</p>
+<p>（2）内核（kernel）就开始了IO的第一个阶段：准备数据。当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存）。</p>
+<p>（3）kernel会给用户线程发送一个信号（signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。</p>
+<p>（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。</p>
+<h4 id="异步io模型的特点"><strong>异步IO模型的特点</strong></h4>
+<p>在内核kernel的等待数据和复制数据的两个阶段，用户线程都不是block(阻塞)的。用户线程需要接受kernel的IO操作完成的事件，或者说注册IO操作完成的回调函数，到操作系统的内核。所以说，异步IO有的时候，也叫做信号驱动 IO 。</p>
+<h4 id="异步io模型缺点"><strong>异步IO模型缺点</strong></h4>
+<p>需要完成事件的注册与传递，这里边需要底层操作系统提供大量的支持，去做大量的工作。</p>
+<p>目前来说， Windows 系统下通过 IOCP 实现了真正的异步 I/O。但是，就目前的业界形式来说，Windows 系统，很少作为百万级以上或者说高并发应用的服务器操作系统来使用。</p>
+<p>而在 Linux 系统下，异步IO模型在2.6版本才引入，目前并不完善。所以，这也是在 Linux 下，实现高并发网络编程时都是以 IO 复用模型模式为主。</p>
+<h3 id="零拷贝">零拷贝</h3>
+<p>指的是内核空间与用户空间之间零次拷贝</p>
+<p><strong>好处</strong></p>
+<ul>
+<li>
+<p>减少甚至完全避免不必要的CPU拷贝，从而让CPU解脱出来去执行其他的任务</p>
+</li>
+<li>
+<p>减少内存带宽的占用</p>
+</li>
+<li>
+<p>通常零拷贝技术还能够减少用户空间和操作系统内核空间之间的上下文切换</p>
+</li>
+</ul>
+<h4 id="dma直接内存访问"><strong>DMA</strong>:直接内存访问</h4>
+<p>DMA是允许外设组件将I/O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。</p>
+<p>而用户空间与内核空间之间的数据传输并没有类似DMA这种可以不需要CPU参与的传输工具，因此用户空间与内核空间之间的数据传输是需要CPU全程参与的。</p>
+<p>所也就有了通过零拷贝技术来减少和避免不必要的CPU数据拷贝过程。</p>
+<h4 id="传统io"><strong>传统IO</strong></h4>
+<p>通过read()将数据放入缓冲区buffer,再通过write输出。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/6.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/7.jpg?raw=true" alt=""></p>
+<ol>
+<li>
+<p>JVM发出read() 系统调用。</p>
+</li>
+<li>
+<p>OS上下文切换到内核模式（第一次上下文切换）并将数据读取到内核空间缓冲区(DMA引擎中执行)。(第一次拷贝：hardware —-&gt; kernel buffer）</p>
+</li>
+<li>
+<p>OS内核然后将数据复制到用户空间缓冲区（CPU拷贝）(第二次拷贝: kernel buffer ——&gt; user buffer)，然后read系统调用返回。而系统调用的返回又会导致一次内核空间到用户空间的上下文切换(第二次上下文切换)。</p>
+</li>
+<li>
+<p>JVM处理代码逻辑并发送write（）系统调用。</p>
+</li>
+<li>
+<p>OS上下文切换到内核模式(第三次上下文切换)并从用户空间缓冲区复制数据到内核空间缓冲区（CPU拷贝）(第三次拷贝: user buffer ——&gt; kernel buffer)。</p>
+</li>
+</ol>
+<p>本例中的socket buffer就是kernel buffer（user buffer ——&gt; socket buffer）</p>
+<p>socket buffer：内核中与该socket连接有关的缓冲区 每个socket被创建后都会分配一个输入缓冲区和一个输出缓冲区</p>
+<ol start="6">
+<li>write系统调用返回，导致内核空间到用户空间的再次上下文切换(第四次上下文切换)。将内核空间缓冲区中的数据写到hardware(第四次拷贝: kernel buffer ——&gt; hardware)。(DMA拷贝)</li>
+</ol>
+<p>（socket buffer ——&gt; protocol engine）本例中的 protocol engine就是hardware</p>
+<p>这次拷贝是一个独立且异步的过程。</p>
+<p>Q：你可能会问独立和异步这是什么意思？难道是调用会在数据被传输前返回？
+A：事实上调用的返回并不保证数据被传输；它甚至不保证传输的开始。它只是意味着将我们要发送的数据放入到了一个待发送的队列中，在我们之前可能有许多数据包在排队。除非驱动器或硬件实现优先级环或队列，否则数据是以先进先出的方式传输的。</p>
+<p>总的来说，传统的I/O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。显然从内核空间到用户空间内存的复制是完全不必要的，所以，我们能不能直接从hardware读取数据到kernel buffer后，再从kernel buffer写到目标地点不就好了。注意，不同的操作系统对零拷贝的实现各不相同。在这里我们介绍linux下的零拷贝实现。</p>
+<h4 id="sendfile">sendfile</h4>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/8.jpg?raw=true" alt=""></p>
+<ol>
+<li>
+<p>发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。通过DMA将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard driver ——&gt; kernel buffer)。</p>
+</li>
+<li>
+<p>然后再将数据从内核空间缓冲区拷贝到内核中与socket相关的缓冲区中(第二次拷贝: kernel buffer ——&gt; socket buffer)。（socket buffer才能将数据传递给协议引擎）</p>
+</li>
+<li>
+<p>sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&gt; protocol engine)。</p>
+</li>
+</ol>
+<p>通过sendfile实现的零拷贝I/O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。
+你可能会说操作系统仍然需要在内核内存空间中复制数据（kernel buffer —&gt;socket buffer）。 是的，但从操作系统的角度来看，这已经是零拷贝，因为没有数据从内核空间复制到用户空间。</p>
+<p>Q：但通过是这里还是存在着一次CPU拷贝操作，即，kernel buffer ——&gt; socket buffer。是否有办法将该拷贝操作也取消掉了？
+A：有的。但这需要底层操作系统的支持。从Linux 2.4版本开始，操作系统底层提供了scatter/gather这种DMA的方式来从内核空间缓冲区中将数据直接读取到协议引擎中，而无需将内核空间缓冲区中的数据再拷贝一份到内核空间socket相关联的缓冲区中。</p>
+<h4 id="带有dma收集拷贝scattergather功能的sendfile">带有DMA收集拷贝（scatter/gather）功能的sendfile</h4>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/9.jpg?raw=true" alt=""></p>
+<ol>
+<li>发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。</li>
+</ol>
+<p>通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&gt; kernel buffer)。</p>
+<ol start="2">
+<li>没有数据拷贝到socket缓冲区。</li>
+</ol>
+<p>取而代之的是只有相应的描述符信息会被拷贝到相应的socket缓冲区当中。该描述符包含了两方面的信息：a) kernel buffer的内存地址；b) kernel buffer的偏移量。</p>
+<ol start="3">
+<li>sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。</li>
+</ol>
+<p>DMA gather copy根据socket缓冲区中描述符提供的位置和偏移量信息直接将内核空间缓冲区中的数据拷贝到协议引擎上(第二次拷贝: kernel buffer ——&gt; protocol engine（可以看出是目标文件）)，这样就避免了最后一次CPU数据拷贝。</p>
+<p>带有DMA收集拷贝功能的sendfile实现的I/O只使用了2次用户空间与内核空间的上下文切换，以及2次数据的拷贝，而且这2次的数据拷贝都是非CPU拷贝。这样一来我们就实现了最理想的零拷贝I/O传输了，不需要任何一次的CPU拷贝，以及最少的上下文切换。</p>
+<p><strong>sendfile零拷贝消除了所有内核空间缓冲区与用户空间缓冲区之间的数据拷贝过程，因此sendfile零拷贝I/O的实现是完成在内核空间中完成的，这对于应用程序来说就无法对数据进行操作了</strong></p>
+<p><strong>解决:通过mmap实现的零拷贝 只有使用mmap的kernel buffer内核缓冲区才是在用户空间和内核空间是共享的</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/10.jpg?raw=true" alt=""></p>
+<ol>
+<li>发出mmap系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。</li>
+</ol>
+<p>通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&gt; kernel buffer)。</p>
+<ol start="2">
+<li>mmap系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。</li>
+</ol>
+<p>接着用户空间和内核空间共享这个缓冲区，而不需要将数据从内核空间拷贝到用户空间。因为用户空间和内核空间共享了这个缓冲区数据，所以用户空间就可以像在操作自己缓冲区中数据一般操作这个由内核空间共享的缓冲区数据。</p>
+<ol start="3">
+<li>发出write系统调用，导致用户空间到内核空间的上下文切换(第三次上下文切换)。将数据从内核空间缓冲区拷贝到内核空间socket相关联的缓冲区(第二次拷贝: kernel buffer ——&gt; socket buffer)。
+\4. write系统调用返回，导致内核空间到用户空间的上下文切换(第四次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&gt; protocol engine)</li>
+</ol>
+<p>通过mmap实现的零拷贝I/O进行了4次用户空间与内核空间的上下文切换，以及3次数据拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。明显，它与传统I/O相比仅仅少了1次内核空间缓冲区和用户空间缓冲区之间的CPU拷贝。</p>
+<p>这样的好处是，我们可以将整个文件或者整个文件的一部分映射到内存当中，用户直接对内存中对文件进行操作，然后是由操作系统来进行相关的页面请求并将内存的修改写入到文件当中。我们的应用程序只需要处理内存的数据，这样可以实现非常迅速的I/O操作。</p>
+<h2 id="java-nio中的bytebuffer">Java NIO中的ByteBuffer</h2>
+<p><strong>HeapByteBuffer</strong></p>
+<p>调用ByteBuffer.allocate()时使用。它被称为堆，因为它保存在JVM的堆空间中，因此您可以获得所有优势，如GC支持和缓存优化。 但是，它不是页面对齐的，这意味着如果您需要通过JNI与本地代码交谈，JVM将不得不复制到对齐的缓冲区空间。</p>
+<p><strong>DirectByteBuffer</strong></p>
+<p>在调用ByteBuffer.allocateDirect（）时使用。 JVM将使用malloc（）在堆空间之外分配内存空间。 因为它不是由JVM管理的，所以你的内存空间是页面对齐的，不受GC影响，这使得它成为处理本地代码的完美选择。 然而，你要C程序员一样，自己管理这个内存，必须自己分配和释放内存来防止内存泄漏。</p>
+<p><strong>MappedByteBuffer</strong></p>
+<p>在调用FileChannel.map（）时使用。 与DirectByteBuffer类似，这也是JVM堆外部的情况。</p>
+<p>它基本上作为OS mmap（）系统调用的包装函数，以便代码直接操作映射的物理内存数据。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-02-12
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">进程通信</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">进程与线程</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

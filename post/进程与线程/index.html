@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>进程与线程 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="进程与线程" />
+<meta property="og:description" content="进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" />
+<meta property="article:published_time" content="2020-02-12T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-02-12T13:39:23+08:00" />
+<meta itemprop="name" content="进程与线程">
+<meta itemprop="description" content="进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系">
+<meta itemprop="datePublished" content="2020-02-12T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-12T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="6270">
+
+
+
+<meta itemprop="keywords" content="进程,线程,进程通信,cpu," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="进程与线程"/>
+<meta name="twitter:description" content="进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">进程与线程</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-02-12" class="post-time">
+          2020-02-12
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"> 操作系统 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#进程和线程">进程和线程</a>
+      <ul>
+        <li><a href="#基本概念">基本概念</a></li>
+        <li><a href="#进程">进程</a></li>
+        <li><a href="#线程">线程</a></li>
+        <li><a href="#进程通信ipc">进程通信（IPC）</a></li>
+        <li><a href="#缓冲区">缓冲区</a></li>
+        <li><a href="#java-io读写流程">java IO读写流程</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h2 id="进程和线程"><strong>进程和线程</strong></h2>
+<h3 id="基本概念">基本概念</h3>
+<h4 id="串行"><strong>串行</strong></h4>
+<p>多个任务执行，一个执行完再执行另外一个。</p>
+<h4 id="并发concurrency"><strong>并发(concurrency)</strong></h4>
+<p>多个线程在单个核心运行，同一时间一个线程运行，系统不停切换线程，看起来像同时运行，实际上是线程不停切换。</p>
+<p>即一个指令 和另一个指令交错执行，操作系统实现这种交错执行的机制称为：上下文切换。</p>
+<p>上下文是指操作系统保持跟踪进程或线程运行所需的所有状态信息，如寄存器文件的当前值、主存内容等</p>
+<h4 id="并行parallelism"><strong>并行（parallelism）</strong></h4>
+<p>每个线程分配给独立的核心，线程同时运行。</p>
+<h4 id="总结"><strong>总结</strong></h4>
+<p>1、单CPU中进程只能是并发，多CPU计算机中进程可以并行。
+2、单CPU单核中线程只能并发，单CPU多核中线程可以并行。
+3、无论是并发还是并行，使用者来看，看到的是多进程，多线程。</p>
+<p><strong>举例：单CPU4核 可以并行4个线程</strong></p>
+<h3 id="进程"><strong>进程</strong></h3>
+<p>进程指正在运行的程序。确切的来说，当一个程序进入内存运行，即变成一个进程，进程是处于运行过程中的程序，并且具有一定独立功能。</p>
+<h3 id="线程"><strong>线程</strong></h3>
+<p>线程是进程中的一个执行单元，负责当前进程中程序的执行，一个进程中至少有一个线程。一个进程中是可以有多个线程的，这个应用程序也可以称之为多线程程序。</p>
+<p>进程是<strong>操作系统</strong>资源分配的基本单位，而线程是<strong>CPU</strong>任务调度和执行的基本单位</p>
+<p><strong>关系</strong></p>
+<p>一个线程可以创建和撤销另一个线程;同一个进程中的多个线程之间可以并发执行.相对进程而言，线程是一个更加接近于执行体的概念，它可以与同进程中的其他线程共享数据，但拥有自己的栈空间，拥有独立的执行序列。</p>
+<h4 id="区别"><strong>区别</strong></h4>
+<p>主要差别在于它们是不同的操作系统资源管理方式。</p>
+<p>进程有独立的地址空间，一个进程崩溃后，在保护模式下不会对其它进程产生影响，而线程只是一个进程中的不同执行路径。线程有自己的<strong>堆栈和局部变量</strong>，但线程之间没有单独的地址空间，一个线程死掉就等于整个进程死掉，所以多进程的程序要比多线程的程序健壮，但在进程切换时，耗费资源较大，效率要差一些。但对于一些要求同时进行并且又要共享某些变量的并发操作，只能用线程，不能用进程。</p>
+<p>每个进程都有独立的代码和数据空间（程序上下文），程序之间的切换会有较大的开销；线程可以看做轻量级的进程，<strong>同一类线程共享代码和数据空间</strong>（堆），每个线程都有自己独立的<strong>运行栈和程序计数器（PC）</strong>，线程之间切换的开销小。</p>
+<p>在操作系统中能同时运行多个进程（程序）；而在同一个进程（程序）中有多个线程同时执行（通过CPU调度，在每个时间片中只有一个线程执行）</p>
+<h4 id="优缺点"><strong>优缺点</strong></h4>
+<p>线程和进程在使用上各有优缺点：线程执行开销小，但不利于资源的管理和保护；而进程正相反。同时，线程适合于在SMP机器上运行，而进程则可以跨机器迁移。</p>
+<h3 id="进程通信ipc">进程通信（IPC）</h3>
+<p>不同进程间交换数据必须通过内核,在内核中开辟一块缓冲区，进程1把数据从用户空间 拷到内核缓冲区，进程2再从内核缓冲区把数据读走，内核提供的这种机制称为进程间通信。</p>
+<h4 id="socket套接字">Socket套接字</h4>
+<p><strong>套接字属性</strong></p>
+<p><strong>int socket( int domain, int type, int ptotocol);</strong></p>
+<p>domain指明 通信域：unix域，IPv4,IPv6等</p>
+<p>type指明 通信类型：udp tcp</p>
+<p><strong>Unix套接字与因特网套接字（tcp udp）</strong></p>
+<p>domain 设置为AF_UNIX实现unxi通信。</p>
+<p>unix套接口可以实现进程间传递<strong>描述字</strong>，如文件、管道、有名管道及套接口等。</p>
+<p>unix套接字只能用于<strong>同一个计算机</strong>的进程间进行通信，速度是tcp套接口速度2倍，因为unix域套接字仅仅进行<strong>数据复制</strong>，不会执行在网络协议栈中需要处理的添加、删除报文头、计算校验和、计算报文顺序等复杂操作，因而在单机的进程间通信中，更加推荐使用Unix域套接字。</p>
+<p>unix通信流程和tcp相似，只是指定通信域时不同。</p>
+<p><strong>服务器端</strong></p>
+<p> 首先服务器应用程序用系统调用<code>socket</code>来创建一个套接字，它是系统分配给该服务器进程的类似文件描述符的资源，它不能与其他的进程共享。</p>
+<p>  接下来，服务器进程会给套接字起个名字，我们使用系统调用<code>bind</code>来给套接字命名。然后服务器进程就开始等待客户连接到这个套接字。</p>
+<p>  然后，系统调用<code>listen</code>来创建一个队列并将其用于存放来自客户的进入连接。</p>
+<p>  最后，服务器通过系统调用<code>accept</code>来接受客户的连接。它会创建一个与原有的命名套接不同的新套接字，这个套接字只用于与这个特定客户端进行通信，而命名套接字（即原先的套接字）则被保留下来继续处理来自其他客户的连接。</p>
+<p><strong>客户端</strong></p>
+<p> 基于<code>socket</code>的客户端比服务器端简单，同样，客户应用程序首先调用<code>socket</code>来创建一个未命名的套接字，然后将服务器的命名套接字作为一个地址来调用<code>connect</code>与服务器建立连接。</p>
+<p>  一旦连接建立，我们就可以像使用底层的文件描述符那样用套接字来实现双向数据的通信。</p>
+<h4 id="管道匿名管道">管道（匿名管道）</h4>
+<p><strong>特点</strong></p>
+<p>1.半双工（数据只能在一个方向上流动）单向通信，具有固定的读端和写端。</p>
+<p>2.只能用于具有情缘关系的进程之间的通信（父子进程或兄弟进程之间）</p>
+<p>初始化 int pipe(int pipefd[2]);</p>
+<p>调用pipe函数，在内核中开辟一块缓冲区用来进行进程间通信，这块<strong>缓冲区</strong>即为<strong>管道</strong>，包含一个<strong>读端</strong>和一个<strong>写端</strong>。</p>
+<p>参数pipefd[2]一个指向读端一个指向写端，管道对于用户程序就是一个文件，可以通过read(pipefd [0])；或者write(pipefd [1])进行操作。</p>
+<p><strong>管道通信步骤</strong></p>
+<p>1.父进程创建管道，得到两个文件描述符指向管道的两端</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/1.jpg?raw=true" alt=""></p>
+<p>2.利用fork函数创建出子进程，则子进程也得到两个文件描述符指向同一管道</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/2.jpg?raw=true" alt=""></p>
+<p>3.父进程关闭读端（pipe[0]）,子进程关闭写端pipe[1]，则此时父进程可以往管道中进行写操作，子进程可以从管道中读，从而实现了通过管道的进程间通信。（一端关闭，一端打开实现进程间通信）</p>
+<p><strong>说明</strong></p>
+<p>因为管道通信是单向的，在上面的例子中我们是通过子进程写父进程来读，如果想要同时父进程写而子进程来读，就需要再打开另外的管道；</p>
+<p>管道的读写端通过打开的<strong>文件描述符</strong>来传递,因此要通信的两个进程必须从它们的公共祖先那里继承管道的件描述符。 上面的例子是父进程把文件描述符传给子进程之后父子进程之 间通信,也可以父进程fork两次,把文件描述符传给两个子进程,然后两个子进程之间通信, 总之 需要通过fork传递文件描述符使两个进程都能访问同一管道,它们才能通信。</p>
+<p><strong>特殊情况</strong></p>
+<ol>
+<li>
+<p>如果所有指向管道写端的文件描述符都关闭了,而仍然有进程从管道的读端读数据,那么管道中剩余的数据都被读取后,再次read会返回0,就像读到文件末尾一样</p>
+</li>
+<li>
+<p>如果有指向管道写端的文件描述符没关闭，而持有管道写端的进程也没有向管道中写数据,这时有进程从管道读端读数据,那么管道中剩余的数据都被读取后,再次read会阻塞,直到管道中有数据可读了才读取数据并返回。</p>
+</li>
+<li>
+<p>如果所有指向管道读端的文件描述符都关闭了,这时有进程指向管道的写端write,那么该进程会收到信号SIGPIPE,通常会导致进程异常终止。</p>
+</li>
+<li>
+<p>如果有指向管道读端的文件描述符没关闭,而持有管道读端的进程也没有从管道中读数据,这时有进程向管道写端写数据,那么在管道被写满时再write会阻塞,直到管道中有空位置了才写入数据并返回。</p>
+</li>
+</ol>
+<h4 id="命名管道fifo">命名管道FIFO</h4>
+<p>解决管道中只有血缘关系的进程才能进行通信。</p>
+<p>提供一个<strong>路径名</strong>与之关联，以FIFO的文件形式存储于文件系统中。只要进程访问该路径，就能够通过FIFO相互通信。FIFO先进先出，第一个写入管道的数据被首先读出。</p>
+<p><strong>FIFO创建</strong></p>
+<p>int mknod(const char *path,mode_t mod,dev_t dev);</p>
+<p>int mkfifo(const char *path,mode_t mode);</p>
+<p>path为创建的命名管道的全路径名</p>
+<p>mod为管道的模 指明存取权限</p>
+<p>dev为设备值，取决于文件创建的种类</p>
+<p><strong>命名管道</strong>创建后是一个位于硬盘上的文件，需要调用open()将其打开，<strong>管道</strong>为内存上的特殊文件，无需打开。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/3.jpg?raw=true" alt=""></p>
+<h4 id="消息队列">消息队列</h4>
+<p>消息队列存放在内核中，一个消息队列由一个标识符队列ID标识，提供了一个进程向另一个进程发送数据块的方法。接受进程可以接受不同类型的数据结构。</p>
+<p><strong>特点</strong></p>
+<p>1.具有特定的格式，独立存放在内存中。</p>
+<p>2.允许一个或多个进程向它写入或读取消息。</p>
+<p>3.随机查询，可以按照消息的类型读取，不用遵循FIFO</p>
+<p><strong>创建</strong></p>
+<pre><code>// 创建或打开消息队列：成功返回队列ID，失败返回-1
+int msgget(key_t，key, int flag);
+// 添加消息：成功返回0，失败返回-1
+int msgsnd(int msqid, const void *ptr, size_t size, int flag);
+// 读取消息：成功返回消息数据的长度，失败返回-1
+int msgrcv(int msqid, void *ptr, size_t size, long type,int flag);
+// 控制消息队列：成功返回0，失败返回-1
+int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+</code></pre><h4 id="信号量">信号量</h4>
+<p>信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。</p>
+<p><strong>特点</strong></p>
+<p>1.用于进程间同步，若要在进程间传递数据需要结合共享内存。</p>
+<p>2.信号量是一个整数，基于操作系统的PV操作，程序对信号量的操作都是原子操作。</p>
+<p>3.每次对信号量的PV操作不仅限于对信号量值加1或减1，而且可以加减任意正整数。</p>
+<p>4.支持信号量组。</p>
+<p><strong>如果一个进程需要访问共享资源，操作如下：</strong></p>
+<p>1.测试控制该资源的信号量。</p>
+<p>2.若信号量大于0，则访问该资源，并将信号量-1。</p>
+<p>3.若小于等于0，则进程进入休眠状态，直至值大于0，才被唤醒。</p>
+<p>4.进程不再使用共享资源时，将信号量+1。</p>
+<p><strong>创建</strong></p>
+<pre><code>// 创建或获取一个信号量组：若成功返回信号量集ID，失败返回-1
+int semget(key_t key, int num_sems, int sem_flags); num_sems指定信号量数目 几乎总是为1
+// 对信号量组进行操作，改变信号量的值：成功返回0，失败返回-1
+int semop(int semid, struct sembuf semoparray[], size_t numops);  
+// 控制信号量的相关信息
+int semctl(int semid, int sem_num, int cmd, ...);
+</code></pre><h4 id="共享内存">共享内存</h4>
+<p>指多个进程共享一个给定的存储区，允许多个进程同时访问数据，在写入数据时另外一个进程可以立即获得最新数据，会造成同步问题。</p>
+<p><strong>特点</strong></p>
+<p>1.是最快的IPC，因为直接对内存进行存取。</p>
+<p>2.通常是<strong>信号量+共享内存</strong>一起使用，信号量用于同步问题。</p>
+<pre><code>// 创建或获取一个共享内存：成功返回共享内存ID，失败返回-1
+int shmget(key_t key, size_t size, int flag);
+// 连接共享内存到当前进程的地址空间：成功返回指向共享内存的指针，失败返回-1
+void *shmat(int shm_id, const void *addr, int flag);
+// 断开与共享内存的连接：成功返回0，失败返回-1
+int shmdt(void *addr); 
+// 控制共享内存的相关信息：成功返回0，失败返回-1
+int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
+</code></pre><p>当一段共享内存被创建以后，它并不能被任何进程访问。必须使用<code>shmat</code>函数连接该共享内存到当前进程的地址空间，连接成功后把共享内存区对象映射到调用进程的地址空间，随后可像本地空间一样访问。</p>
+<p><code>shmdt</code>函数是用来断开<code>shmat</code>建立的连接的。注意，这并不是从系统中删除该共享内存，只是当前进程不能再访问该共享内存而已。</p>
+<h4 id="五种通讯方式区别">五种通讯方式区别</h4>
+<p>1.管道：速度慢，容量有限，只有父子进程能通讯</p>
+<p>2.FIFO：任何进程间都能通讯，但速度慢</p>
+<p>3.消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题</p>
+<p>4.信号量：不能传递复杂消息，只能用来同步</p>
+<p>5.共享内存区：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了同一进程内的一块内存</p>
+<h4 id="文件锁">文件锁</h4>
+<p>Linux内核支持的文件锁包括<strong>劝告锁</strong>和<strong>强制锁</strong>。</p>
+<p>多个进程可以同时对一个文件加共享锁（读锁），而当有一个进程对文件加了排他锁（写锁）时，那么其它进程无权对该文件加任何锁，直到排他锁释放。</p>
+<p>不论是使用劝告锁还是强制锁，都是同时使用共享锁和排写锁。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center"><strong>是否满足请求</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong>当前加上的锁</strong></td>
+<td align="center">共享锁</td>
+<td>排他锁</td>
+</tr>
+<tr>
+<td align="left">无</td>
+<td align="center">是</td>
+<td>是</td>
+</tr>
+<tr>
+<td align="left">共享锁</td>
+<td align="center">是</td>
+<td>否</td>
+</tr>
+<tr>
+<td align="left">排他锁</td>
+<td align="center">否</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<h5 id="劝告锁"><strong>劝告锁</strong></h5>
+<p>劝告锁是一种协同工作的锁。对于这一种锁来说，内核只提供<strong>加锁</strong>以及<strong>检测文件是否已经加锁</strong>的手段，但是内核并不参与锁的控制和协调。</p>
+<p>也就是说，如果有进程不遵守“游戏规则”，不检查目标文件是否已经由别的进程加了锁就往其中写入数据，那么内核是不会加以阻拦的。因此，劝告锁并不能阻止进程对文件的访问，而只能依靠各个进程<strong>自觉在访问文件之前检查该文件</strong>是否已经被其他进程加锁来实现并发控制。进程需要事先对锁的状态做一个约定，并根据锁的当前状态和相互关系来确定其他进程是否能对文件执行指定的操作。从这点上来说，劝告锁的工作方式与使用信号量保护临界区的方式非常类似。</p>
+<p>劝告锁可以对文件的任意一个部分进行加锁，也可以对整个文件进行加锁，甚至可以对文件将来增大的部分也进行加锁。由于进程可以选择对文件的某个部分进行加锁，所以<strong>一个进程</strong>可以获得<strong>关于某个文件不同部分的多个锁</strong>。</p>
+<h5 id="强制锁"><strong>强制锁</strong></h5>
+<p>每当有系统调用 open()、read() 以及write() 发生的时候，内核都要检查并确保这些系统调用不会违反在所访问文件上加的强制锁约束。有进程不遵守游戏规则，硬要往加了锁的文件中写入内容，内核就会加以阻拦。</p>
+<p>如果一个文件已经被加上了共享锁，那么其他进程再对这个文件进行写操作就会被内核阻止；</p>
+<p>如果一个文件已经被加上了排他锁，那么其他进程再对这个文件进行读取或者写操作就会被内核阻止。</p>
+<p>如果其他进程试图访问一个已经加有强制锁的文件，进程行为取决于所执行的操作模式和文件锁的类型，如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">当前锁类型</th>
+<th align="center">阻塞读</th>
+<th align="center">阻塞写</th>
+<th align="center">非阻塞读</th>
+<th align="center">非阻塞写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">读锁</td>
+<td align="center">正常读取数据</td>
+<td align="center">阻塞</td>
+<td align="center">正常读取数据</td>
+<td align="center">EAGAIN</td>
+</tr>
+<tr>
+<td align="center">写锁</td>
+<td align="center">阻塞</td>
+<td align="center">阻塞</td>
+<td align="center">EAGAIN</td>
+<td align="center">EAGAIN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系统调用</strong></p>
+<p><strong>int flock(int fd,int operation) 对整个文件加锁</strong></p>
+<p>fd标识文件描述符，operation指定加锁类型。通常情况下flock()获取锁失败会阻塞进程，可以将 LOCK_NB 和 LOCK_SH 或者 LOCK_EX 联合使用，就不会阻塞进程。</p>
+<p>*<em>int fcntl(int fd,int cmd,struct flock <em>lock) 对记录进行加锁</em></em></p>
+<p>fd标识文件描述符，cmd指定要进行的锁操作,flock指定锁类型等。</p>
+<h3 id="缓冲区">缓冲区</h3>
+<h4 id="用户进程缓冲区">用户进程缓冲区</h4>
+<p>每个用户进程都维护一个用户进程缓冲区</p>
+<p>程序在读取文件时，会先申请一块内存数组，称为buffer，然后每次调用read，读取设定字节长度的数据，写入buffer。（用较小的次数填满buffer）。之后的程序都是从buffer中获取数据，当buffer使用完后，在进行下一次调用，填充buffer。</p>
+<p><strong>目的是为了减少系统调用次数，从而降低操作系统在用户态与内核态切换所耗费的时间和资源</strong></p>
+<h4 id="内核缓冲区">内核缓冲区</h4>
+<p>当一个用户进程要从磁盘读取数据时，内核一般不直接读磁盘，而是将内核缓冲区中的数据复制到进程缓冲区中。</p>
+<p>但若是内核缓冲区中没有数据，内核会把对数据块的请求，加入到请求队列，然后把请求用户进程挂起（基本不占CPU资源），为其它用户进程提供服务。</p>
+<p>等到系统进程将数据已经读取到内核缓冲区时，把内核缓冲区中的数据读取到用户进程中，才会通知进程，当然不同的io模型，在调度和使用内核缓冲区的方式上有所不同。</p>
+<p>你可以认为，read是把数据从内核缓冲区复制到进程缓冲区。write是把进程缓冲区复制到内核缓冲区。</p>
+<p>当然，write并不一定导致内核的写动作，比如os可能会把内核缓冲区的数据积累到一定量后，再一次写入。这也就是为什么断电有时会导致数据丢失。</p>
+<p><strong>内核缓冲区，是为了在OS级别，减少对磁盘的读写次数，提高磁盘IO效率，优化磁盘写操作。</strong></p>
+<h3 id="java-io读写流程">java IO读写流程</h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/4.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/5.jpg?raw=true" alt=""></p>
+<p>（1）客户端请求</p>
+<p>Linux通过网卡，读取客户断的请求数据，将数据读取到内核缓冲区。</p>
+<p>（2）获取请求数据</p>
+<p>服务器从内核缓冲区读取数据到Java进程缓冲区。</p>
+<p>（1）服务器端业务处理</p>
+<p>Java服务端在自己的用户空间中，处理客户端的请求。</p>
+<p>（2）服务器端返回数据</p>
+<p>Java服务端已构建好的响应，从用户缓冲区写入系统缓冲区。</p>
+<p>（3）发送给客户端</p>
+<p>Linux内核通过网络 I/O ，将内核缓冲区中的数据，写入网卡，网卡通过底层的通讯协议，会将数据发送给目标客户端。</p>
+<h5 id="cpu分配">CPU分配</h5>
+<p>JAVA使用抢占式分配：优先让优先级高的线程使用 CPU，如果线程的优先级相同，那么会随机选择一个(线程随机性)。</p>
+<p>实际上，CPU(中央处理器)使用抢占式调度模式在多个线程间进行着高速的切换。对于CPU的一个核而言，某个时刻，只能执行一个线程，而 CPU的在多个线程间切换速度相对我们的感觉要快，看上去就是在同一时刻运行。</p>
+<p>其实，多线程程序并不能提高程序的运行速度，但能够提高程序运行效率，让CPU的使用率更高。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-02-12
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/%E8%BF%9B%E7%A8%8B/">进程</a>
+          <a href="https://phantommmm.github.io/tags/%E7%BA%BF%E7%A8%8B/">线程</a>
+          <a href="https://phantommmm.github.io/tags/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">进程通信</a>
+          <a href="https://phantommmm.github.io/tags/cpu/">cpu</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">虚拟内存</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">
+            <span class="next-text nav-default">进程通信</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

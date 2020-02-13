@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://phantommmm.github.io/sitemap.xml

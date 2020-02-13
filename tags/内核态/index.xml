@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>内核态 on Phantom</title>
+    <link>https://phantommmm.github.io/tags/%E5%86%85%E6%A0%B8%E6%80%81/</link>
+    <description>Recent content in 内核态 on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Wed, 12 Feb 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/%E5%86%85%E6%A0%B8%E6%80%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用户态和内核态</title>
+      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
+      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
+    </item>
+    
+  </channel>
+</rss>
