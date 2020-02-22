@@ -7,10 +7,64 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 20 Feb 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>HTTP</title>
+      <link>https://phantommmm.github.io/post/http/</link>
+      <pubDate>Thu, 20 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/http/</guid>
+      <description>网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b</description>
+    </item>
+    
+    <item>
+      <title>TCP-IP</title>
+      <link>https://phantommmm.github.io/post/tcp-ip/</link>
+      <pubDate>Wed, 19 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/tcp-ip/</guid>
+      <description>TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次</description>
+    </item>
+    
+    <item>
+      <title>IO模型</title>
+      <link>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Sun, 16 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</guid>
+      <description>五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统</description>
+    </item>
+    
+    <item>
+      <title>进程与线程</title>
+      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
+      <pubDate>Sat, 15 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
+      <description>进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系</description>
+    </item>
+    
+    <item>
+      <title>虚拟内存</title>
+      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
+      <pubDate>Fri, 14 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
+      <description>虚拟内存 页： 将进程划分的块，对应的大小就叫页面大小 页框： 将内存划分的块 一个页里有一个页框，理论上，页和页框的大小相同 页表： 页和页框一一对应的</description>
+    </item>
+    
+    <item>
+      <title>用户态和内核态</title>
+      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
+      <pubDate>Thu, 13 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
+    </item>
     
     <item>
       <title>关于</title>
@@ -19,42 +73,6 @@
       
       <guid>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</guid>
       <description>关于内容 本博客发布的部分内容，可能并不能称之为文章，因为这些内容大多是本人学习过程的笔记。 若文章内容有误或读者有好的建议，欢迎通过邮件或qq</description>
-    </item>
-    
-    <item>
-      <title>用户态和内核态</title>
-      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
-      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
-    </item>
-    
-    <item>
-      <title>虚拟内存</title>
-      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
-      <description>虚拟内存 页： 将进程划分的块，对应的大小就叫页面大小 页框： 将内存划分的块 一个页里有一个页框，理论上，页和页框的大小相同 页表： 页和页框一一对应的</description>
-    </item>
-    
-    <item>
-      <title>进程与线程</title>
-      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
-      <description>进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系</description>
-    </item>
-    
-    <item>
-      <title>进程通信</title>
-      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</guid>
-      <description>五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统</description>
     </item>
     
   </channel>

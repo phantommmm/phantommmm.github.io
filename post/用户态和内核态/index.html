@@ -63,13 +63,13 @@
 <meta property="og:description" content="用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" />
-<meta property="article:published_time" content="2020-02-12T13:39:23+08:00" />
-<meta property="article:modified_time" content="2020-02-12T13:39:23+08:00" />
+<meta property="article:published_time" content="2020-02-13T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-02-13T13:39:23+08:00" />
 <meta itemprop="name" content="用户态和内核态">
 <meta itemprop="description" content="用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode">
-<meta itemprop="datePublished" content="2020-02-12T13:39:23&#43;08:00" />
-<meta itemprop="dateModified" content="2020-02-12T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="414">
+<meta itemprop="datePublished" content="2020-02-13T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-13T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="1127">
 
 
 
@@ -309,8 +309,8 @@ if (!doNotTrack) {
       <h1 class="post-title">用户态和内核态</h1>
       
       <div class="post-meta">
-        <time datetime="2020-02-12" class="post-time">
-          2020-02-12
+        <time datetime="2020-02-13" class="post-time">
+          2020-02-13
         </time>
         <div class="post-category">
             <a href="https://phantommmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"> 操作系统 </a>
@@ -335,6 +335,19 @@ if (!doNotTrack) {
   <ul>
     <li><a href="#用户态和内核态">用户态和内核态</a></li>
     <li><a href="#用户态和内核态的切换">用户态和内核态的切换</a></li>
+    <li><a href="#僵尸进程">僵尸进程</a>
+      <ul>
+        <li><a href="#ps--aux什么意思">ps -aux什么意思</a></li>
+      </ul>
+    </li>
+    <li><a href="#进程调度策略">进程调度策略</a>
+      <ul>
+        <li><a href="#先进先出算法fifo">先进先出算法(FIFO):</a></li>
+        <li><a href="#时间片轮转算法rr">时间片轮转算法(RR):</a></li>
+        <li><a href="#最高优先级算法hpf">最高优先级算法(HPF):</a></li>
+        <li><a href="#多级队列反馈法">多级队列反馈法:</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
   </div>
@@ -352,6 +365,35 @@ if (!doNotTrack) {
 <p>2.异常：当cpu在执行运行在用户态下的程序时，发生了一些没有预知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关进程中，也就是切换到了内核态，如缺页异常。</p>
 <p>3.外围设备的中断：当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号，这时CPU会暂停执行下一条即将要执行的指令而转到与中断信号对应的处理程序去执行，如果前面执行的指令时用户态下的程序，那么转换的过程自然就会是 由用户态到内核态的切换。</p>
 <p>如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后边的操作等。</p>
+<h2 id="僵尸进程">僵尸进程</h2>
+<p><strong>定义</strong>  完成了生命周期但却依然留在进程表中的进程，我们称之为 “僵尸进程”。</p>
+<p><strong>如何产生：</strong></p>
+<p>当你运行一个程序时，它会产生一个父进程以及很多子进程。 所有这些子进程都会消耗内核分配给它们的内存和CPU 资源。
+这些子进程完成执行后会发送一个 Exit 信号然后死掉。这个 Exit 信号需要被父进程所读取。父进程需要随后调用 wait 命令来读取子进程的退出状态，并将子进程从进程表中移除。
+若父进程正确第读取了子进程的 Exit 信号，则子进程会从进程表中删掉。
+但若父进程未能读取到子进程的 Exit 信号，则这个子进程虽然完成执行处于死亡的状态，但也不会从进程表中删掉。</p>
+<p><strong>处理：</strong>
+打开终端并输入下面命令:
+ps -aux | grep Z
+kill -s SIGCHLD pid
+将这里的 pid 替换成父进程的进程 id，这样父进程就会删除所有以及完成并死掉的子进程了。
+确保删除子僵尸的唯一方法就是杀掉它们的父进程。</p>
+<h3 id="ps--aux什么意思">ps -aux什么意思</h3>
+<p>ps -aux 显示所有的进程（静态）</p>
+<blockquote>
+<p>a 显示所有用户的进程
+u 显示用户
+x 显示无控制终端的进程</p>
+</blockquote>
+<h2 id="进程调度策略">进程调度策略</h2>
+<h3 id="先进先出算法fifo"><strong>先进先出算法(FIFO):</strong></h3>
+<p>按照进程进入就绪队列的先后次序来选择。即每当进入进程调度，总是把就绪队列的队首进程投入运行。</p>
+<h3 id="时间片轮转算法rr"><strong>时间片轮转算法(RR):</strong></h3>
+<p>分时系统的一种调度算法。轮转的基本思想是，将CPU的处理时间划分成一个个的时间片，就绪队列中的进程轮流运行一个时间片。当时间片结束时，就强迫进程让出CPU，该进程进入就绪队列，等待下一次调度，同时，进程调度又去选择就绪队列中的一个进程，分配给它一个时间片，以投入运行。</p>
+<h3 id="最高优先级算法hpf"><strong>最高优先级算法(HPF):</strong></h3>
+<p>进程调度每次将处理机分配给具有最高优先级的就绪进程。最高优先级算法可与不同的CPU方式结合形成可抢占式最高优先级算法和不可抢占式最高优先级算法。</p>
+<h3 id="多级队列反馈法"><strong>多级队列反馈法:</strong></h3>
+<p>几种调度算法的结合形式多级队列方式。</p>
 
     </div>
 
@@ -365,7 +407,7 @@ if (!doNotTrack) {
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-      2020-02-12
+      2020-02-13
       
     </span>
   </p>
@@ -390,7 +432,7 @@ if (!doNotTrack) {
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/%E5%85%B3%E4%BA%8E/">
+          <a class="prev" href="/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">
             
             <i class="iconfont">
               <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -400,12 +442,12 @@ if (!doNotTrack) {
 </svg>
 
             </i>
-            <span class="prev-text nav-default">关于</span>
+            <span class="prev-text nav-default">虚拟内存</span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
         
-          <a class="next" href="/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">
-            <span class="next-text nav-default">虚拟内存</span>
+          <a class="next" href="/post/%E5%85%B3%E4%BA%8E/">
+            <span class="next-text nav-default">关于</span>
             <span class="prev-text nav-mobile">下一篇</span>
             
             <i class="iconfont">

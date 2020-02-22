@@ -7,133 +7,763 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 20 Feb 2020 13:39:23 +0800</lastBuildDate>
     
         <atom:link href="https://phantommmm.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>关于</title>
-      <link>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <title>HTTP</title>
+      <link>https://phantommmm.github.io/post/http/</link>
+      <pubDate>Thu, 20 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</guid>
+      <guid>https://phantommmm.github.io/post/http/</guid>
       
-        <description>&lt;h2 id=&#34;关于内容&#34;&gt;关于内容&lt;/h2&gt;
-&lt;p&gt;本博客发布的部分内容，可能并不能称之为文章，因为这些内容大多是本人学习过程的笔记。&lt;/p&gt;
-&lt;p&gt;若文章内容有误或读者有好的建议，欢迎通过邮件或qq联系我。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;邮件：&lt;/strong&gt; &lt;a href=&#34;mailto:15521010551@163.com&#34;&gt;15521010551@163.com&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;qq：&lt;/strong&gt; 897388824&lt;/p&gt;
+        <description>&lt;h1 id=&#34;网络&#34;&gt;网络&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;http&#34;&gt;HTTP&lt;/h1&gt;
+&lt;p&gt;HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理&lt;/p&gt;
+&lt;p&gt;HTTP是 &lt;strong&gt;明文协议&lt;/strong&gt;。&lt;strong&gt;每个HTTP请求和返回的每个byte都会在网络上明文传播，不管是url，header还是body&lt;/strong&gt; 。这完全不是一个“是否容易在浏览器地址栏上看到“的问题。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为什么这么做？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;把HTTP设计得简单，为了可以更快的处理大量的事务，确保协议的可伸缩性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;那我要保存状态怎么做？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP/1.1 引入了COOKIE技术&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP 1.1 引入了流水线（Pipelining）处理&lt;/strong&gt; ，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。&lt;/p&gt;
+&lt;p&gt;例如：一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍然需要使用各自的连接。&lt;/p&gt;
+&lt;p&gt;HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP/1.1加入了一个新的状态码100（Continue）。&lt;/strong&gt; 客户端事先发送一个只带头域的请求，如果服务器因为权限拒绝了请求，就回送响应码401（Unauthorized）；如果服务器接收此请求就回送响应码100，客户端就可以继续发送带实体的完整请求了。100 (Continue) 状态代码的使用，允许客户端在发request消息body之前先用request header试探一下server，看server要不要接收request body，再决定要不要发request body。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP/1.1中引入了Chunked transfer-coding&lt;/strong&gt; 来解决上面这个问题，发送方将消息分割成若干个任意大小的数据块，每个数据块在发送时都会附上块的长度，最后用一个零长度的块作为消息结束的标志。这种方法允许发送方只缓冲消息的一个片段，避免缓冲整个消息带来的过载。&lt;/p&gt;
+&lt;p&gt;HTTP/1.1在1.0的基础上加入了一些cache的新特性，当缓存对象的Age超过Expire时变为stale对象，cache不需要直接抛弃stale对象，而是与源服务器进行重新激活（revalidation）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP/1.1增加host字段&lt;/strong&gt; ，在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。&lt;/p&gt;
+&lt;p&gt;HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中如果没有Host头域会报告一个错误（400 Bad Request）。此外，服务器应该接受以绝对路径标记的资源请求。&lt;/p&gt;
+&lt;h3 id=&#34;http连接优化&#34;&gt;HTTP连接优化&lt;/h3&gt;
+&lt;h4 id=&#34;并行连接&#34;&gt;并行连接&lt;/h4&gt;
+&lt;p&gt;服务端接受多条http连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt; 宽带资源充足情况下，同时建立多个HTTP连接，加快页面加载速度。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt; 宽带资源不足情况下，效率会下降。同一时间建立多条连接消耗大量内存，对服务端来说，大量的用户产生大量的连接可能会超过服务端的处理能力。&lt;/p&gt;
+&lt;h4 id=&#34;持久连接&#34;&gt;持久连接&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;非持久连接：HTTP处理完后，TCP连接断开&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TCP连接不断开&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;http允许在事务处理结束后将TCP连接保持在打开状态，以便未来的HTTP请求重用现存的连接。&lt;/p&gt;
+&lt;p&gt;在事务处理结束之后仍然保持在打开状态的TCP连接称之为持久连接。&lt;/p&gt;
+&lt;p&gt;重用已对目标服务端打开的空暇持久连接，就能够避免缓慢的连接建立阶段。同一时候，已经打开的连接还能够避免慢启动的拥塞适应阶段。以便更快的进行传输数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;目前WEB服务器基本使用 并行连接和持久连接&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;持久连接类型&#34;&gt;持久连接类型&lt;/h4&gt;
+&lt;h5 id=&#34;http10-keep-alive&#34;&gt;HTTP/1.0 keep-alive&lt;/h5&gt;
+&lt;p&gt;需要通过报文首部请求，默认是不支持持久连接的。&lt;/p&gt;
+&lt;p&gt;客户端发生请求报文头部包含Connection：Keep-Alive 首部请求将连接保持在打开状态。&lt;/p&gt;
+&lt;p&gt;如果服务器愿意为下一条请求将连接保持在打开状态，就在响应中包含相同的首部。&lt;/p&gt;
+&lt;p&gt;如果响应中没有Connection：Keep-Alive首部，客户端就认为服务器不支持keep-alive，会在发回响应报文之后关闭连接。&lt;/p&gt;
+&lt;h5 id=&#34;http11-persistent&#34;&gt;HTTP/1.1 persistent&lt;/h5&gt;
+&lt;p&gt;默认情况下都是持久连接。&lt;/p&gt;
+&lt;p&gt;请求报文中添加一个Connection:close首部用来关闭持久连接。&lt;/p&gt;
+&lt;p&gt;当客户端收到响应报文中包含close首部，就会关闭连接。&lt;/p&gt;
+&lt;p&gt;不是没有接受到close首部连接就会一直存在，前提是该连接的所有报文都正确。例如：自定义报文长度和实际报文长度一致时，才能保证连接持久，否则连接断开。&lt;/p&gt;
+&lt;h4 id=&#34;管道化连接&#34;&gt;管道化连接&lt;/h4&gt;
+&lt;p&gt;Http1.1允许在持久连接上使用请求管道。&lt;/p&gt;
+&lt;p&gt;在响应到达之前，可以将多条请求放入队列，当第一条请求通过网络流向服务器时，第二条、第三条请求就可以开始发送。无需等到收到第一条响应再发送。&lt;/p&gt;
+&lt;p&gt;降低网络的环回实际，提高i性能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;限制&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果HTTP客户端无法确定连接是否是持久的，不应该使用管道。&lt;/p&gt;
+&lt;p&gt;必须按照请求的顺序返回响应。因为http报文中没有序列号标签。因此假设收到的响应失序了。那么就没办法将其与请求匹配起来了。&lt;/p&gt;
+&lt;p&gt;HTTP客户端必须做好连接会在任意时刻关闭的准备，还要准备好重发所有未完成管道化的请求。&lt;/p&gt;
+&lt;p&gt;HTTP客户端不应该用管道化的方式发送会产生副作用的请求（POST请求）。比方POST是要买一本书，再运行一次就又买了一本书，显然是不能运行的。&lt;/p&gt;
+&lt;h4 id=&#34;http连接的关闭&#34;&gt;HTTP连接的关闭&lt;/h4&gt;
+&lt;p&gt;HTTP通信建立在TCP连接之上，所以http连接的关闭事实上就是TCP连接的关闭。&lt;/p&gt;
+&lt;p&gt;连接关闭分为全然关闭和半关闭，close会 &lt;strong&gt;同一时候关闭输入和输出信道&lt;/strong&gt; ，shutdown仅仅会 &lt;strong&gt;单独关闭输入或者输出信道&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h1 id=&#34;https&#34;&gt;HTTPS&lt;/h1&gt;
+&lt;p&gt;https用SSL/TLS协议协商出的密钥加密明文的http数据,保证安全性&lt;/p&gt;
+&lt;p&gt;假设客户端为爱丽丝，服务器为鲍勃&lt;/p&gt;
+&lt;p&gt;SSL/TLS握手阶段分为五步：&lt;/p&gt;
+&lt;p&gt;第一步，爱丽丝给出协议版本号、一个客户端生成的随机数（Client random），以及客户端支持的加密方法。
+第二步，鲍勃确认双方使用的加密方法，并给出数字证书、以及一个服务器生成的随机数（Server random）。
+第三步，爱丽丝确认数字证书有效，然后生成一个新的随机数（Premaster secret），并使用数字证书中的公钥，加密这个随机数，发给鲍勃。
+第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。
+第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成&amp;quot;对话密钥&amp;rdquo;（session key），用来加密接下来的整个对话过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;（1）生成对话密钥一共需要三个随机数。
+
+（2）握手之后的对话使用&amp;quot;对话密钥&amp;quot;加密（对称加密），服务器的公钥和私钥只用于加密和解密&amp;quot;对话密钥&amp;quot;（非对称加密），无其他作用。
+
+（3）服务器公钥放在服务器的数字证书之中。
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;非对称加密：加密 解密用的不是同一个密匙&lt;/p&gt;
+&lt;p&gt;对称加密：加密 解密用的是用一个密匙&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CA证书：证书授权中心&lt;/strong&gt;  用于证明自己是哪个服务器，安不安全等&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CA证书在SSL中的作用？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;客户端需要对服务端的证书进行检查，如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。如果证书没有问题，客户端就会从服务器证书中取出服务器的公钥( &lt;strong&gt;公钥从证书中获取,证书的正确性由CA保证&lt;/strong&gt; )&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;证书的申请过程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP请求报文&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP响应报文&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/6.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/28.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;http首部11&#34;&gt;HTTP首部（1.1）&lt;/h4&gt;
+&lt;p&gt;1.通用类型首部。请求报文和响应报文都会使用到的首部。&lt;/p&gt;
+&lt;p&gt;2.请求首部字段。从客户端向服务端请求报文的时候使用的首部。&lt;/p&gt;
+&lt;p&gt;补充了请求的附加内容、客户端信息、响应客户端内容优先级等信息。&lt;/p&gt;
+&lt;p&gt;3.响应首部字段。&lt;/p&gt;
+&lt;p&gt;4.实体首部字段。针对请求报文和响应报文中的实体部分使用的首部。补充了资源内容更新时间等与实体相关的信息。&lt;/p&gt;
+&lt;p&gt;具体字段值及意义：https://www.cnblogs.com/xzsty/p/11452610.html&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/7.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/8.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/9.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/10.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/11.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/12.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;http方法&#34;&gt;HTTP方法&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/13.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;get-一般用于获取查询资源-从服务器上获取数据&#34;&gt;GET: 一般用于获取/查询资源 从服务器上获取数据&lt;/h4&gt;
+&lt;p&gt;根据HTTP规范，GET用于信息的获取，而且应该是安全的和幂等的。&lt;/p&gt;
+&lt;p&gt;安全：即不修改信息，不产生副作用。&lt;/p&gt;
+&lt;p&gt;幂等：对同一URL的多个请求应该返回相同的结果。数学中，对一个数进行多次相同的运算，结果一样，则该运算时幂等的。&lt;/p&gt;
+&lt;p&gt;但在实际应用中，以上2条规定并没有这么严格。比如，新闻站点的头版不断更新。虽然第二次请求会返回不同的一批新闻，该操作仍然被认为是安全的和幂等的，因为它总是返回当前的新闻。从根本上说，如果目标是当用户打开一个链接时，他可以确信从自身的角度来看没有改变资源即可。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;提交方式：&lt;/strong&gt; 请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以‘?’分割URL和传输数据，多个参数用‘&amp;amp;’连接；地址栏中会显示出参数。&lt;/p&gt;
+&lt;p&gt;例如：login.action?name=hyddd&amp;amp;password=idontknow&amp;amp;verify=%E4%BD%A0%E5%A5%BD。&lt;/p&gt;
+&lt;p&gt;如果数据是英文字母/数字，原样发送，如果是空格，转换为+，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如：%E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;传输数据大小：&lt;/strong&gt; HTTP规范中没有对传输数据大小限制，但因为参数值在URL后面，但因为特定浏览器和服务器对URL长度有限制。因此对于GET提交时，传输数据就会受到URL长度的 限制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;安全性：&lt;/strong&gt; POST的安全性要比GET的安全性高。&lt;/p&gt;
+&lt;p&gt;比如：通过GET提交数据，用户名和密码将明文出现在URL上。&lt;/p&gt;
+&lt;p&gt;(1)登录页面有可能被浏览器缓存，(2)其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-siterequest forgery攻击&lt;/p&gt;
+&lt;h4 id=&#34;post-一般用于更新修改资源-往服务器上发送数据&#34;&gt;POST: 一般用于更新/修改资源 往服务器上发送数据&lt;/h4&gt;
+&lt;p&gt;根据HTTP规范，POST表示可能修改变服务器上的资源的请求。还是新闻以网站为例，读者对新闻发表自己的评论应该通过POST实现，因为在评论提交后站点的资源已经不同了，或者说资源被修改了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;提交方式：&lt;/strong&gt; 把提交的数据放置在是HTTP包的包体中。地址栏不会有参数列表。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;传输数据大小：&lt;/strong&gt; 由于不是通过URL传值，理论上数据不受 限。但实际各个WEB服务器会规定对post提交数据大小进行限制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;安全性：&lt;/strong&gt; 高于GET。&lt;/p&gt;
+&lt;h3 id=&#34;区别&#34;&gt;区别&lt;/h3&gt;
+&lt;p&gt;不同浏览器下，有些浏览器在POST在提交表单后，再刷新浏览器，会提示重新提交表单。&lt;/p&gt;
+&lt;p&gt;刷新浏览器会重新发送已经发送过的最后一个请求。如果是post，那么会再次提交表单。&lt;/p&gt;
+&lt;p&gt;解决：将最后一次的post改为get，get不会重新发送请求。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/29.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对于GET方式，服务器端用Request.QueryString获取变量的值，&lt;/p&gt;
+&lt;p&gt;对于POST方式，服务器端用Request.Form获取提交的数据&lt;/p&gt;
+&lt;p&gt;GET请求只能进行url编码，而POST支持多种编码方式。&lt;/p&gt;
+&lt;p&gt;GET请求参数会被完整保留在浏览器历史记录里，而POST中的参数不会被保留。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;GET产生一个TCP数据包；POST产生两个TCP数据包（http1.1）？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；&lt;/p&gt;
+&lt;p&gt;而对于POST，浏览器先发送header，服务器响应100-continue，浏览器再发送data，服务器响应200 ok（返回数据）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一次发送目的是让服务器解析请求头，然后决定怎么处理这个请求，打算处理则返回100-continue，否则返回4xx表示拒绝&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;收到100-continue后，则发送数据&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这样，就可以避免浪费带宽传请求体。但是代价就是会多一次Round Trip。如果刚好请求体的数据也不多，那么一次性全部发给服务器可能反而更好。&lt;/p&gt;
+&lt;p&gt;例如：比如写一个上传文件的服务，请求url中包含了文件名称，请求体中是个尺寸为几百兆的压缩二进制流。服务器端接收到请求后，就可以先拿到请求头部，查看用户是不是有权限上传，文件名是不是符合规范等。如果不符合，就不再处理请求体的数据了，直接丢弃。而不用等到整个请求都处理完了再拒绝。&lt;/p&gt;
+&lt;p&gt;在网络环境好的情况下，发一次包的时间和发两次包的时间差别基本可以无视。而在网络环境差的情况下，两次包的TCP在验证数据包完整性上，有非常大的优点。&lt;/p&gt;
+&lt;p&gt;并不是所有浏览器都会在POST中发送两次包，Firefox就只发送一次。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为什么浏览器在GET请求时，会主动缓存相应的css、js等静态文件 POST不会？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为浏览器GET对服务器的第一次请求会获取很多相关文件，如果每次都加载大量的文件对带宽、时间等有很大的损耗，所以GET请求后，将资源下载到本地，下次直接从本地拿，加快速度、减轻服务器压力&lt;/p&gt;
+&lt;p&gt;而POST请求一般是往服务器发送数据，每次发送的数据可能千奇百怪，服务端不会去缓存。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/14.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/15.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【HEAD：获得报文首部】&lt;/strong&gt;
+HEAD方法和GET方法一样，知识不返回报文的主体部分，用于确认URI的有效性及资源更新的日期时间等。
+具体来说：1、判断类型； 2、查看响应中的状态码，看对象是否存在（响应：请求执行成功了，但无数据返回）； 3、测试资源是否被修改过
+HEAD方法和GET方法的区别： GET方法有实体，HEAD方法无实体。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【PUT：传输文件】&lt;/strong&gt;
+PUT方法用来传输文件，就像FTP协议的文件上传一样，要求在 &lt;strong&gt;请求报文的主体中包含文件内容&lt;/strong&gt; ，然后 &lt;strong&gt;保存在请求URI指定的位置&lt;/strong&gt; 。但是HTTP/1.1的PUT方法自身不带验证机制，任何人都可以上传文件，存在安全问题，故一般不用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【DELETE：删除文件】&lt;/strong&gt;
+指明客户端想让服务器删除某个资源，与PUT方法相反，按URI删除指定资源&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【OPTIONS：询问支持的方法】&lt;/strong&gt;
+OPTIONS方法用来查询针对请求URI指定资源支持的方法（客户端询问服务器可以提交哪些请求方法）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【TRACE：追踪路径】&lt;/strong&gt;
+TRACE方法是让Web服务器端将之前的请求通信还给客户端的方法追踪路径。&lt;/p&gt;
+&lt;p&gt;使得服务器原样返回任何客户端请求的内容。&lt;/p&gt;
+&lt;p&gt;发送请求的时候，在Max-Forwards首部字段中加入数值，每经过一个服务器端该数字就减一，当数值刚好减到0的时候，就停止传输，最后收到请求的服务器返回的200OK的响应。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/16.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;【CONNECT：要求用隧道协议连接代理】&lt;/strong&gt;
+CONNECT方法要求在与代理服务器通信时建立隧道，实现用隧道协议进行TCP通信。主要使用SSL（安全套接层）和TLS（传输层安全）协议把通信内容加密后经网络隧道传输。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/17.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;http-10&#34;&gt;HTTP 1.0&lt;/h2&gt;
+&lt;p&gt;规定浏览器与服务器只保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不跟踪每个客户也不记录过去的请求。&lt;/p&gt;
+&lt;p&gt;在1.0时的会话方式：&lt;/p&gt;
+&lt;p&gt;1.建立连接 2.发出请求信息 3.回送响应信息 4.关掉连接&lt;/p&gt;
+&lt;h2 id=&#34;http-11&#34;&gt;HTTP 1.1&lt;/h2&gt;
+&lt;p&gt;HTTP 1.1支持持久连接Persistent Connection, 并且默认使用persistent connection. 在同一个tcp的连接中可以传送多个HTTP请求和响应. 多个请求和响应可以重叠，多个请求和响应可以同时进行.&lt;/p&gt;
+&lt;p&gt;HTTP1.1新增请求头：&lt;/p&gt;
+&lt;p&gt;Connection请求头的值为Keep-Alive时，客户端通知服务器返回本次请求结果后保持连接；Connection请求头的值为close时，客户端通知服务器返回本次请求结果后关闭连接。&lt;/p&gt;
+&lt;p&gt;HTTP 1.1还提供了与身份认证、状态管理和Cache缓存等机制相关的请求头和响应头。&lt;/p&gt;
+&lt;h3 id=&#34;从url输入一个网址发生了什么&#34;&gt;从URL输入一个网址发生了什么？&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/18.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;1输入网址&#34;&gt;1.输入网址&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.163.com&#34;&gt;www.163.com&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2浏览器通过dns服务器查找网址对应的ip地址&#34;&gt;2.浏览器通过DNS服务器查找网址对应的IP地址&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;浏览器首先查看 &lt;strong&gt;本地硬盘的hosts文件&lt;/strong&gt; ，查看里面的映射中有没有该域名 对应的IP 有则直接返回。&lt;/li&gt;
+&lt;li&gt;浏览器发起一个DNS请求到 &lt;strong&gt;本地DNS服务器&lt;/strong&gt; 。本地DNS服务器一般都是你的网络接入服务器商提供，比如中国电信，中国移动。&lt;/li&gt;
+&lt;li&gt;本地DNS服务器首先查询缓存记录，如果缓存中含有此条记录（即对应的IP），直接返回。否则， &lt;strong&gt;本地DNS服务器&lt;/strong&gt; 向 &lt;strong&gt;DNS根服务器查询。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;根DNS服务器没有缓存具体的域名&lt;/li&gt;
+&lt;li&gt;和IP的映射关系，而是记录了网址属于哪个区域(&lt;a href=&#34;http://www.163.com&#34;&gt;www.163.com&lt;/a&gt;属于.com区域管理)，告诉本地DNS服务器到相应的 &lt;strong&gt;域服务器&lt;/strong&gt; （.com服务器）上查询，给出相应的域服务器地址。&lt;/li&gt;
+&lt;li&gt;本地DNS服务器向域服务器发出请求，域服务器返回相应的域名解析服务器地址。（163.com域服务器）&lt;/li&gt;
+&lt;li&gt;本地DNS服务器向域名解析服务器发送请求，这时才收到域名和IP的映射关系，本地DNS把该IP地址返回给浏览器，还把该映射缓存起来，方便下次查询。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/19.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;31-使用套接字&#34;&gt;3.1 使用套接字&lt;/h4&gt;
+&lt;p&gt;调用系统库函数 socket,请求一个TCP流套接字。&lt;/p&gt;
+&lt;p&gt;请求首先在 &lt;strong&gt;传输层&lt;/strong&gt; 封装成 &lt;strong&gt;TCP segment(片)&lt;/strong&gt; ，在头部添加 &lt;strong&gt;目标端口&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;TCP segment 被送往 &lt;strong&gt;网络层&lt;/strong&gt; ，网络层会在其中再加入一个  &lt;strong&gt;IP 头部&lt;/strong&gt; ，里面包含了目标服务器的IP地址以及本机的IP地址，把它封装成一个 &lt;strong&gt;IP packet&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;这个 TCP packet 接下来会进入 &lt;strong&gt;链路层&lt;/strong&gt; ，链路层会在封包中加入  &lt;strong&gt;frame 头部&lt;/strong&gt; ，里面包含了 &lt;strong&gt;本地内置网卡的MAC地址以及网关（本地路由器）的 MAC 地址&lt;/strong&gt; 。像前面说的一样，如果内核不知道网关的 MAC 地址，它必须进行 ARP 广播来查询其地址。&lt;/p&gt;
+&lt;h4 id=&#34;32-建立tcp连接三次握手&#34;&gt;3.2 建立TCP连接（三次握手）&lt;/h4&gt;
+&lt;p&gt;浏览器拿到IP地址后，会以随机端口（1024&amp;ndash;65535）向WEB服务器程序80端口发起TCP连接。&lt;/p&gt;
+&lt;h4 id=&#34;4浏览器向web服务器发起http请求&#34;&gt;4.浏览器向WEB服务器发起Http请求&lt;/h4&gt;
+&lt;p&gt;HTTP请求：请求方法、URL、协议版本&lt;/p&gt;
+&lt;p&gt;​					 请求头&lt;/p&gt;
+&lt;p&gt;​					 请求体&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/20.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5服务器端处理&#34;&gt;5.服务器端处理&lt;/h4&gt;
+&lt;p&gt;服务器端收到请求后的由web服务器（准确说应该是http服务器）处理请求，诸如Apache、Ngnix、IIS等。web服务器解析用户请求，知道了需要调度哪些资源文件，再通过相应的这些资源文件处理用户请求和参数，并调用数据库信息，最后将结果通过web服务器返回给浏览器客户端。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/21.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;6关闭tcp连接四次挥手&#34;&gt;6.关闭TCP连接（四次挥手）&lt;/h4&gt;
+&lt;p&gt;为了避免服务器与客户端双方的资源占用和损耗，当双方没有请求或响应传递时，任意一方都可以发起关闭请求。&lt;/p&gt;
+&lt;h4 id=&#34;7浏览器解析资源&#34;&gt;7.浏览器解析资源&lt;/h4&gt;
+&lt;p&gt;浏览器解析获取到的HTML、CSS、JS、图片等等资源。&lt;/p&gt;
+&lt;h4 id=&#34;8浏览器布局渲染&#34;&gt;8.浏览器布局渲染&lt;/h4&gt;
+&lt;p&gt;浏览器通过解析的资源渲染页面展示给用户&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用层寻找DNS 发起HTTP请求&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;传输层建立TCP连接&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;网络层IP地址&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;链路层 MAC地址（物理地址）&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;分布式session共享&#34;&gt;分布式Session共享？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;问题：&lt;/strong&gt; 在搭建完集群环境后，不得不考虑的一个问题就是用户访问产生的session如何处理。如果不做任何处理的话，用户将出现频繁登录的现象，比如集群中存在A、B两台服务器，用户在第一次访问网站时，Nginx通过其负载均衡机制将用户请求转发到A服务器，这时A服务器就会给用户创建一个Session。当用户第二次发送请求时，Nginx将其负载均衡到B服务器，而这时候B服务器并不存在Session，所以就会将用户踢到登录页面。这将大大降低用户体验度，导致用户的流失，这种情况是项目绝不应该出现的。&lt;/p&gt;
+&lt;h4 id=&#34;1粘性session&#34;&gt;1.粘性Session&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt; 将用户SessionId锁定到某一服务器上，如将用户a锁定到A服务器上后，以后每次请求都转发到服务器A上。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt; 简单，直接&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt; 缺乏容错率，当锁定的服务器发生故障，用户信息被转移到第二个服务器，而用户session还未过期时，用户还是得重新登录，之前的session信息失效。&lt;/p&gt;
+&lt;h4 id=&#34;2服务器session复制&#34;&gt;2.服务器session复制&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt; 任何一个服务器上的session发生变化（增删改），该服务器将该session序列化后，广播给其他所有服务器，保证session同步。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt; 容错率高，各个服务器实时同步session&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt; 对网络负荷造成一定压力，若同一时刻session量大，可能造成网络堵塞，拖慢服务器性能&lt;/p&gt;
+&lt;h4 id=&#34;3session基于缓存框架机制redismemcached等&#34;&gt;3.session基于缓存框架机制（redis、memcached等）&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;要求：&lt;/strong&gt; redis、memcached是集群的，数据一致性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;①粘性session处理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt; 用户访问时，首先tomcat服务器创建并存放session（依旧是将用户锁定到某一服务器），然后将session复制一份到redis中做备份。（解决服务器挂了，用户得重新登录问题）&lt;/p&gt;
+&lt;p&gt;​			当某一个服务器挂掉后，先取服务器找（挂了），所以去redis中找到相应的session，然后将该session复制一份到存活的服务器中。（锁到新的服务器中，用户不用重新登录）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/22.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;②非粘性session处理  spring-session&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt; 用户访问时，直接存放到主redis中，redis做主从复制，tomcat不保存sessioin，读写操作都直接访问主redis，当主redis崩了，就访问备份redis，不会影响到用户。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt; 将服务器压力转移到redis中，减轻服务器压力同时，容错率高，实现session实时响应。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt; redis压力大，需要较大的内存，否则会出现用户session从缓存中移除，而且需要redis定期清楚较久的session&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/23.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/24.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4session持久化到数据库&#34;&gt;4.session持久化到数据库&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt; 将session持久化到数据库&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt; 服务器崩，数据库中仍然存在着数据&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt; 随着用户量增大，数据库压力不断增大&lt;/p&gt;
+&lt;h2 id=&#34;http2&#34;&gt;Http2&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;新特性&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.二进制分帧&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;http1.x是文本格式传输，http2二进制格式传输，并且被切分未过个帧发送，帧可以根据头部流标识重新组装。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. 单一长连接&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;同一个域名使用一个TCP连接,(http1.x 使用6-8个TCP连接，浏览器为减少消耗，进行的限制)，无论请求多少个资源，能减少握手带来的延时，减少创建多个TCP连接&lt;/p&gt;
+&lt;p&gt;带来的网络开销，提高吞吐量&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. 多路复用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;http1.x相当于单车道，同一个连接上的请求串行执行&lt;/p&gt;
+&lt;p&gt;http2相当于多车道，同一个连接上的请求可以并行执行。由于请求被二进制分帧，每个帧都有流编号。同一个请求和响应的帧必须是有序的，不同的请求的帧可以&lt;/p&gt;
+&lt;p&gt;互相穿插。然后按照流编号重组。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4.头部压缩&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;用HPACK压缩头部，使用首部表来进行首部字段存储，只有当首部表中的数据变更或为发送过时，才会发送http头部字段。&lt;/p&gt;
+&lt;p&gt;首部表分为静态表和动态表，静态表包含常用字段，动态表包含自定义字段等非常用字段，当新增或改变字段时，会增加或修改动态表中的数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5.服务端推送&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;客户端请求资源X,服务端判断客户端还需要别的资源，可以主动推送这些资源。客户端需要显式允许服务器启用推送功能。并且，客户端可以发送一个RST_STREAM帧来中断推送流，推送受同源策略限制&lt;/p&gt;
+&lt;p&gt;例如，请求index.html页面时，服务器同时将index.js和index.css push给浏览器，当浏览器解析html到请求index.css和index.js时，可以直接从缓存中读取&lt;/p&gt;
+&lt;h3 id=&#34;ping用的是什么协议&#34;&gt;Ping用的是什么协议&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;网络层协议：ICMP&lt;/strong&gt; ，是TCP-IP的子协议，用于IP主机、路由器之间传递控制消息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;功能&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.确认IP包是否成功到达目标地址&lt;/p&gt;
+&lt;p&gt;2.通知在发送过程中IP包被丢弃的原因&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ICMP基于IP协议，辅助IP协议，但是在 网络层 传输。&lt;/p&gt;
+&lt;h4 id=&#34;icmp报文格式&#34;&gt;&lt;strong&gt;ICMP报文格式&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;ICMP内容放在IP数据包的数据部分。&lt;/p&gt;
+&lt;p&gt;当IP报头中的协议字段位&lt;strong&gt;1&lt;/strong&gt;时，表明是ICMP报文。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;包括 差错报文 询问报文&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/25.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ICMP实现Ping命令&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/26.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.向目标服务器发送请求&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;发送请求报文 &lt;strong&gt;类型8 代码0&lt;/strong&gt; 并且追加 &lt;strong&gt;标识符 序号 字段&lt;/strong&gt;（这两个字段填入任意值）。&lt;/p&gt;
+&lt;p&gt;对于 &lt;strong&gt;标识符&lt;/strong&gt; 同一个Ping命令填入相同的值表明是同一个Ping。&lt;/p&gt;
+&lt;p&gt;对于 &lt;strong&gt;序号&lt;/strong&gt; 同一个Ping命令每送出一个报文 值+1。&lt;/p&gt;
+&lt;p&gt;2.&lt;strong&gt;目标服务器返回响应&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;返回响应报文 &lt;strong&gt;类型0（表示成功） 代码0&lt;/strong&gt; &lt;strong&gt;标识符&lt;/strong&gt; &lt;strong&gt;序号&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;3.&lt;strong&gt;本机确认&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过 &lt;strong&gt;标识符 序号&lt;/strong&gt; 确认是否是本次Ping,通过 &lt;strong&gt;类型&lt;/strong&gt; 确认Ping是否成功。&lt;/p&gt;
+&lt;h5 id=&#34;icmp差错报文&#34;&gt;&lt;strong&gt;ICMP差错报文&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;对差错报文进行响应时，做特殊处理，不会生成另一份差错报文，防止出现死循环。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.目标不可达 类型3&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;网络不可达，主机不可达，协议不可达，端口不可达，需要分片但DF比特已置为1，以及源路由失败等六种情况，其代码字段分别置为0至5。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.源抑制 类型4&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;目标服务器 &lt;strong&gt;控制流量&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;当路由器或主机由于 &lt;strong&gt;拥塞而丢弃数据报&lt;/strong&gt; 时，就向源站发送源站抑制报文，使源站知道应当将数据报的发送速率放慢。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3.超时报文 类型11&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;代码0 表示传输超时，代码1 表示分段重组超时。&lt;/p&gt;
+&lt;p&gt;当路由器收到生存时间为零的数据报时，除丢弃该数据报外，还要向源站发送超时报文。&lt;/p&gt;
+&lt;p&gt;当目的站在预先规定的时间内不能收到一个数据报的全部数据报片时，就将已收到的数据报片都丢弃，并向源站发送时间超过报文。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4.参数问题&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当路由器或目的主机收到的数据报的 &lt;strong&gt;首部中的字段的值不正确&lt;/strong&gt; 时，就丢弃该数据报，并向源站发送参数问题报文。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5.改变路由&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;改变路由（重定向）&lt;strong&gt;路由器&lt;/strong&gt; 将 &lt;strong&gt;改变路由报文&lt;/strong&gt; 发送给主机，让主机知道下次应将数据报发送给另外的路由器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;收到什么报文不会发送差错报文的情况&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.ICMP差错报文&lt;/strong&gt;（防止死循环）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.作为链路层广播的数据报、目的地址为广播地址或多播地址的IP数据报&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;（防止ICMP差错报文对广播分组响应所带来的广播风暴）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3.对特殊地址&lt;/strong&gt; ，如 127.0.0.0或0.0.0.0&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;这些规则都是为了 防止差错报文广播 带来的广播风暴&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4.如果 IP数据过大导致分片，则只对第一个数据片发送差错报文&lt;/strong&gt;&lt;/p&gt;
+&lt;h5 id=&#34;icmp询问报文&#34;&gt;ICMP询问报文&lt;/h5&gt;
+&lt;p&gt;询问报文包括  &lt;strong&gt;回送请求回答 时间戳请求回答 掩码地址请求回答 路由器询问通过&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;回送请求回答：&lt;/strong&gt; 测试目标能否到达。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;时间戳请求回答：&lt;/strong&gt; 当前系统向另一个系统查询当前时间。&lt;/p&gt;
+&lt;p&gt;优点是 提供 **毫秒级 ** 单位&lt;/p&gt;
+&lt;p&gt;请求端填写 &lt;strong&gt;发起时间&lt;/strong&gt; ，然后发送报文。应答系统收到请求报文时填写 &lt;strong&gt;接收时间戳&lt;/strong&gt; ，在发送应答时填写 &lt;strong&gt;发送时间戳&lt;/strong&gt; 。大多数的实现是把后面两个字段都设成相同的值。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;路由器询问通过：&lt;/strong&gt; 了解连接在本网络上的路由器是否正常工作&lt;/p&gt;
+&lt;p&gt;主机将路由器询问报文进行广播（或多播）。收到询问报文的一个或几个路由器就使用路由器通过报文广播其路由选择信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;掩码地址请求回答&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;向 &lt;strong&gt;子网掩码服务器&lt;/strong&gt; 得到某个接口的地址掩码。系统广播它的ICMP请求报文。ICMP报文中的标识符和序列号字段由发送端任意选择设定，这些值在应答中将被返回，这样，发送端就可以把应答与请求进行匹配。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;子网掩码：&lt;/strong&gt; 判断两台计算机IP地址是否属于同一子网络&lt;/p&gt;
+&lt;p&gt;将两台计算机IP地址分别与子网掩码进行AND运算（获取对外的唯一地址），如果结果相同。说明处于同一个子网络上。&lt;/p&gt;
+&lt;h5 id=&#34;traceroute命令&#34;&gt;traceroute命令&lt;/h5&gt;
+&lt;p&gt;与Ping并列，也是ICMP命令。&lt;/p&gt;
+&lt;p&gt;返回从主机 到 目标主机 之间经历多少 路由器&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[root@localhost ~]# traceroute www.baidu.com
+traceroute to www.baidu.com (61.135.169.125), 30 hops max, 40 byte packets
+ 192.168.74.2 (192.168.74.2)  2.606 ms  2.771 ms  2.950 ms
+ 211.151.56.57 (211.151.56.57)  0.596 ms  0.598 ms  0.591 ms
+ 211.151.227.206 (211.151.227.206)  0.546 ms  0.544 ms  0.538 (61.148.156.138)  1.899 ms  1.951 ms
+ * * *
+ * * *
+[root@localhost ~]#
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;每个记录是 &lt;strong&gt;一跳&lt;/strong&gt; ，每跳 表示一个 &lt;strong&gt;网关&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;每次探测 默认发送 三个数据包。&lt;/p&gt;
+&lt;p&gt;*** 表示 防火墙 封掉了 ICMP返回信息。&lt;/p&gt;
+&lt;p&gt;有时我们在某一网关处延时比较长，有可能是某台网关比较阻塞，也可能是物理设备本身的原因。&lt;/p&gt;
+&lt;p&gt;如果在局域网中的不同网段之间，我们可以通过traceroute 来排查问题所在，是主机的问题还是网关的问题。如果我们通过远程来访问某台服务器遇到问题时，我们用到traceroute 追踪数据包所经过的网关，提交IDC服务商，也有助于解决问题。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/27.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 </description>
       
     </item>
     
     <item>
-      <title>用户态和内核态</title>
-      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <title>TCP-IP</title>
+      <link>https://phantommmm.github.io/post/tcp-ip/</link>
+      <pubDate>Wed, 19 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      <guid>https://phantommmm.github.io/post/tcp-ip/</guid>
       
-        <description>&lt;h2 id=&#34;用户态和内核态&#34;&gt;用户态和内核态&lt;/h2&gt;
-&lt;p&gt;内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的&lt;/p&gt;
-&lt;p&gt;用户态（User Mode）：运行用户程序（用户自己编写的程序）&lt;/p&gt;
-&lt;h2 id=&#34;用户态和内核态的切换&#34;&gt;&lt;strong&gt;用户态和内核态的切换&lt;/strong&gt;&lt;/h2&gt;
-&lt;p&gt;当运行用户程序时，大部分时间是运行在用户态。&lt;/p&gt;
-&lt;p&gt;当需要内核态的操作或资源时，切换到内核态。&lt;/p&gt;
-&lt;p&gt;1.系统调用：如read(),write()访问系统资源。&lt;/p&gt;
-&lt;p&gt;2.异常：当cpu在执行运行在用户态下的程序时，发生了一些没有预知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关进程中，也就是切换到了内核态，如缺页异常。&lt;/p&gt;
-&lt;p&gt;3.外围设备的中断：当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号，这时CPU会暂停执行下一条即将要执行的指令而转到与中断信号对应的处理程序去执行，如果前面执行的指令时用户态下的程序，那么转换的过程自然就会是 由用户态到内核态的切换。&lt;/p&gt;
-&lt;p&gt;如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后边的操作等。&lt;/p&gt;
+        <description>&lt;h2 id=&#34;tcp首部格式&#34;&gt;TCP首部格式&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;三次握手过程中的报文是不含数据的，只包含tcp协议首部。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;序号：&lt;/strong&gt;  seq&lt;/p&gt;
+&lt;p&gt;占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次方-1 后，下一个序列号就回到了1。也就是说，序号使用mod 2的32次方 运算。TCP是面向字节流的，TCP连接中传送的字节流中的每一个字节都按顺序编号。首部中的序号就是指本报文段所发送数据的第一个字节的序号。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;确认号：&lt;/strong&gt;  ack&lt;/p&gt;
+&lt;p&gt;占4个字节，是期望收到对方下一个报文段的一个数据字节的序号。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;确认ACK：&lt;/strong&gt; 占一位  当携带数据时占一个序列号seq 4个字节 （第三次握手）&lt;/p&gt;
+&lt;p&gt;当ACK=1时，确认号有效，当ACK=0时，确认号无效。当建立连接后所有传送的报文段都必须把ACK置1。 （区分开确认号和ACK）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;同步SYN：&lt;/strong&gt;  占一个序列号seq 4个字节 不能携带数据&lt;/p&gt;
+&lt;p&gt;当SYN=1，ACK=0时，表明这是一个连接请求报文段。 （ 第一次握手）&lt;/p&gt;
+&lt;p&gt;当SYN=1,   ACK=1时，表明这是一个连接响应报文段。    （第二次握手）&lt;/p&gt;
+&lt;p&gt;握手完成后 SYN=0；&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;终止FIN：&lt;/strong&gt;  占一个序列号seq 4个字节 不能携带数据&lt;/p&gt;
+&lt;p&gt;当FIN=1时。表明此报文的发送方的数据已经发送完毕，并要求释放运输连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为什么SYN FIN占一个序列号？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由于报文在网络中路径不同，可能会导致报文的乱序，SYN带sn号，对方就知道你要发送的数据第一个字节的sn号了，这样对方就能根据sn号排序啦；
+FIN也会占一个sn号，当你收到FIN时，就可以根据这个sn号和你之前收到的数据进行对比，是不是还有数据没收到啊；
+sn号只是对方用来对数据进行重组排序，确认数据有没有丢失，因此空的ack当然不用占一个sn了；&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;什么时候完成连接?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;客户端在第三次握手，发送完报文后，即进入established（已建立连接）状态&lt;/p&gt;
+&lt;p&gt;服务器在收到报文后，才进入established（已建立连接）状态&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ACK可以携带数据？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;TCP标准规定，第三次握手的报文，可以携带数据。因为此时客户端已经处于established状态了呀。&lt;/p&gt;
+&lt;p&gt;三次握手最后一个消息是客户端发过来的ACK，如果让应用层数据与这个信令数据合二为一，可以减少发送的IP包的数目，还可以提高效率，何乐不为呢？&lt;/p&gt;
+&lt;p&gt;假设第三次握手客户端发送报文的seq是x+1，&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果有携带数据&lt;/strong&gt;，下次客户端发送的报文，seq=服务器发回的ACK号。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果没有携带数据&lt;/strong&gt;，那么第三次握手的报文不消耗seq。下次客户端发送的报文，seq序列号还是和第三次握手的报文的seq一样，为x+1。这是因为，seq和报文中的数据在整条数据流流中的位置是一一对应的。如果报文没有携带数据，那么seq当然也不会更新。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;什么时候完成断开？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;服务器在收到客户端最后一次报文时，断开连接&lt;/p&gt;
+&lt;p&gt;客户端在发送完最后一次报文时，等待2msl后，都断开连接&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;超时重传机制&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先客户端发送一个数据报，序号为1，数据长度是1000。这里有开启一个&lt;strong&gt;超时计时器&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;那么服务器接收到后，会发送一个确认报文，确认号为1000+1。表示你下一个该发送的是1001。&lt;/p&gt;
+&lt;p&gt;那么如何处理发送丢包呢以及确认丢包呢 ？&lt;/p&gt;
+&lt;p&gt;当客户端的&lt;strong&gt;超时计时器&lt;/strong&gt;到期了，还没有收到服务器的确认，无论是发送的包丢了，还是确认的包丢了，都会重新发送数据报。&lt;/p&gt;
+&lt;h3 id=&#34;滑动窗口&#34;&gt;滑动窗口&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;TCP按顺序发送一个包接受一个包，怎么提高吞吐量？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;滑动窗口，同时发送多个包&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;TCP双方都维护一个 &lt;strong&gt;接受窗口&lt;/strong&gt;和&lt;strong&gt;发送窗口&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;各自的&lt;code&gt;接收窗口&lt;/code&gt;大小取决于应用、系统、硬件的限制（TCP传输速率不能大于应用的数据处理速率）。各自的&lt;code&gt;发送窗口&lt;/code&gt;则要求取决于对端通告的&lt;code&gt;接收窗口&lt;/code&gt;，要求相同。&lt;/p&gt;
+&lt;p&gt;发送方的发送缓存内的数据都可以被分为4类:         接收方的缓存数据分为3类：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;已发送，已收到ACK 											1.已接收&lt;/li&gt;
+&lt;li&gt;已发送，未收到ACK                                             2.未接收但准备接收&lt;/li&gt;
+&lt;li&gt;未发送，但允许发送                                            3.未接收而且不准备接收&lt;/li&gt;
+&lt;li&gt;未发送，但不允许发送&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中类型2和3都属于发送窗口。                               其中类型2属于接收窗口。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;并不是一个报文段就回复一个ACK,可能对多个报文段回复一个ACK（累计ACK）&lt;/p&gt;
+&lt;p&gt;比如说发送方有1/2/3    3个报文段，先发送了2,3 两个报文段，但是接收方期望收到1报文段，这个时候2,3报文段就只能放在缓存中等待报文1的空洞被填上，如果报文1，一直不来，报文2/3也将被丢弃，如果报文1来了，那么会发送一个ACK对这3个报文进行一次确认。&lt;/p&gt;
+&lt;p&gt;1.接收窗口只有在&lt;strong&gt;前面的段&lt;/strong&gt;确认收到的情况下，窗口右移。&lt;/p&gt;
+&lt;p&gt;2.发送窗口只有收到ACK后，窗口才右移。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. 假设32~45 这些数据，是上层Application发送给TCP的，TCP将其分成四个Segment来发往internet
+
+2. seg1 32~34 seg2 35~36 seg3 37~41 seg4 42~45  这四个片段，依次发送出去，此时假设接收端之接收到了seg1 seg2 seg4
+
+3. 此时接收端的行为是回复一个ACK包说明已经接收到了32~36的数据，并将seg4进行缓存（保证顺序，产生一个保存seg3 的hole）
+
+4. 发送端收到ACK之后，就会将32~36的数据包从发送并没有确认切到发送已经确认，提出窗口，这个时候窗口向右移动
+
+5. 假设接收端通告的Window Size仍然不变，此时窗口右移，产生一些新的空位，这些是接收端允许发送的范畴
+
+6. 对于丢失的seg3，如果超过一定时间，TCP就会重新传送（重传机制），重传成功会seg3 seg4一块被确认，不成功，seg4也将被丢弃
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接收端可以根据自己的状况通告窗口大小，从而控制发送端的接收，进行流量控制&lt;/p&gt;
+&lt;p&gt;TCP是发送报文段为单位的，假如每发一个报文就要等ACK，那么对于大数据包，等待时间就太长了。只要发送的报文在滑动窗口里面，不用等每个ACK回来就可以向右滑动。&lt;/p&gt;
+&lt;p&gt;窗口大小不能大于序号空间大小的一半。目的是为了不让两个窗口出现交迭，比如总大小为7，窗口大小都为4，接收窗口应当滑动4，但只剩3个序号，导致两个窗口交迭。&lt;/p&gt;
+&lt;h4 id=&#34;对比滑动窗口和拥塞窗口&#34;&gt;对比滑动窗口和拥塞窗口&lt;/h4&gt;
+&lt;p&gt;滑动窗口是控制接收以及同步数据范围的，通知发送端目前接收的数据范围，用于流量控制，接收端使用。&lt;/p&gt;
+&lt;p&gt;拥塞窗口是控制发送速率的，避免发的过多，发送端使用。因为tcp是全双工，所以两边都有滑动窗口。
+两个窗口的维护是独立的，滑动窗口主要由接收方反馈缓存情况来维护，拥塞窗口主要由发送方的拥塞控制算法检测出的网络拥塞程度来决定的。&lt;/p&gt;
+&lt;p&gt;拥塞窗口控制sender向connection传输数据的速率，使这个速率为网络拥堵状况的函数。&lt;/p&gt;
+&lt;h3 id=&#34;rst标志位reset复位&#34;&gt;RST标志位：reset复位&lt;/h3&gt;
+&lt;p&gt;RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包，而接收端收到RST包后，也不必发送ACK包确认，直接关闭连接资源即可。（然后可以重新发起连接）&lt;/p&gt;
+&lt;h4 id=&#34;rst包没有顺利到达对端&#34;&gt;RST包没有顺利到达对端？&lt;/h4&gt;
+&lt;p&gt;导致双方状态不同步，一方为 &amp;ldquo;established(已建立连接)&amp;quot;，一方为 &amp;ldquo;closed&amp;rdquo;。已建立连接方仍然能往closed方发送数据，就会触发closed方发送RST。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;若已建立连接方，一直不发送消息，那么连接一直处于泄露状态？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;理论上是这样的，但如今的TCP会在几十秒内发送一次KeepAlive(心跳检测)，便解决这个问题&lt;/p&gt;
+&lt;h4 id=&#34;rst攻击&#34;&gt;RST攻击&lt;/h4&gt;
+&lt;p&gt;A和服务器B之间建立了TCP连接，此时C伪造了一个TCP包发给B，使B异常的断开了与A之间的TCP连接，就是RST攻击了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;那么伪造什么样的TCP包可以达成目的呢？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;（1）假定C伪装成A发过去的包，这个包如果是RST包的话，毫无疑问，B将会丢弃与A的缓冲区上所有数据，强制关掉连接。
+（2）假定C伪装成A发过去的包，这个包如果是SYN包的话，那么，B会表示A已经发疯了(AB已经正常连接时，A又来请求建立新连接) ==&amp;gt; B会主动向A发个RST包，并在自己这端强制关掉连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何能伪造成A发给B的包呢？这里有两个关键因素，源端口和序列号。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;（1）一个TCP连接都是四元组，由源IP、源端口、目标IP、目标端口唯一确定一个连接。&lt;/p&gt;
+&lt;p&gt;所以，如果C要伪造A发给B的包，要在上面提到的IP头和TCP头，把源IP、源端口、目标IP、目标端口都填对。这里B作为服务器，IP和端口是公开的，A是我们要下手的目标，IP当然知道，但A的源端口就不清楚了，因为这可能是A随机生成的。&lt;/p&gt;
+&lt;p&gt;当然，如果能够对常见的OS如windows和linux找出生成source port规律的话，还是可以搞定的。&lt;/p&gt;
+&lt;p&gt;（2）序列号问题是与滑动窗口对应的，伪造的TCP包里需要填序列号，如果序列号的值不在A之前向B发送时B的滑动窗口内，B是会主动丢弃的。所以我们要找到能落到当时的AB间滑动窗口的序列号。&lt;/p&gt;
+&lt;p&gt;这个可以暴力解决，因为一个sequence（序列号）长度是32位，取值范围0-4294967296，如果窗口大小像上图中我抓到的windows下的65535的话，只需要相除，就知道最多只需要发65537（4294967296/65535=65537）个包就能有一个序列号落到滑动窗口内。RST包是很小的，IP头＋TCP头也才40字节，算算我们的带宽就知道这实在只需要几秒钟就能搞定。&lt;/p&gt;
+&lt;h4 id=&#34;什么情况下会收到对端的rst包&#34;&gt;什么情况下，会收到对端的RST包？&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;客户端&lt;code&gt;connect&lt;/code&gt;一个不存在的端口，客户端会收到一条&lt;code&gt;RST&lt;/code&gt;，报错&lt;code&gt;Connection refused&lt;/code&gt;；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;程序崩溃或异常退出，会向对端发送。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;对端断电重启（连接断开），本端（不知道连接已经断开）&lt;code&gt;send&lt;/code&gt;数据时会收到来自对端的&lt;code&gt;RST&lt;/code&gt;。因为对端连接已经断开，通过RST告知异常断开情况。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;某些服务器对连接的IP有限制，对禁止连接的IP，会发送RST包禁止连接&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;客户端发起TCP连接，经过服务器防火墙时，防火墙查询自己的安全策略，这是一个不被允许的连接请求，于是防火墙以服务器IP的名义，返还给用户一个Reset状态位，用户以为是服务器发的，其实服务器压根不知道，是防火墙作为中间人发的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;tcp连接异常断开&#34;&gt;TCP连接异常断开&lt;/h3&gt;
+&lt;p&gt;如果客户端异常断开而服务器未及时清理这些连接，则发送连接泄露直至服务端资源耗尽拒绝提供服务（&lt;code&gt;connection refused exception&lt;/code&gt;）&lt;/p&gt;
+&lt;h4 id=&#34;客户端程序崩溃或异常退出&#34;&gt;客户端程序崩溃或异常退出&lt;/h4&gt;
+&lt;p&gt;当客户端程序因未知原因崩溃或异常退出后，操作系统会给服务端发送一条&lt;code&gt;RST&lt;/code&gt;消息&lt;/p&gt;
+&lt;h4 id=&#34;客户端断电或网络异常无法即时发送rst&#34;&gt;客户端断电或网络异常：无法即时发送RST&lt;/h4&gt;
+&lt;p&gt;如果客户端断电或网络异常，并且连接通道内没有任何数据交互，服务端是感知不到客户端掉线的，此时需要借助心跳机制来感知这种状况，客户端收到不明的消息包，返回RST告知连接状态&lt;/p&gt;
+&lt;h4 id=&#34;keep-alive-vs-heart-beart&#34;&gt;keep alive VS heart beart&lt;/h4&gt;
+&lt;p&gt;使用场景：客户端拔网线，服务器不知道。&lt;/p&gt;
+&lt;p&gt;原理相似：都是发送一个信号给对方，如果多次发送都没有响应的话，则判断连接中断。&lt;/p&gt;
+&lt;p&gt;它们的不同点在于，&lt;strong&gt;keepalive是tcp实现中内置的机制，是在创建tcp连接时通过设置参数启动keepalive机制&lt;/strong&gt;；而&lt;strong&gt;heart-beat则需要在tcp之上的应用层实现（程序员自己实现逻辑）。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一个简单的heart-beat实现一般测试连接是否中断采用的时间间隔都比较短，可以很快的决定连接是否中断。并且，由于是在应用层实现，因为可以自行决定当判断连接中断后应该采取的行为，而keepalive在判断连接失败后只会将连接丢弃。&lt;/p&gt;
+&lt;p&gt;Keep alive适用于清除死亡时间比较长的连接,它会先要求此连接一定时间没有活动（一般是几个小时），然后发出数据段，经过多次尝试后（每次尝试之间也有时间间隔），如果仍没有响应，则判断连接中断。可想而知，整个周期需要很长的时间。&lt;/p&gt;
+&lt;p&gt;heart beart适用于快速或者实时监控连接状态的机制，分布式环境中。&lt;/p&gt;
+&lt;p&gt;关于heart-beat，应该在传输真正数据的连接中发送“心跳”信号，还是可以专门创建一个发送“心跳”信号的连接呢？&lt;/p&gt;
+&lt;p&gt;比如说，A，B两台机器之间通过连接m来传输数据，现在为了能够检测A，B之间的连接状态，我们是应该在连接m中传输“心跳”信号，还是创建新的连接n来专门传输“心跳”呢？&lt;/p&gt;
+&lt;p&gt;我个人认为两者皆可。如果担心的是端到端的连接状态，那么就直接在该条连接中实现“心跳”。但很多时候，关注的是网络状况和两台主机间的连接状态，这种情况下， 创建专门的“心跳”连接也未尝不可。&lt;/p&gt;
+&lt;h3 id=&#34;流量控制&#34;&gt;流量控制&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;为什么要进行流量控制，是为了让发送方的发送速率不要太快，让接收方来得及接收，减少丢失。&lt;/strong&gt;
+接收端处理数据的速度是有限的，如果发送方的速度太快，就会把缓冲区打满。这个时候如果继续发送数据，就会导致丢包等一系列连锁反应。&lt;/p&gt;
+&lt;p&gt;TCP首部中, 有一个16位窗口字段存放了窗口大小信息;&lt;/p&gt;
+&lt;p&gt;那么问题来了, 16位数字最大表示65535, 那么TCP窗口最大就是65535字节么?&lt;/p&gt;
+&lt;p&gt;实际上, TCP首部40字节选项中还包含了一个窗口扩大因子M,
+实际窗口大小是 窗口字段的值左移 M 位;&lt;/p&gt;
+&lt;p&gt;接收端将自己可以接收的缓冲区大小放入 TCP 首部中的 “窗口大小” 字段, 通过ACK端通知发送端;窗口大小字段越大, 说明网络的吞吐量越高;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用滑动窗口机制，例如在建立连接时，B告诉A接收窗口rwnd=400，那么发送方的窗口不能超过接收方给出的接收窗口数值。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;若一开始就发送大量数据？&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;拥塞控制&#34;&gt;&lt;strong&gt;拥塞控制&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;拥塞窗口：可以同时发送的数量&lt;/p&gt;
+&lt;p&gt;拥塞窗口发送开始的时候, 定义拥塞窗口大小为1;每次收到一个ACK应答, 拥塞窗口加1;&lt;/p&gt;
+&lt;p&gt;例如：刚开始A 只能同时发送一个数据&lt;/p&gt;
+&lt;p&gt;​			接受到一个ACK后，拥塞窗口加1，可以同时发送两个数据&lt;/p&gt;
+&lt;p&gt;​			接受到两个ACK后，拥塞窗口加2，可以同时发送四个数据&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;慢启动&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;以2-4个开始，以指数增长，阀值为 2^16=65535&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;拥塞避免&amp;amp;阀值&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;不能单纯的让拥塞窗口指数增长，当拥塞窗口超过这个阈值的时候,进入拥塞避免， 不再按照指数方式增长, 而是按照线性方式增长，即无论收到多少个ACK，拥塞窗口都只加1&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;快速重传&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;进入拥塞避免之后，最终还是会碰到拥塞点，发送方此时迟迟得不到确认，当然得不到确认也有可能是因为&lt;a href=&#34;http://www.cnblogs.com/iou123lg/p/8727598.html&#34;&gt;延迟确认&lt;/a&gt;导致的。发送方此时决定等待一段时间，如果一段时间后还是得不到确认，就发起重传，这个过程叫做超时重传。从发出原始包到重传该包的时间叫做RTO(Retransmission TimeOut)。&lt;/p&gt;
+&lt;p&gt;在每次超时重发的时候（大概率是网络出现拥塞）, 慢启动阈值会变成原来的一半, 同时拥塞窗口置回1，重新进入慢启动&lt;/p&gt;
+&lt;p&gt;少量的丢包, 我们仅仅是触发超时重传; 大量的丢包, 我们就认为网络拥塞;&lt;/p&gt;
+&lt;p&gt;收到3个相同的ACK。TCP在收到乱序到达包时就会立即发送ACK，TCP利用3个相同的ACK来判定数据包的丢失，此时进行快速重传，不必等到重传计时器到期，快速重传做的事情有：&lt;/p&gt;
+&lt;p&gt;1.把阀值设置为窗口的一半&lt;/p&gt;
+&lt;p&gt;2.把窗口再设置为阀值的值(具体实现有些为ssthresh+3)&lt;/p&gt;
+&lt;p&gt;3.重新进入拥塞避免阶段。&lt;/p&gt;
+&lt;p&gt;为什么是3个？因为1-2个重复ACK，很有可能是乱序，只有在3个及以上的时候才是有可能丢包了。&lt;/p&gt;
+&lt;p&gt;例子：&lt;/p&gt;
+&lt;p&gt;B等待A发送首字节序号为3的报文段，给A发送“ack = 3”的确认报文段（ACK），而A在发送过程中出现了丢失，B收到的只有4、5字节的报文段；
+此时B给A发送的确认报文中ack字段仍然等于3（因为字节3还没收到）；
+接着，在B收到字节6后，给A发送的确认报文仍然是“ack = 3”&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;快速恢复&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.当收到3个重复ACK时，把阀值设置为窗口的一半，把窗口设置为阀值的值加3，然后重传丢失的报文段，加3的原因是因为收到3个重复的ACK，表明有3个“老”的数据包离开了网络（丢包）。&lt;/p&gt;
+&lt;p&gt;2.再收到重复的ACK时，拥塞窗口增加1。&lt;/p&gt;
+&lt;p&gt;3.当收到新的数据包的ACK时，把窗口设置为第一步中的阀值的值。原因是因为该ACK确认了新的数据，说明从重复ACK时的数据都已收到，该恢复过程已经结束，可以回到恢复之前的状态了，也即再次进入拥塞避免状态。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;设计可靠的udp&#34;&gt;设计可靠的UDP&lt;/h3&gt;
+&lt;p&gt;传输层无法保证数据的可靠传输，只能通过应用层来实现了。实现的方式可以参照tcp可靠性传输的方式，只是实现不在传输层，实现转移到了应用层。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用层确认机制、重传机制、滑动窗口&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;给数据包进行编号，按顺序接收并存储&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;接收端收到数据包后发送确认信息给发送端，发送端接收到确认信息后继续发送，若接收端接收的数据不是期望的顺序编号，则要求重发；（主要解决丢包和包无序的问题）&lt;/p&gt;
+&lt;h3 id=&#34;tcp怎么可靠安全&#34;&gt;TCP怎么可靠、安全&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1.序列号 确认号 数据包分片&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.超时重传 快速重传&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3.流量控制（滑动窗口）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4.拥塞控制（拥塞窗口）&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;time_wait&#34;&gt;time_wait&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;大量time_wait的危害&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;只有主动进行关闭连接的机器会进入time_wait状态。&lt;/p&gt;
+&lt;p&gt;在&lt;strong&gt;高并发短连接&lt;/strong&gt;的TCP服务器上，当客户端完成访问后立刻主动正常关闭连接，就会出现大量time_wait。&lt;/p&gt;
+&lt;p&gt;这时该客户端在访问同一服务器，会启用另一个端口，因为刚刚那个端口处于time_wait状态。&lt;/p&gt;
+&lt;p&gt;这时，如果客户端并发量持续很高，就会部分客户端连接不上。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.高并发可以让客户端在短时间范围内同时占用大量端口&lt;/strong&gt;，而端口有个0~65535的范围，并不是很多，刨除系统和其他服务要用的，剩下的就更少了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.短连接表示“业务处理+传输数据的时间 远远小于 TIMEWAIT超时的时间”的连接&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;比如取一个web页面，1秒钟的http短连接处理完业务，在关闭连接之后，这个业务用过的端口会停留在TIMEWAIT状态几分钟，而这几分钟，其他HTTP请求来临的时候是无法占用此端口的(占着茅坑不拉翔)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;调整 time_wait时间 net.ipv4.tcp_fin_timeout=30
+
+//首先打开 timestamps
+net.ipv4.tcp_timestamps = 1
+//机器作为客户端时起作用，开启后time_wait在一秒内回收
+net.ipv4.tcp_tw_reuse = 1
+（不要开启，现在互联网NAT结构很多，可能直接无法三次握手）
+net.ipv4.tcp_tw_recycle = 0 
+
+reuse:复用time_wait连接。
+recycle:快速回收。
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;timestamps&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;开启timestamps时间戳，实现打开同一个IP 不同端口，同一源IP的socket connect请求中的 timestamps必须是递增的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;reuse&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是因为一来TIME_WAIT创建时间必须超过一秒才可能会被复用；二来只有连接的时间戳是递增的时候才会被复用。&lt;/p&gt;
+&lt;p&gt;满足以下任意一点即可复用&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.初始序列号比TW老连接的末序列号大&lt;/strong&gt;
+&lt;strong&gt;2.如果使能了时间戳，那么新到来的连接的时间戳比老连接的时间戳大&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;recycle&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;先发送的数据包 后到达 导致被丢弃&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Linux实现了一个TIME_WAIT状态快速回收的机制，即无需等待两倍的MSL这么久的时间，而是等待一个Retrans时间即释放，也就是等待一个重传时间(一般超级短，以至于你都来不及能在netstat -ant中看到TIME_WAIT状态)随即释放。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;假设PC1和PC2均启用了TCP时间戳，它们经过NAT设备N1往服务器S1的22端口连接：
+PC1：192.168.100.1
+PC2：192.168.100.2
+N1外网口(即NAT后的地址)：172.16.100.1
+S1：172.16.100.2
+所有涉事机器的配置：
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_timestamps = 1
+由于有NAT设备，S1看来是同一台机器发出的，且出现了时间戳倒流，连接拒绝！
+仅仅两台机器就出现了这个问题，试问如果大量的源端机器在服务器的入口处遇到了NAT设备会怎样？即一台三层NAT设备部署在高负载网站的入口处...没有谁能保证时间戳小的机器一定先发起连接，各个机器频繁连接断开后依然按照时间戳从小到大的顺序连接！！
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;经过nat之后，如果前面相同的端口被使用过，且时间戳大于这个链接发出的syn中的时间戳，服务器上就会忽略掉这个syn，不返会syn-ack消息，表现为用户无法正常完成tcp3次握手，从而不能打开web页面。在业务闲时，如果用户nat的端口没有被使用过时，就可以正常打开；业务忙时，nat端口重复使用的频率高，很难分到没有被使用的端口，从而产生这种问题。&lt;/p&gt;
+&lt;p&gt;NAT设备为所有的内部设备代理一个IP地址即主机标识，然而&lt;strong&gt;却不触动其时间戳&lt;/strong&gt;，而各个机器的时间戳并不满足任何规律&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;close_wait&#34;&gt;close_wait&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;服务器保持了大量的close_wait&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当客户端发送一个FIN后，服务器没有返回ACK确认。即程序没有检测到需要关闭连接。这个资源就一直被程序占着。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;（1）关闭正在运行的程序，这个需要视业务情况而定。
+（2）尽快的修改程序里的bug，然后测试提交到线上服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HttpClient未释放连接，会造成close_wait&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;服务器A是一台爬虫服务器，它使用简单的HttpClient去请求资源服务器B上面的apache获取文件资源，正常情况下，如果请求成功，那么在抓取完资源后，服务器A会主动发出关闭连接的请求，这个时候就是主动关闭连接，服务器A的连接状态我们可以看到是TIME_WAIT。&lt;/p&gt;
+&lt;p&gt;如果一旦发生异常呢？假设请求的资源服务器B上并不存在，那么这个时候就会由服务器B发出关闭连接的请求，服务器A就是被动的关闭了连接，如果服务器A被动关闭连接之后程序员忘了让HttpClient释放连接，那就会造成CLOSE_WAIT的状态了。&lt;/p&gt;
+&lt;h3 id=&#34;nat&#34;&gt;NAT&lt;/h3&gt;
+&lt;p&gt;**介绍：**在通信中将内网的ip和端口映射为外围的ip和端口。&lt;/p&gt;
+&lt;p&gt;NAT是将私有IP地址通过边界路由转换成外网IP地址，在边界路由的&lt;strong&gt;NAT地址转换表&lt;/strong&gt;记录下这个转换映射记录，当外部数据返回时，路由使用NAT技术查询NAT转换表，再将目标地址替换成内网用户IP地址。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;出现原因：ip地址不够用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;三种NAT技术&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;**静态NAT：**静态NAT就是一对一映射，内部有多少私有地址需要和外部通信，就要配置多少外网IP地址与其对应&lt;/p&gt;
+&lt;p&gt;**动态NAT：**动态NAT是在路由器上配置一个外网IP地址池，当内部有计算机需要和外部通信时，就从地址池里动态的取出一个外网IP，并将他们的对应关系绑定到NAT表中，通信结束后，这个外网IP才被释放，可供其他内部IP地址转换使用，这个DHCP租约IP有相似之处。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PAT(port address Translation，端口地址转换，也叫端口地址复用)：&lt;strong&gt;这是最常用的NAT技术，也是IPv4能够维持到今天的最重要的原因之一，它提供了一种多对一的方式，对多个内网IP地址，边界路由可以给他们分配&lt;/strong&gt;一个外网IP&lt;/strong&gt;，利用这个外网IP的不同端口和外部进行通信。&lt;/p&gt;
+&lt;p&gt;**优点：**节约了公网ip，并且隐藏和保护了内网&lt;/p&gt;
+&lt;p&gt;**缺点：**使网络报文被修改，增加了网络的转发时延。&lt;/p&gt;
 </description>
       
     </item>
     
     <item>
-      <title>虚拟内存</title>
-      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <title>IO模型</title>
+      <link>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Sun, 16 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
+      <guid>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</guid>
       
-        <description>&lt;h3 id=&#34;虚拟内存&#34;&gt;虚拟内存&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;页：&lt;/strong&gt; 将进程划分的块，对应的大小就叫页面大小&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;页框：&lt;/strong&gt; 将内存划分的块&lt;/p&gt;
-&lt;p&gt;一个页里有一个页框，理论上，页和页框的大小相同&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;页表：&lt;/strong&gt; 页和页框一一对应的关系表，存放在内存中，通过页表能查找到哪个页对应哪个页框&lt;/p&gt;
-&lt;h4 id=&#34;为什么要有虚拟内存&#34;&gt;&lt;strong&gt;为什么要有虚拟内存？&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;物理内存：物理地址即实际内存地址&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;1.因为机器物理内存是有限的，当有多个进程要执行的时候，都要给4G内存，当机器内存小的时候，这很快就分配完了，于是没有得到分配资源的进程就只能等待，当一个进程执行完了以后，再将等待的进程装入内存。这种频繁的装入内存的操作是很没效率的。
-2.由于指令都是直接访问物理内存的，那么我这个进程就可以修改其他进程的数据，甚至会修改内核地址空间的数据，这是我们不想看到的
-3.因为内存是随机分配的，所以程序运行的地址也是不正确的。
-&lt;strong&gt;虚拟内存：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;每个进程得到一个4G虚拟内存，（可以当作是每个进程认为自己拥有4G的空间，但实际上，在虚拟内存对应的物理内存上，可能只对应一点点的物理内存，即实际使用了多少内存就对应多少物理内存）&lt;/p&gt;
-&lt;p&gt;进程得到的这4G虚拟内存是一个  &lt;strong&gt;连续的地址空间（这也只是进程认为），而实际上，它通常是被分隔成多个物理内存碎片，还有一部分存储在外部磁盘存储器上，在需要时进行数据交换。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;进程访问一个内存地址，会发生&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;1.每次我要访问地址空间上的某一个地址，都需要把虚拟地址翻译为实际物理内存地址
-2.所有进程共享这整一块物理内存，每个进程只把自己目前需要的虚拟地址空间映射到物理内存上
-3.进程需要知道哪些地址空间上的数据在物理内存上，哪些不在（可能这部分存储在磁盘上），还有在物理内存上的哪里，这就需要通过页表来记录
-4.页表的每一个表项分两部分，第一部分记录此页是否在物理内存上，第二部分记录物理内存页的地址（如果在的话）
-5.当进程访问某个虚拟地址的时候，就会先去看页表，如果发现对应的数据不在物理内存上，就会发生缺页异常
-6.缺页异常的处理过程，操作系统立即阻塞该进程，并将硬盘里对应的页换入内存，然后使该进程就绪，如果内存已经满了，没有空地方了，那就找一个页覆盖，至于具体覆盖的哪个页，就需要看操作系统的页面置换算法是怎么设计的了。&lt;/p&gt;
-&lt;p&gt;内存被分为大小相等的多个块,称为页(Page).每个页都是一段连续的地址。&lt;/p&gt;
-&lt;p&gt;对于进程来看,逻辑上貌似有很多内存空间，其中一部分对应物理内存上的一块(称为页框，通常页和页框大小相等)，还有一些没加载在内存中的对应在硬盘上。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;虚拟内存实际上可以比物理内存大。&lt;/p&gt;
-&lt;p&gt;虚拟内存和物理内存的匹配是通过页表实现，页表存在MMU中。&lt;/p&gt;
-&lt;p&gt;页表中每个项通常为32位，既4byte,除了存储虚拟地址和页框地址之外，还会存储一些标志位，比如是否缺页，是否修改过，写保护等。&lt;/p&gt;
-&lt;p&gt;可以把MMU想象成一个接收虚拟地址项返回物理地址的方法。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;进程中的内核地址空间（1G）直接映射到物理内存，即所有的进程都共享这1G内核空间，只有3G用户内存是进程私有的&lt;/strong&gt;&lt;/p&gt;
-&lt;h4 id=&#34;为什么需要区分用户空间和内核空间&#34;&gt;&lt;strong&gt;为什么需要区分用户空间和内核空间？&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;在 CPU 的所有指令中，有些指令是非常危险的，如果错用，将导致系统崩溃，比如清内存、设置时钟等。如果允许所有的程序都可以使用这些指令，那么系统崩溃的概率将大大增加。
-所以，CPU 将指令分为特权指令和非特权指令，对于那些危险的指令，只允许操作系统及其相关模块使用，普通应用程序只能使用那些不会造成灾难的指令。比如 Intel 的 CPU 将特权等级分为 4 个级别：Ring0~Ring3。
-其实 Linux 系统只使用了 Ring0 和 Ring3 两个运行级别(Windows 系统也是一样的)。当进程运行在 Ring3 级别时被称为运行在用户态，而运行在 Ring0 级别时被称为运行在内核态。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;当进程运行在内核空间时就处于内核态，而进程运行在用户空间时则处于用户态。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;1.我们的cpu想访问虚拟地址所在的虚拟页(VP3)，根据页表，找出页表中第三条的值.判断有效位。 如果有效位为1，DRMA缓存命中，根据物理页号，找到物理页当中的内容，返回。
-2.若有效位为0，参数缺页异常，调用内核缺页异常处理程序。内核通过页面置换算法选择一个页面作为被覆盖的页面，将该页的内容刷新到磁盘空间当中。然后把VP3映射的磁盘文件缓存到该物理页上面。然后页表中第三条，有效位变成1，第二部分存储上了可以对应物理内存页的地址的内容。
-3.缺页异常处理完毕后，返回中断前的指令，重新执行，此时缓存命中，执行1。
-4.将找到的内容映射到告诉缓存当中，CPU从告诉缓存中获取该值，结束。&lt;/p&gt;
-&lt;h4 id=&#34;总结&#34;&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;当每个进程创建的时候，内核会为进程分配4G的虚拟内存，当进程还没有开始运行时，这只是一个内存布局。实际上并不立即就把虚拟内存对应位置的程序数据和代码（比如.text .data段）拷贝到物理内存中，只是建立好虚拟内存和磁盘文件之间的映射就好（叫做存储器映射）。这个时候数据和代码还是在磁盘上的。当运行到对应的程序时，进程去寻找页表，发现页表中地址没有存放在物理内存上，而是在磁盘上，于是发生缺页异常，于是将磁盘上的数据拷贝到物理内存中。&lt;/p&gt;
-&lt;p&gt;另外在进程运行过程中，要通过malloc来动态分配内存时，也只是分配了虚拟内存，即为这块虚拟内存对应的页表项做相应设置，当进程真正访问到此数据时，才引发缺页异常。&lt;/p&gt;
-&lt;p&gt;可以认为虚拟空间都被映射到了磁盘空间中（事实上也是按需要映射到磁盘空间上，通过mmap，mmap是用来建立虚拟空间和磁盘空间的映射关系的）&lt;/p&gt;
-&lt;h4 id=&#34;优点&#34;&gt;&lt;strong&gt;优点&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;1.既然每个进程的内存空间都是一致而且固定的（32位平台下都是4G），所以链接器在链接可执行文件时，可以设定内存地址，而不用去管这些数据最终实际内存地址，这交给内核来完成映射关系
-2.当不同的进程使用同一段代码时，比如库文件的代码，在物理内存中可以只存储一份这样的代码，不同进程只要将自己的虚拟内存映射过去就好了，这样可以节省物理内存
-3.在程序需要分配连续空间的时候，只需要在虚拟内存分配连续空间，而不需要物理内存时连续的，实际上，往往物理内存都是断断续续的内存碎片。这样就可以有效地利用我们的物理内存&lt;/p&gt;
-&lt;h3 id=&#34;为什么会出现分段分页&#34;&gt;为什么会出现分段、分页？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;为了更好的管理计算机内存&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;之前的问题&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;某个程序大小是10M，然后，就需要有&lt;strong&gt;连续的&lt;/strong&gt;10M内存空间才能把这个程序装载到内存里面。如果无法找到连续的10M内存，就无法把这个程序装载进内存里面，程序也就无法得到运行。&lt;/p&gt;
-&lt;h4 id=&#34;1地址空间不隔离&#34;&gt;1.地址空间不隔离。&lt;/h4&gt;
-&lt;p&gt;只能操作连续的地址空间，一旦不小心操作了其它地址空间则程序出错。&lt;/p&gt;
-&lt;p&gt;假设我有两个程序，一个是程序A，一个是程序B。程序A在内存中的地址假设是0x00000000~0x00000099，程序B在内存中的地址假设是0x00000100~x00000199。那么假设你在程序A中，本来想操作地址0x00000050，不小心手残操作了地址0x00000150，那么，不好的事情或许会发生。你影响了程序A也就罢了，你把程序B也搞了一顿。&lt;/p&gt;
-&lt;h4 id=&#34;2程序运行时地址不确定&#34;&gt;2.程序运行时地址不确定&lt;/h4&gt;
-&lt;p&gt;每次装载进程序的内存位置发生改变时，用户无法及时更改操作。&lt;/p&gt;
-&lt;p&gt;因为我们程序每次要运行的时候，都是需要装载到内存中的，假设你在程序中写死了要操作某个地址的内存，例如你要地址0x00000010。但是问题来了，你能够保证你操作的地址0x00000010真的就是你原来想操作的那个位置吗？很可能程序第一次装载进内存的位置是0x00000000~0x00000099，而程序第二次运行的时候，这个程序装载进内存的位置变成了0x00000200~0x00000299，而你操作的0x00000010地址压根就不是属于这个程序所占有的内存。&lt;/p&gt;
-&lt;h4 id=&#34;3内存使用率低下&#34;&gt;3.内存使用率低下&lt;/h4&gt;
-&lt;p&gt;举个例子，假设你写了3个程序，其中程序A大小为10M，程序B为70M，程序C的大小为30M你的计算机的内存总共有100M。&lt;/p&gt;
-&lt;p&gt;这三个程序加起来有110M，显然这三个程序是无法同时存在于内存中的。&lt;/p&gt;
-&lt;p&gt;并且最多只能够同时运行两个程序。可能是这样的，程序A占有的内存空间是0x00000000～0x00000009，程序B占有的内存空间是0x00000010～0x00000079。假设这个时候程序C要运行该怎么做？可以把其中的一个程序换出到磁盘上，然后再把程序C装载到内存中。假设是把程序A换出，那么程序C还是无法装载进内存中，因为内存中空闲的连续区域有两块，一块是原来程序A占有的那10M，还有就是从0x00000080～0x00000099这20M，所以，30M的程序C无法装载进内存中。那么，唯一的办法就是把程序B换出，保留程序A，但是，此时会有60M的内存无法利用起来，很浪费对吧。&lt;/p&gt;
-&lt;h3 id=&#34;分段存储管理&#34;&gt;分段存储管理&lt;/h3&gt;
-&lt;p&gt;将一个程序分成代码段、数据段、堆栈段等。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;把虚拟地址空间映射到了物理地址空间，并且你写的程序操作的是虚拟地址&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;解决上面1.2问题， &lt;strong&gt;分段机制映射的是一片连续的物理内存&lt;/strong&gt; ，无法解决问题3.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;分页存储管理&#34;&gt;分页存储管理&lt;/h3&gt;
-&lt;p&gt;将这些段，例如代码段分成均匀的小块，然后这些给这些小块编号，然后就可以放到内存中去，由于编号了的，所以也不怕顺序乱&lt;/p&gt;
-&lt;p&gt;分页仍然是 &lt;strong&gt;把虚拟地址空间映射到了物理地址空间&lt;/strong&gt; 但是粒度更小，单位不是整个程序，而是某个“页”。&lt;/p&gt;
-&lt;p&gt;分页，它的虚拟地址空间仍然是连续的，但是，每一页映射后的物理地址就不一定是连续的了。&lt;/p&gt;
-&lt;h3 id=&#34;分页和分段的区别&#34;&gt;&lt;strong&gt;分页和分段的区别&lt;/strong&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;主要区别：粒度大小&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;a)&lt;/strong&gt;  页是信息的物理单位，分页是为实现离散分配方式，以消减内存的外零头，提高内存的利用率；或者说，分页仅仅是由于系统管理的需要，而不是用户的需要（也是对用户透明的）。&lt;/p&gt;
-&lt;p&gt;段是信息的逻辑单位，它含有一组其意义相对完整的信息（比如数据段、代码段和堆栈段等）。分段的目的是为了能更好的满足用户的需要（用户也是可以使用的）。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;b)&lt;/strong&gt;  页的大小固定且由系统确定，把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的，因而一个系统只能有一种大小的页面。段的长度却不固定，决定于用户所编写的程序，通常由编辑程序在对源程序进行编辑时，根据信息的性质来划分。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;c)&lt;/strong&gt;  分页的作业地址空间是一维的，即单一的线性空间，程序员只须利用一个记忆符（线性地址的16进制表示），即可表示一地址。&lt;/p&gt;
-&lt;p&gt;分段的作业地址空间是二维的，程序员在标识一个地址时，既需给出段名（比如数据段、代码段和堆栈段等），又需给出段内地址。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;d)&lt;/strong&gt;  页和段都有存储保护机制。但存取权限不同：段有读、写和执行三种权限；而页只有读和写两种权限。&lt;/p&gt;
+        <description>&lt;h2 id=&#34;五种主要的io模型&#34;&gt;&lt;strong&gt;五种主要的IO模型&lt;/strong&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;同步阻塞io-blocking-io&#34;&gt;同步阻塞IO （Blocking IO）&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;（1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统进程将用户线程所需的系统资源写入内核缓冲区）。很多时候，数据在一开始还没有到达（比如，还没有收到一个完整的Socket数据包），这个时候kernel就要等待足够的数据到来。&lt;/p&gt;
+&lt;p&gt;（2）当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）从开始IO读的read系统调用开始，用户线程就进入阻塞状态。一直到kernel返回结果后，用户线程才解除block的状态，重新运行起来。&lt;/p&gt;
+&lt;p&gt;所以，blocking IO的特点就是在内核进行IO执行的两个阶段，用户线程都被block了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BIO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;程序简单，在阻塞等待数据期间，用户线程挂起。用户线程基本不会占用 CPU 资源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BIO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一般情况下，会为每个连接配套一条独立的线程，或者说一条线程维护一个连接成功的IO流的读写。在并发量小的情况下，这个没有什么问题。但是，当在高并发的场景下，服务器需要大量的线程来维护大量的网络连接，内存、线程切换开销会非常巨大。因此，基本上，BIO模型在高并发场景下是不可用的。&lt;/p&gt;
+&lt;h3 id=&#34;同步非阻塞nionone-blocking-io&#34;&gt;&lt;strong&gt;同步非阻塞NIO（None Blocking IO）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;（1）在内核数据没有准备好的阶段，用户线程发起IO请求时，立即返回。用户线程需要不断地发起IO系统调用，直到获取到资源。&lt;/p&gt;
+&lt;p&gt;（2）内核数据到达后，用户线程发起系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）用户线程才解除block的状态，重新运行起来。经过多次的尝试，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;应用程序的线程需要不断的进行 I/O 系统调用，轮询数据是否已经准备好，如果没有准备好，继续轮询，直到完成系统调用为止。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每次发起的 IO 系统调用，在内核的等待数据过程中可以立即返回。用户线程不会阻塞，实时性较好。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NIO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;需要不断的重复发起IO系统调用，这种不断的轮询，将会不断地询问内核，这将占用大量的 CPU 时间，系统资源利用率较低。&lt;/p&gt;
+&lt;p&gt;总之，NIO模型在高并发场景下，也是不可用的。一般 Web 服务器不使用这种 IO 模型。一般很少直接使用这种模型，而是在其他IO模型中使用非阻塞IO这一特性。java的实际开发中，也不会涉及这种IO模型。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;  Java NIO（New IO） 不是IO模型中的NIO模型，而是另外的一种模型，叫做IO多路复用模型（ IO multiplexing ）。&lt;/p&gt;
+&lt;h3 id=&#34;io多路复用模型io-multiplexing&#34;&gt;&lt;strong&gt;IO多路复用模型(I/O multiplexing）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;服务器复用同一线程 接受 多个客户端请求线程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;用户线程轮询&amp;mdash;》系统内核select/epoll 轮询 数据是否准备好&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列。&lt;/p&gt;
+&lt;p&gt;在这种模式中，首先不是进行read系统调动，而是进行select/epoll系统调用。当然，这里有一个前提，需要将目标网络连接，提前注册到select/epoll的可查询socket列表中。然后，才可以开启整个的IO多路复用模型的读流程。&lt;/p&gt;
+&lt;p&gt;（1）进行select/epoll系统调用，查询可以读的连接。kernel会查询所有select的可查询socket列表，当任何一个socket中的数据准备好了，select就会返回。&lt;/p&gt;
+&lt;p&gt;当用户进程调用了select，那么整个线程会被block（阻塞掉）。&lt;/p&gt;
+&lt;p&gt;（2）用户线程获得了目标连接后，发起read系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
+&lt;p&gt;（3）用户线程才解除block的状态，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的特点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;IO多路复用模型，建立在操作系统kernel内核能够提供的多路分离系统调用select/epoll基础之上的。多路复用IO需要用到两个系统调用（system call）， 一个select/epoll查询调用，一个是IO的读取调用。&lt;/p&gt;
+&lt;p&gt;和NIO模型相似，多路复用IO需要轮询。负责select/epoll查询调用的线程，需要不断的进行select/epoll轮询，查找出可以进行IO操作的连接。&lt;/p&gt;
+&lt;p&gt;另外，多路复用IO模型与前面的NIO模型，是有关系的。对于每一个可以查询的socket，一般都设置成为non-blocking模型。只是这一点，对于用户程序是透明的（不感知）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的优点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;用select/epoll的优势在于，它可以同时处理成千上万个连接（用户请求）。与一条线程维护一个连接相比，I/O多路复用技术的最大优势是：系统不必创建线程，也不必维护这些线程，从而大大减小了系统的开销。&lt;/p&gt;
+&lt;p&gt;多个连接的情况下，不会有连接被阻塞，select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列&lt;/p&gt;
+&lt;p&gt;Java的NIO（new IO）技术，使用的就是IO多路复用模型。在linux系统上，使用的是epoll系统调用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多路复用IO的缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本质上，select/epoll系统调用，属于同步IO，也是阻塞IO。都需要在读写事件就绪后，自己负责进行读写，也就是说这个读写过程是阻塞的。&lt;/p&gt;
+&lt;h3 id=&#34;信号驱动io&#34;&gt;信号驱动IO&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;允许Socket进行信号驱动IO,并注册一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。&lt;/p&gt;
+&lt;h3 id=&#34;异步io模型asynchronous-io&#34;&gt;&lt;strong&gt;异步IO模型（asynchronous IO）&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;kernel的数据准备是将（请求数据）从网络物理设备（网卡）读取到内核缓冲区；kernel的数据复制是将数据从内核缓冲区拷贝到用户程序空间的缓冲区。&lt;/p&gt;
+&lt;p&gt;（1）当用户线程调用了read系统调用，立刻就可以开始去做其它的事，用户线程不阻塞。&lt;/p&gt;
+&lt;p&gt;（2）内核（kernel）就开始了IO的第一个阶段：准备数据。当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存）。&lt;/p&gt;
+&lt;p&gt;（3）kernel会给用户线程发送一个信号（signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。&lt;/p&gt;
+&lt;p&gt;（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。&lt;/p&gt;
+&lt;h4 id=&#34;异步io模型的特点&#34;&gt;&lt;strong&gt;异步IO模型的特点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;在内核kernel的等待数据和复制数据的两个阶段，用户线程都不是block(阻塞)的。用户线程需要接受kernel的IO操作完成的事件，或者说注册IO操作完成的回调函数，到操作系统的内核。所以说，异步IO有的时候，也叫做信号驱动 IO 。&lt;/p&gt;
+&lt;h4 id=&#34;异步io模型缺点&#34;&gt;&lt;strong&gt;异步IO模型缺点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;需要完成事件的注册与传递，这里边需要底层操作系统提供大量的支持，去做大量的工作。&lt;/p&gt;
+&lt;p&gt;目前来说， Windows 系统下通过 IOCP 实现了真正的异步 I/O。但是，就目前的业界形式来说，Windows 系统，很少作为百万级以上或者说高并发应用的服务器操作系统来使用。&lt;/p&gt;
+&lt;p&gt;而在 Linux 系统下，异步IO模型在2.6版本才引入，目前并不完善。所以，这也是在 Linux 下，实现高并发网络编程时都是以 IO 复用模型模式为主。&lt;/p&gt;
+&lt;h3 id=&#34;零拷贝&#34;&gt;零拷贝&lt;/h3&gt;
+&lt;p&gt;指的是内核空间与用户空间之间零次拷贝&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;好处&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;减少甚至完全避免不必要的CPU拷贝，从而让CPU解脱出来去执行其他的任务&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;减少内存带宽的占用&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通常零拷贝技术还能够减少用户空间和操作系统内核空间之间的上下文切换&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;dma直接内存访问&#34;&gt;&lt;strong&gt;DMA&lt;/strong&gt;:直接内存访问&lt;/h4&gt;
+&lt;p&gt;DMA是允许外设组件将I/O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。&lt;/p&gt;
+&lt;p&gt;而用户空间与内核空间之间的数据传输并没有类似DMA这种可以不需要CPU参与的传输工具，因此用户空间与内核空间之间的数据传输是需要CPU全程参与的。&lt;/p&gt;
+&lt;p&gt;所也就有了通过零拷贝技术来减少和避免不必要的CPU数据拷贝过程。&lt;/p&gt;
+&lt;h4 id=&#34;传统io&#34;&gt;&lt;strong&gt;传统IO&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;通过read()将数据放入缓冲区buffer,再通过write输出。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/6.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/7.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;JVM发出read() 系统调用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS上下文切换到内核模式（第一次上下文切换）并将数据读取到内核空间缓冲区(DMA引擎中执行)。(第一次拷贝：hardware —-&amp;gt; kernel buffer）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS内核然后将数据复制到用户空间缓冲区（CPU拷贝）(第二次拷贝: kernel buffer ——&amp;gt; user buffer)，然后read系统调用返回。而系统调用的返回又会导致一次内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;JVM处理代码逻辑并发送write（）系统调用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS上下文切换到内核模式(第三次上下文切换)并从用户空间缓冲区复制数据到内核空间缓冲区（CPU拷贝）(第三次拷贝: user buffer ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本例中的socket buffer就是kernel buffer（user buffer ——&amp;gt; socket buffer）&lt;/p&gt;
+&lt;p&gt;socket buffer：内核中与该socket连接有关的缓冲区 每个socket被创建后都会分配一个输入缓冲区和一个输出缓冲区&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;write系统调用返回，导致内核空间到用户空间的再次上下文切换(第四次上下文切换)。将内核空间缓冲区中的数据写到hardware(第四次拷贝: kernel buffer ——&amp;gt; hardware)。(DMA拷贝)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;（socket buffer ——&amp;gt; protocol engine）本例中的 protocol engine就是hardware&lt;/p&gt;
+&lt;p&gt;这次拷贝是一个独立且异步的过程。&lt;/p&gt;
+&lt;p&gt;Q：你可能会问独立和异步这是什么意思？难道是调用会在数据被传输前返回？
+A：事实上调用的返回并不保证数据被传输；它甚至不保证传输的开始。它只是意味着将我们要发送的数据放入到了一个待发送的队列中，在我们之前可能有许多数据包在排队。除非驱动器或硬件实现优先级环或队列，否则数据是以先进先出的方式传输的。&lt;/p&gt;
+&lt;p&gt;总的来说，传统的I/O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。显然从内核空间到用户空间内存的复制是完全不必要的，所以，我们能不能直接从hardware读取数据到kernel buffer后，再从kernel buffer写到目标地点不就好了。注意，不同的操作系统对零拷贝的实现各不相同。在这里我们介绍linux下的零拷贝实现。&lt;/p&gt;
+&lt;h4 id=&#34;sendfile&#34;&gt;sendfile&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/8.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。通过DMA将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard driver ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后再将数据从内核空间缓冲区拷贝到内核中与socket相关的缓冲区中(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。（socket buffer才能将数据传递给协议引擎）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过sendfile实现的零拷贝I/O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。
+你可能会说操作系统仍然需要在内核内存空间中复制数据（kernel buffer —&amp;gt;socket buffer）。 是的，但从操作系统的角度来看，这已经是零拷贝，因为没有数据从内核空间复制到用户空间。&lt;/p&gt;
+&lt;p&gt;Q：但通过是这里还是存在着一次CPU拷贝操作，即，kernel buffer ——&amp;gt; socket buffer。是否有办法将该拷贝操作也取消掉了？
+A：有的。但这需要底层操作系统的支持。从Linux 2.4版本开始，操作系统底层提供了scatter/gather这种DMA的方式来从内核空间缓冲区中将数据直接读取到协议引擎中，而无需将内核空间缓冲区中的数据再拷贝一份到内核空间socket相关联的缓冲区中。&lt;/p&gt;
+&lt;h4 id=&#34;带有dma收集拷贝scattergather功能的sendfile&#34;&gt;带有DMA收集拷贝（scatter/gather）功能的sendfile&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/9.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;没有数据拷贝到socket缓冲区。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;取而代之的是只有相应的描述符信息会被拷贝到相应的socket缓冲区当中。该描述符包含了两方面的信息：a) kernel buffer的内存地址；b) kernel buffer的偏移量。&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;DMA gather copy根据socket缓冲区中描述符提供的位置和偏移量信息直接将内核空间缓冲区中的数据拷贝到协议引擎上(第二次拷贝: kernel buffer ——&amp;gt; protocol engine（可以看出是目标文件）)，这样就避免了最后一次CPU数据拷贝。&lt;/p&gt;
+&lt;p&gt;带有DMA收集拷贝功能的sendfile实现的I/O只使用了2次用户空间与内核空间的上下文切换，以及2次数据的拷贝，而且这2次的数据拷贝都是非CPU拷贝。这样一来我们就实现了最理想的零拷贝I/O传输了，不需要任何一次的CPU拷贝，以及最少的上下文切换。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;sendfile零拷贝消除了所有内核空间缓冲区与用户空间缓冲区之间的数据拷贝过程，因此sendfile零拷贝I/O的实现是完成在内核空间中完成的，这对于应用程序来说就无法对数据进行操作了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决:通过mmap实现的零拷贝 只有使用mmap的kernel buffer内核缓冲区才是在用户空间和内核空间是共享的&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/10.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;发出mmap系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;mmap系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接着用户空间和内核空间共享这个缓冲区，而不需要将数据从内核空间拷贝到用户空间。因为用户空间和内核空间共享了这个缓冲区数据，所以用户空间就可以像在操作自己缓冲区中数据一般操作这个由内核空间共享的缓冲区数据。&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;发出write系统调用，导致用户空间到内核空间的上下文切换(第三次上下文切换)。将数据从内核空间缓冲区拷贝到内核空间socket相关联的缓冲区(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。
+\4. write系统调用返回，导致内核空间到用户空间的上下文切换(第四次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过mmap实现的零拷贝I/O进行了4次用户空间与内核空间的上下文切换，以及3次数据拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。明显，它与传统I/O相比仅仅少了1次内核空间缓冲区和用户空间缓冲区之间的CPU拷贝。&lt;/p&gt;
+&lt;p&gt;这样的好处是，我们可以将整个文件或者整个文件的一部分映射到内存当中，用户直接对内存中对文件进行操作，然后是由操作系统来进行相关的页面请求并将内存的修改写入到文件当中。我们的应用程序只需要处理内存的数据，这样可以实现非常迅速的I/O操作。&lt;/p&gt;
+&lt;h2 id=&#34;java-nio中的bytebuffer&#34;&gt;Java NIO中的ByteBuffer&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;HeapByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;调用ByteBuffer.allocate()时使用。它被称为堆，因为它保存在JVM的堆空间中，因此您可以获得所有优势，如GC支持和缓存优化。 但是，它不是页面对齐的，这意味着如果您需要通过JNI与本地代码交谈，JVM将不得不复制到对齐的缓冲区空间。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;DirectByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在调用ByteBuffer.allocateDirect（）时使用。 JVM将使用malloc（）在堆空间之外分配内存空间。 因为它不是由JVM管理的，所以你的内存空间是页面对齐的，不受GC影响，这使得它成为处理本地代码的完美选择。 然而，你要C程序员一样，自己管理这个内存，必须自己分配和释放内存来防止内存泄漏。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MappedByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在调用FileChannel.map（）时使用。 与DirectByteBuffer类似，这也是JVM堆外部的情况。&lt;/p&gt;
+&lt;p&gt;它基本上作为OS mmap（）系统调用的包装函数，以便代码直接操作映射的物理内存数据。&lt;/p&gt;
 </description>
       
     </item>
@@ -141,7 +771,7 @@
     <item>
       <title>进程与线程</title>
       <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <pubDate>Sat, 15 Feb 2020 13:39:23 +0800</pubDate>
       
       <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
       
@@ -401,178 +1031,156 @@ int shmctl(int shm_id, int cmd, struct shmid_ds *buf);
     </item>
     
     <item>
-      <title>进程通信</title>
-      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</link>
+      <title>虚拟内存</title>
+      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
+      <pubDate>Fri, 14 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
+      
+        <description>&lt;h3 id=&#34;虚拟内存&#34;&gt;虚拟内存&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;页：&lt;/strong&gt; 将进程划分的块，对应的大小就叫页面大小&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;页框：&lt;/strong&gt; 将内存划分的块&lt;/p&gt;
+&lt;p&gt;一个页里有一个页框，理论上，页和页框的大小相同&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;页表：&lt;/strong&gt; 页和页框一一对应的关系表，存放在内存中，通过页表能查找到哪个页对应哪个页框&lt;/p&gt;
+&lt;h4 id=&#34;为什么要有虚拟内存&#34;&gt;&lt;strong&gt;为什么要有虚拟内存？&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;物理内存：物理地址即实际内存地址&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.因为机器物理内存是有限的，当有多个进程要执行的时候，都要给4G内存，当机器内存小的时候，这很快就分配完了，于是没有得到分配资源的进程就只能等待，当一个进程执行完了以后，再将等待的进程装入内存。这种频繁的装入内存的操作是很没效率的。
+2.由于指令都是直接访问物理内存的，那么我这个进程就可以修改其他进程的数据，甚至会修改内核地址空间的数据，这是我们不想看到的
+3.因为内存是随机分配的，所以程序运行的地址也是不正确的。
+&lt;strong&gt;虚拟内存：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每个进程得到一个4G虚拟内存，（可以当作是每个进程认为自己拥有4G的空间，但实际上，在虚拟内存对应的物理内存上，可能只对应一点点的物理内存，即实际使用了多少内存就对应多少物理内存）&lt;/p&gt;
+&lt;p&gt;进程得到的这4G虚拟内存是一个  &lt;strong&gt;连续的地址空间（这也只是进程认为），而实际上，它通常是被分隔成多个物理内存碎片，还有一部分存储在外部磁盘存储器上，在需要时进行数据交换。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;进程访问一个内存地址，会发生&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1.每次我要访问地址空间上的某一个地址，都需要把虚拟地址翻译为实际物理内存地址
+2.所有进程共享这整一块物理内存，每个进程只把自己目前需要的虚拟地址空间映射到物理内存上
+3.进程需要知道哪些地址空间上的数据在物理内存上，哪些不在（可能这部分存储在磁盘上），还有在物理内存上的哪里，这就需要通过页表来记录
+4.页表的每一个表项分两部分，第一部分记录此页是否在物理内存上，第二部分记录物理内存页的地址（如果在的话）
+5.当进程访问某个虚拟地址的时候，就会先去看页表，如果发现对应的数据不在物理内存上，就会发生缺页异常
+6.缺页异常的处理过程，操作系统立即阻塞该进程，并将硬盘里对应的页换入内存，然后使该进程就绪，如果内存已经满了，没有空地方了，那就找一个页覆盖，至于具体覆盖的哪个页，就需要看操作系统的页面置换算法是怎么设计的了。&lt;/p&gt;
+&lt;p&gt;内存被分为大小相等的多个块,称为页(Page).每个页都是一段连续的地址。&lt;/p&gt;
+&lt;p&gt;对于进程来看,逻辑上貌似有很多内存空间，其中一部分对应物理内存上的一块(称为页框，通常页和页框大小相等)，还有一些没加载在内存中的对应在硬盘上。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;虚拟内存实际上可以比物理内存大。&lt;/p&gt;
+&lt;p&gt;虚拟内存和物理内存的匹配是通过页表实现，页表存在MMU中。&lt;/p&gt;
+&lt;p&gt;页表中每个项通常为32位，既4byte,除了存储虚拟地址和页框地址之外，还会存储一些标志位，比如是否缺页，是否修改过，写保护等。&lt;/p&gt;
+&lt;p&gt;可以把MMU想象成一个接收虚拟地址项返回物理地址的方法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;进程中的内核地址空间（1G）直接映射到物理内存，即所有的进程都共享这1G内核空间，只有3G用户内存是进程私有的&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;为什么需要区分用户空间和内核空间&#34;&gt;&lt;strong&gt;为什么需要区分用户空间和内核空间？&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;在 CPU 的所有指令中，有些指令是非常危险的，如果错用，将导致系统崩溃，比如清内存、设置时钟等。如果允许所有的程序都可以使用这些指令，那么系统崩溃的概率将大大增加。
+所以，CPU 将指令分为特权指令和非特权指令，对于那些危险的指令，只允许操作系统及其相关模块使用，普通应用程序只能使用那些不会造成灾难的指令。比如 Intel 的 CPU 将特权等级分为 4 个级别：Ring0~Ring3。
+其实 Linux 系统只使用了 Ring0 和 Ring3 两个运行级别(Windows 系统也是一样的)。当进程运行在 Ring3 级别时被称为运行在用户态，而运行在 Ring0 级别时被称为运行在内核态。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;当进程运行在内核空间时就处于内核态，而进程运行在用户空间时则处于用户态。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1.我们的cpu想访问虚拟地址所在的虚拟页(VP3)，根据页表，找出页表中第三条的值.判断有效位。 如果有效位为1，DRMA缓存命中，根据物理页号，找到物理页当中的内容，返回。
+2.若有效位为0，参数缺页异常，调用内核缺页异常处理程序。内核通过页面置换算法选择一个页面作为被覆盖的页面，将该页的内容刷新到磁盘空间当中。然后把VP3映射的磁盘文件缓存到该物理页上面。然后页表中第三条，有效位变成1，第二部分存储上了可以对应物理内存页的地址的内容。
+3.缺页异常处理完毕后，返回中断前的指令，重新执行，此时缓存命中，执行1。
+4.将找到的内容映射到告诉缓存当中，CPU从告诉缓存中获取该值，结束。&lt;/p&gt;
+&lt;h4 id=&#34;总结&#34;&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;当每个进程创建的时候，内核会为进程分配4G的虚拟内存，当进程还没有开始运行时，这只是一个内存布局。实际上并不立即就把虚拟内存对应位置的程序数据和代码（比如.text .data段）拷贝到物理内存中，只是建立好虚拟内存和磁盘文件之间的映射就好（叫做存储器映射）。这个时候数据和代码还是在磁盘上的。当运行到对应的程序时，进程去寻找页表，发现页表中地址没有存放在物理内存上，而是在磁盘上，于是发生缺页异常，于是将磁盘上的数据拷贝到物理内存中。&lt;/p&gt;
+&lt;p&gt;另外在进程运行过程中，要通过malloc来动态分配内存时，也只是分配了虚拟内存，即为这块虚拟内存对应的页表项做相应设置，当进程真正访问到此数据时，才引发缺页异常。&lt;/p&gt;
+&lt;p&gt;可以认为虚拟空间都被映射到了磁盘空间中（事实上也是按需要映射到磁盘空间上，通过mmap，mmap是用来建立虚拟空间和磁盘空间的映射关系的）&lt;/p&gt;
+&lt;h4 id=&#34;优点&#34;&gt;&lt;strong&gt;优点&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;1.既然每个进程的内存空间都是一致而且固定的（32位平台下都是4G），所以链接器在链接可执行文件时，可以设定内存地址，而不用去管这些数据最终实际内存地址，这交给内核来完成映射关系
+2.当不同的进程使用同一段代码时，比如库文件的代码，在物理内存中可以只存储一份这样的代码，不同进程只要将自己的虚拟内存映射过去就好了，这样可以节省物理内存
+3.在程序需要分配连续空间的时候，只需要在虚拟内存分配连续空间，而不需要物理内存时连续的，实际上，往往物理内存都是断断续续的内存碎片。这样就可以有效地利用我们的物理内存&lt;/p&gt;
+&lt;h3 id=&#34;为什么会出现分段分页&#34;&gt;为什么会出现分段、分页？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;为了更好的管理计算机内存&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;之前的问题&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;某个程序大小是10M，然后，就需要有&lt;strong&gt;连续的&lt;/strong&gt;10M内存空间才能把这个程序装载到内存里面。如果无法找到连续的10M内存，就无法把这个程序装载进内存里面，程序也就无法得到运行。&lt;/p&gt;
+&lt;h4 id=&#34;1地址空间不隔离&#34;&gt;1.地址空间不隔离。&lt;/h4&gt;
+&lt;p&gt;只能操作连续的地址空间，一旦不小心操作了其它地址空间则程序出错。&lt;/p&gt;
+&lt;p&gt;假设我有两个程序，一个是程序A，一个是程序B。程序A在内存中的地址假设是0x00000000~0x00000099，程序B在内存中的地址假设是0x00000100~x00000199。那么假设你在程序A中，本来想操作地址0x00000050，不小心手残操作了地址0x00000150，那么，不好的事情或许会发生。你影响了程序A也就罢了，你把程序B也搞了一顿。&lt;/p&gt;
+&lt;h4 id=&#34;2程序运行时地址不确定&#34;&gt;2.程序运行时地址不确定&lt;/h4&gt;
+&lt;p&gt;每次装载进程序的内存位置发生改变时，用户无法及时更改操作。&lt;/p&gt;
+&lt;p&gt;因为我们程序每次要运行的时候，都是需要装载到内存中的，假设你在程序中写死了要操作某个地址的内存，例如你要地址0x00000010。但是问题来了，你能够保证你操作的地址0x00000010真的就是你原来想操作的那个位置吗？很可能程序第一次装载进内存的位置是0x00000000~0x00000099，而程序第二次运行的时候，这个程序装载进内存的位置变成了0x00000200~0x00000299，而你操作的0x00000010地址压根就不是属于这个程序所占有的内存。&lt;/p&gt;
+&lt;h4 id=&#34;3内存使用率低下&#34;&gt;3.内存使用率低下&lt;/h4&gt;
+&lt;p&gt;举个例子，假设你写了3个程序，其中程序A大小为10M，程序B为70M，程序C的大小为30M你的计算机的内存总共有100M。&lt;/p&gt;
+&lt;p&gt;这三个程序加起来有110M，显然这三个程序是无法同时存在于内存中的。&lt;/p&gt;
+&lt;p&gt;并且最多只能够同时运行两个程序。可能是这样的，程序A占有的内存空间是0x00000000～0x00000009，程序B占有的内存空间是0x00000010～0x00000079。假设这个时候程序C要运行该怎么做？可以把其中的一个程序换出到磁盘上，然后再把程序C装载到内存中。假设是把程序A换出，那么程序C还是无法装载进内存中，因为内存中空闲的连续区域有两块，一块是原来程序A占有的那10M，还有就是从0x00000080～0x00000099这20M，所以，30M的程序C无法装载进内存中。那么，唯一的办法就是把程序B换出，保留程序A，但是，此时会有60M的内存无法利用起来，很浪费对吧。&lt;/p&gt;
+&lt;h3 id=&#34;分段存储管理&#34;&gt;分段存储管理&lt;/h3&gt;
+&lt;p&gt;将一个程序分成代码段、数据段、堆栈段等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;把虚拟地址空间映射到了物理地址空间，并且你写的程序操作的是虚拟地址&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;解决上面1.2问题， &lt;strong&gt;分段机制映射的是一片连续的物理内存&lt;/strong&gt; ，无法解决问题3.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;分页存储管理&#34;&gt;分页存储管理&lt;/h3&gt;
+&lt;p&gt;将这些段，例如代码段分成均匀的小块，然后这些给这些小块编号，然后就可以放到内存中去，由于编号了的，所以也不怕顺序乱&lt;/p&gt;
+&lt;p&gt;分页仍然是 &lt;strong&gt;把虚拟地址空间映射到了物理地址空间&lt;/strong&gt; 但是粒度更小，单位不是整个程序，而是某个“页”。&lt;/p&gt;
+&lt;p&gt;分页，它的虚拟地址空间仍然是连续的，但是，每一页映射后的物理地址就不一定是连续的了。&lt;/p&gt;
+&lt;h3 id=&#34;分页和分段的区别&#34;&gt;&lt;strong&gt;分页和分段的区别&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;主要区别：粒度大小&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;a)&lt;/strong&gt;  页是信息的物理单位，分页是为实现离散分配方式，以消减内存的外零头，提高内存的利用率；或者说，分页仅仅是由于系统管理的需要，而不是用户的需要（也是对用户透明的）。&lt;/p&gt;
+&lt;p&gt;段是信息的逻辑单位，它含有一组其意义相对完整的信息（比如数据段、代码段和堆栈段等）。分段的目的是为了能更好的满足用户的需要（用户也是可以使用的）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;b)&lt;/strong&gt;  页的大小固定且由系统确定，把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的，因而一个系统只能有一种大小的页面。段的长度却不固定，决定于用户所编写的程序，通常由编辑程序在对源程序进行编辑时，根据信息的性质来划分。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;c)&lt;/strong&gt;  分页的作业地址空间是一维的，即单一的线性空间，程序员只须利用一个记忆符（线性地址的16进制表示），即可表示一地址。&lt;/p&gt;
+&lt;p&gt;分段的作业地址空间是二维的，程序员在标识一个地址时，既需给出段名（比如数据段、代码段和堆栈段等），又需给出段内地址。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;d)&lt;/strong&gt;  页和段都有存储保护机制。但存取权限不同：段有读、写和执行三种权限；而页只有读和写两种权限。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>用户态和内核态</title>
+      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
+      <pubDate>Thu, 13 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      
+        <description>&lt;h2 id=&#34;用户态和内核态&#34;&gt;用户态和内核态&lt;/h2&gt;
+&lt;p&gt;内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的&lt;/p&gt;
+&lt;p&gt;用户态（User Mode）：运行用户程序（用户自己编写的程序）&lt;/p&gt;
+&lt;h2 id=&#34;用户态和内核态的切换&#34;&gt;&lt;strong&gt;用户态和内核态的切换&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;当运行用户程序时，大部分时间是运行在用户态。&lt;/p&gt;
+&lt;p&gt;当需要内核态的操作或资源时，切换到内核态。&lt;/p&gt;
+&lt;p&gt;1.系统调用：如read(),write()访问系统资源。&lt;/p&gt;
+&lt;p&gt;2.异常：当cpu在执行运行在用户态下的程序时，发生了一些没有预知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关进程中，也就是切换到了内核态，如缺页异常。&lt;/p&gt;
+&lt;p&gt;3.外围设备的中断：当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号，这时CPU会暂停执行下一条即将要执行的指令而转到与中断信号对应的处理程序去执行，如果前面执行的指令时用户态下的程序，那么转换的过程自然就会是 由用户态到内核态的切换。&lt;/p&gt;
+&lt;p&gt;如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后边的操作等。&lt;/p&gt;
+&lt;h2 id=&#34;僵尸进程&#34;&gt;僵尸进程&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;定义&lt;/strong&gt;  完成了生命周期但却依然留在进程表中的进程，我们称之为 “僵尸进程”。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何产生：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当你运行一个程序时，它会产生一个父进程以及很多子进程。 所有这些子进程都会消耗内核分配给它们的内存和CPU 资源。
+这些子进程完成执行后会发送一个 Exit 信号然后死掉。这个 Exit 信号需要被父进程所读取。父进程需要随后调用 wait 命令来读取子进程的退出状态，并将子进程从进程表中移除。
+若父进程正确第读取了子进程的 Exit 信号，则子进程会从进程表中删掉。
+但若父进程未能读取到子进程的 Exit 信号，则这个子进程虽然完成执行处于死亡的状态，但也不会从进程表中删掉。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;处理：&lt;/strong&gt;
+打开终端并输入下面命令:
+ps -aux | grep Z
+kill -s SIGCHLD pid
+将这里的 pid 替换成父进程的进程 id，这样父进程就会删除所有以及完成并死掉的子进程了。
+确保删除子僵尸的唯一方法就是杀掉它们的父进程。&lt;/p&gt;
+&lt;h3 id=&#34;ps--aux什么意思&#34;&gt;ps -aux什么意思&lt;/h3&gt;
+&lt;p&gt;ps -aux 显示所有的进程（静态）&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a 显示所有用户的进程
+u 显示用户
+x 显示无控制终端的进程&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;进程调度策略&#34;&gt;进程调度策略&lt;/h2&gt;
+&lt;h3 id=&#34;先进先出算法fifo&#34;&gt;&lt;strong&gt;先进先出算法(FIFO):&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;按照进程进入就绪队列的先后次序来选择。即每当进入进程调度，总是把就绪队列的队首进程投入运行。&lt;/p&gt;
+&lt;h3 id=&#34;时间片轮转算法rr&#34;&gt;&lt;strong&gt;时间片轮转算法(RR):&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;分时系统的一种调度算法。轮转的基本思想是，将CPU的处理时间划分成一个个的时间片，就绪队列中的进程轮流运行一个时间片。当时间片结束时，就强迫进程让出CPU，该进程进入就绪队列，等待下一次调度，同时，进程调度又去选择就绪队列中的一个进程，分配给它一个时间片，以投入运行。&lt;/p&gt;
+&lt;h3 id=&#34;最高优先级算法hpf&#34;&gt;&lt;strong&gt;最高优先级算法(HPF):&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;进程调度每次将处理机分配给具有最高优先级的就绪进程。最高优先级算法可与不同的CPU方式结合形成可抢占式最高优先级算法和不可抢占式最高优先级算法。&lt;/p&gt;
+&lt;h3 id=&#34;多级队列反馈法&#34;&gt;&lt;strong&gt;多级队列反馈法:&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;几种调度算法的结合形式多级队列方式。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>关于</title>
+      <link>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</link>
       <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</guid>
+      <guid>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</guid>
       
-        <description>&lt;h2 id=&#34;五种主要的io模型&#34;&gt;&lt;strong&gt;五种主要的IO模型&lt;/strong&gt;&lt;/h2&gt;
-&lt;h3 id=&#34;同步阻塞io-blocking-io&#34;&gt;同步阻塞IO （Blocking IO）&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/1.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;（1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统进程将用户线程所需的系统资源写入内核缓冲区）。很多时候，数据在一开始还没有到达（比如，还没有收到一个完整的Socket数据包），这个时候kernel就要等待足够的数据到来。&lt;/p&gt;
-&lt;p&gt;（2）当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
-&lt;p&gt;（3）从开始IO读的read系统调用开始，用户线程就进入阻塞状态。一直到kernel返回结果后，用户线程才解除block的状态，重新运行起来。&lt;/p&gt;
-&lt;p&gt;所以，blocking IO的特点就是在内核进行IO执行的两个阶段，用户线程都被block了。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;BIO的优点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;程序简单，在阻塞等待数据期间，用户线程挂起。用户线程基本不会占用 CPU 资源。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;BIO的缺点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;一般情况下，会为每个连接配套一条独立的线程，或者说一条线程维护一个连接成功的IO流的读写。在并发量小的情况下，这个没有什么问题。但是，当在高并发的场景下，服务器需要大量的线程来维护大量的网络连接，内存、线程切换开销会非常巨大。因此，基本上，BIO模型在高并发场景下是不可用的。&lt;/p&gt;
-&lt;h3 id=&#34;同步非阻塞nionone-blocking-io&#34;&gt;&lt;strong&gt;同步非阻塞NIO（None Blocking IO）&lt;/strong&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/2.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;（1）在内核数据没有准备好的阶段，用户线程发起IO请求时，立即返回。用户线程需要不断地发起IO系统调用，直到获取到资源。&lt;/p&gt;
-&lt;p&gt;（2）内核数据到达后，用户线程发起系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
-&lt;p&gt;（3）用户线程才解除block的状态，重新运行起来。经过多次的尝试，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NIO的特点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;应用程序的线程需要不断的进行 I/O 系统调用，轮询数据是否已经准备好，如果没有准备好，继续轮询，直到完成系统调用为止。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NIO的优点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;每次发起的 IO 系统调用，在内核的等待数据过程中可以立即返回。用户线程不会阻塞，实时性较好。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NIO的缺点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;需要不断的重复发起IO系统调用，这种不断的轮询，将会不断地询问内核，这将占用大量的 CPU 时间，系统资源利用率较低。&lt;/p&gt;
-&lt;p&gt;总之，NIO模型在高并发场景下，也是不可用的。一般 Web 服务器不使用这种 IO 模型。一般很少直接使用这种模型，而是在其他IO模型中使用非阻塞IO这一特性。java的实际开发中，也不会涉及这种IO模型。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;  Java NIO（New IO） 不是IO模型中的NIO模型，而是另外的一种模型，叫做IO多路复用模型（ IO multiplexing ）。&lt;/p&gt;
-&lt;h3 id=&#34;io多路复用模型io-multiplexing&#34;&gt;&lt;strong&gt;IO多路复用模型(I/O multiplexing）&lt;/strong&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;服务器复用同一线程 接受 多个客户端请求线程&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;用户线程轮询&amp;mdash;》系统内核select/epoll 轮询 数据是否准备好&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/3.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列。&lt;/p&gt;
-&lt;p&gt;在这种模式中，首先不是进行read系统调动，而是进行select/epoll系统调用。当然，这里有一个前提，需要将目标网络连接，提前注册到select/epoll的可查询socket列表中。然后，才可以开启整个的IO多路复用模型的读流程。&lt;/p&gt;
-&lt;p&gt;（1）进行select/epoll系统调用，查询可以读的连接。kernel会查询所有select的可查询socket列表，当任何一个socket中的数据准备好了，select就会返回。&lt;/p&gt;
-&lt;p&gt;当用户进程调用了select，那么整个线程会被block（阻塞掉）。&lt;/p&gt;
-&lt;p&gt;（2）用户线程获得了目标连接后，发起read系统调用，用户线程阻塞。内核开始复制数据。它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存），然后kernel返回结果。&lt;/p&gt;
-&lt;p&gt;（3）用户线程才解除block的状态，用户线程终于真正读取到数据，继续执行。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;多路复用IO的特点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;IO多路复用模型，建立在操作系统kernel内核能够提供的多路分离系统调用select/epoll基础之上的。多路复用IO需要用到两个系统调用（system call）， 一个select/epoll查询调用，一个是IO的读取调用。&lt;/p&gt;
-&lt;p&gt;和NIO模型相似，多路复用IO需要轮询。负责select/epoll查询调用的线程，需要不断的进行select/epoll轮询，查找出可以进行IO操作的连接。&lt;/p&gt;
-&lt;p&gt;另外，多路复用IO模型与前面的NIO模型，是有关系的。对于每一个可以查询的socket，一般都设置成为non-blocking模型。只是这一点，对于用户程序是透明的（不感知）。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;多路复用IO的优点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;用select/epoll的优势在于，它可以同时处理成千上万个连接（用户请求）。与一条线程维护一个连接相比，I/O多路复用技术的最大优势是：系统不必创建线程，也不必维护这些线程，从而大大减小了系统的开销。&lt;/p&gt;
-&lt;p&gt;多个连接的情况下，不会有连接被阻塞，select/epoll会在内核里维护一个列表，每个连接的socket都会在这个列表里，当有数据来的时候，会遍历这里面的socket，唤起连接到工作队列&lt;/p&gt;
-&lt;p&gt;Java的NIO（new IO）技术，使用的就是IO多路复用模型。在linux系统上，使用的是epoll系统调用。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;多路复用IO的缺点&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;本质上，select/epoll系统调用，属于同步IO，也是阻塞IO。都需要在读写事件就绪后，自己负责进行读写，也就是说这个读写过程是阻塞的。&lt;/p&gt;
-&lt;h3 id=&#34;信号驱动io&#34;&gt;信号驱动IO&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/4.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;允许Socket进行信号驱动IO,并注册一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。&lt;/p&gt;
-&lt;h3 id=&#34;异步io模型asynchronous-io&#34;&gt;&lt;strong&gt;异步IO模型（asynchronous IO）&lt;/strong&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/5.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;kernel的数据准备是将（请求数据）从网络物理设备（网卡）读取到内核缓冲区；kernel的数据复制是将数据从内核缓冲区拷贝到用户程序空间的缓冲区。&lt;/p&gt;
-&lt;p&gt;（1）当用户线程调用了read系统调用，立刻就可以开始去做其它的事，用户线程不阻塞。&lt;/p&gt;
-&lt;p&gt;（2）内核（kernel）就开始了IO的第一个阶段：准备数据。当kernel一直等到数据准备好了，它就会将数据从kernel内核缓冲区，拷贝到用户缓冲区（用户内存）。&lt;/p&gt;
-&lt;p&gt;（3）kernel会给用户线程发送一个信号（signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。&lt;/p&gt;
-&lt;p&gt;（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。&lt;/p&gt;
-&lt;h4 id=&#34;异步io模型的特点&#34;&gt;&lt;strong&gt;异步IO模型的特点&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;在内核kernel的等待数据和复制数据的两个阶段，用户线程都不是block(阻塞)的。用户线程需要接受kernel的IO操作完成的事件，或者说注册IO操作完成的回调函数，到操作系统的内核。所以说，异步IO有的时候，也叫做信号驱动 IO 。&lt;/p&gt;
-&lt;h4 id=&#34;异步io模型缺点&#34;&gt;&lt;strong&gt;异步IO模型缺点&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;需要完成事件的注册与传递，这里边需要底层操作系统提供大量的支持，去做大量的工作。&lt;/p&gt;
-&lt;p&gt;目前来说， Windows 系统下通过 IOCP 实现了真正的异步 I/O。但是，就目前的业界形式来说，Windows 系统，很少作为百万级以上或者说高并发应用的服务器操作系统来使用。&lt;/p&gt;
-&lt;p&gt;而在 Linux 系统下，异步IO模型在2.6版本才引入，目前并不完善。所以，这也是在 Linux 下，实现高并发网络编程时都是以 IO 复用模型模式为主。&lt;/p&gt;
-&lt;h3 id=&#34;零拷贝&#34;&gt;零拷贝&lt;/h3&gt;
-&lt;p&gt;指的是内核空间与用户空间之间零次拷贝&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;好处&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;减少甚至完全避免不必要的CPU拷贝，从而让CPU解脱出来去执行其他的任务&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;减少内存带宽的占用&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;通常零拷贝技术还能够减少用户空间和操作系统内核空间之间的上下文切换&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;dma直接内存访问&#34;&gt;&lt;strong&gt;DMA&lt;/strong&gt;:直接内存访问&lt;/h4&gt;
-&lt;p&gt;DMA是允许外设组件将I/O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。&lt;/p&gt;
-&lt;p&gt;而用户空间与内核空间之间的数据传输并没有类似DMA这种可以不需要CPU参与的传输工具，因此用户空间与内核空间之间的数据传输是需要CPU全程参与的。&lt;/p&gt;
-&lt;p&gt;所也就有了通过零拷贝技术来减少和避免不必要的CPU数据拷贝过程。&lt;/p&gt;
-&lt;h4 id=&#34;传统io&#34;&gt;&lt;strong&gt;传统IO&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;通过read()将数据放入缓冲区buffer,再通过write输出。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/6.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/7.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;JVM发出read() 系统调用。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS上下文切换到内核模式（第一次上下文切换）并将数据读取到内核空间缓冲区(DMA引擎中执行)。(第一次拷贝：hardware —-&amp;gt; kernel buffer）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS内核然后将数据复制到用户空间缓冲区（CPU拷贝）(第二次拷贝: kernel buffer ——&amp;gt; user buffer)，然后read系统调用返回。而系统调用的返回又会导致一次内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;JVM处理代码逻辑并发送write（）系统调用。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS上下文切换到内核模式(第三次上下文切换)并从用户空间缓冲区复制数据到内核空间缓冲区（CPU拷贝）(第三次拷贝: user buffer ——&amp;gt; kernel buffer)。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;本例中的socket buffer就是kernel buffer（user buffer ——&amp;gt; socket buffer）&lt;/p&gt;
-&lt;p&gt;socket buffer：内核中与该socket连接有关的缓冲区 每个socket被创建后都会分配一个输入缓冲区和一个输出缓冲区&lt;/p&gt;
-&lt;ol start=&#34;6&#34;&gt;
-&lt;li&gt;write系统调用返回，导致内核空间到用户空间的再次上下文切换(第四次上下文切换)。将内核空间缓冲区中的数据写到hardware(第四次拷贝: kernel buffer ——&amp;gt; hardware)。(DMA拷贝)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;（socket buffer ——&amp;gt; protocol engine）本例中的 protocol engine就是hardware&lt;/p&gt;
-&lt;p&gt;这次拷贝是一个独立且异步的过程。&lt;/p&gt;
-&lt;p&gt;Q：你可能会问独立和异步这是什么意思？难道是调用会在数据被传输前返回？
-A：事实上调用的返回并不保证数据被传输；它甚至不保证传输的开始。它只是意味着将我们要发送的数据放入到了一个待发送的队列中，在我们之前可能有许多数据包在排队。除非驱动器或硬件实现优先级环或队列，否则数据是以先进先出的方式传输的。&lt;/p&gt;
-&lt;p&gt;总的来说，传统的I/O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。显然从内核空间到用户空间内存的复制是完全不必要的，所以，我们能不能直接从hardware读取数据到kernel buffer后，再从kernel buffer写到目标地点不就好了。注意，不同的操作系统对零拷贝的实现各不相同。在这里我们介绍linux下的零拷贝实现。&lt;/p&gt;
-&lt;h4 id=&#34;sendfile&#34;&gt;sendfile&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/8.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。通过DMA将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard driver ——&amp;gt; kernel buffer)。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;然后再将数据从内核空间缓冲区拷贝到内核中与socket相关的缓冲区中(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。（socket buffer才能将数据传递给协议引擎）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;通过sendfile实现的零拷贝I/O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。
-你可能会说操作系统仍然需要在内核内存空间中复制数据（kernel buffer —&amp;gt;socket buffer）。 是的，但从操作系统的角度来看，这已经是零拷贝，因为没有数据从内核空间复制到用户空间。&lt;/p&gt;
-&lt;p&gt;Q：但通过是这里还是存在着一次CPU拷贝操作，即，kernel buffer ——&amp;gt; socket buffer。是否有办法将该拷贝操作也取消掉了？
-A：有的。但这需要底层操作系统的支持。从Linux 2.4版本开始，操作系统底层提供了scatter/gather这种DMA的方式来从内核空间缓冲区中将数据直接读取到协议引擎中，而无需将内核空间缓冲区中的数据再拷贝一份到内核空间socket相关联的缓冲区中。&lt;/p&gt;
-&lt;h4 id=&#34;带有dma收集拷贝scattergather功能的sendfile&#34;&gt;带有DMA收集拷贝（scatter/gather）功能的sendfile&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/9.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;发出sendfile系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;没有数据拷贝到socket缓冲区。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;取而代之的是只有相应的描述符信息会被拷贝到相应的socket缓冲区当中。该描述符包含了两方面的信息：a) kernel buffer的内存地址；b) kernel buffer的偏移量。&lt;/p&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;sendfile系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;DMA gather copy根据socket缓冲区中描述符提供的位置和偏移量信息直接将内核空间缓冲区中的数据拷贝到协议引擎上(第二次拷贝: kernel buffer ——&amp;gt; protocol engine（可以看出是目标文件）)，这样就避免了最后一次CPU数据拷贝。&lt;/p&gt;
-&lt;p&gt;带有DMA收集拷贝功能的sendfile实现的I/O只使用了2次用户空间与内核空间的上下文切换，以及2次数据的拷贝，而且这2次的数据拷贝都是非CPU拷贝。这样一来我们就实现了最理想的零拷贝I/O传输了，不需要任何一次的CPU拷贝，以及最少的上下文切换。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;sendfile零拷贝消除了所有内核空间缓冲区与用户空间缓冲区之间的数据拷贝过程，因此sendfile零拷贝I/O的实现是完成在内核空间中完成的，这对于应用程序来说就无法对数据进行操作了&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;解决:通过mmap实现的零拷贝 只有使用mmap的kernel buffer内核缓冲区才是在用户空间和内核空间是共享的&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/phantommmm/phantommmm.github.io/blob/master/image/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/10.jpg?raw=true&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;发出mmap系统调用，导致用户空间到内核空间的上下文切换(第一次上下文切换)。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;通过DMA引擎将磁盘文件中的内容拷贝到内核空间缓冲区中(第一次拷贝: hard drive ——&amp;gt; kernel buffer)。&lt;/p&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;mmap系统调用返回，导致内核空间到用户空间的上下文切换(第二次上下文切换)。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;接着用户空间和内核空间共享这个缓冲区，而不需要将数据从内核空间拷贝到用户空间。因为用户空间和内核空间共享了这个缓冲区数据，所以用户空间就可以像在操作自己缓冲区中数据一般操作这个由内核空间共享的缓冲区数据。&lt;/p&gt;
-&lt;ol start=&#34;3&#34;&gt;
-&lt;li&gt;发出write系统调用，导致用户空间到内核空间的上下文切换(第三次上下文切换)。将数据从内核空间缓冲区拷贝到内核空间socket相关联的缓冲区(第二次拷贝: kernel buffer ——&amp;gt; socket buffer)。
-\4. write系统调用返回，导致内核空间到用户空间的上下文切换(第四次上下文切换)。通过DMA引擎将内核空间socket缓冲区中的数据传递到协议引擎(第三次拷贝: socket buffer ——&amp;gt; protocol engine)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;通过mmap实现的零拷贝I/O进行了4次用户空间与内核空间的上下文切换，以及3次数据拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。明显，它与传统I/O相比仅仅少了1次内核空间缓冲区和用户空间缓冲区之间的CPU拷贝。&lt;/p&gt;
-&lt;p&gt;这样的好处是，我们可以将整个文件或者整个文件的一部分映射到内存当中，用户直接对内存中对文件进行操作，然后是由操作系统来进行相关的页面请求并将内存的修改写入到文件当中。我们的应用程序只需要处理内存的数据，这样可以实现非常迅速的I/O操作。&lt;/p&gt;
-&lt;h2 id=&#34;java-nio中的bytebuffer&#34;&gt;Java NIO中的ByteBuffer&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;HeapByteBuffer&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;调用ByteBuffer.allocate()时使用。它被称为堆，因为它保存在JVM的堆空间中，因此您可以获得所有优势，如GC支持和缓存优化。 但是，它不是页面对齐的，这意味着如果您需要通过JNI与本地代码交谈，JVM将不得不复制到对齐的缓冲区空间。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;DirectByteBuffer&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在调用ByteBuffer.allocateDirect（）时使用。 JVM将使用malloc（）在堆空间之外分配内存空间。 因为它不是由JVM管理的，所以你的内存空间是页面对齐的，不受GC影响，这使得它成为处理本地代码的完美选择。 然而，你要C程序员一样，自己管理这个内存，必须自己分配和释放内存来防止内存泄漏。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;MappedByteBuffer&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在调用FileChannel.map（）时使用。 与DirectByteBuffer类似，这也是JVM堆外部的情况。&lt;/p&gt;
-&lt;p&gt;它基本上作为OS mmap（）系统调用的包装函数，以便代码直接操作映射的物理内存数据。&lt;/p&gt;
+        <description>&lt;h2 id=&#34;关于内容&#34;&gt;关于内容&lt;/h2&gt;
+&lt;p&gt;本博客发布的部分内容，可能并不能称之为文章，因为这些内容大多是本人学习过程的笔记。&lt;/p&gt;
+&lt;p&gt;若文章内容有误或读者有好的建议，欢迎通过邮件或qq联系我。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;邮件：&lt;/strong&gt; &lt;a href=&#34;mailto:15521010551@163.com&#34;&gt;15521010551@163.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;qq：&lt;/strong&gt; 897388824&lt;/p&gt;
 </description>
       
     </item>

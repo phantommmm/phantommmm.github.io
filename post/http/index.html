@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>HTTP - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/http/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="HTTP" />
+<meta property="og:description" content="网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/http/" />
+<meta property="article:published_time" content="2020-02-20T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-02-20T13:39:23+08:00" />
+<meta itemprop="name" content="HTTP">
+<meta itemprop="description" content="网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b">
+<meta itemprop="datePublished" content="2020-02-20T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-20T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="10703">
+
+
+
+<meta itemprop="keywords" content="HTTP,Session,ICMP," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HTTP"/>
+<meta name="twitter:description" content="网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">HTTP</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-02-20" class="post-time">
+          2020-02-20
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#http连接优化">HTTP连接优化</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+        <li><a href="#区别">区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#http-10">HTTP 1.0</a></li>
+    <li><a href="#http-11">HTTP 1.1</a>
+      <ul>
+        <li><a href="#从url输入一个网址发生了什么">从URL输入一个网址发生了什么？</a></li>
+        <li><a href="#分布式session共享">分布式Session共享？</a></li>
+      </ul>
+    </li>
+    <li><a href="#http2">Http2</a>
+      <ul>
+        <li><a href="#ping用的是什么协议">Ping用的是什么协议</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="网络">网络</h1>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/1.jpg?raw=true" alt=""></p>
+<h1 id="http">HTTP</h1>
+<p>HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理</p>
+<p>HTTP是 <strong>明文协议</strong>。<strong>每个HTTP请求和返回的每个byte都会在网络上明文传播，不管是url，header还是body</strong> 。这完全不是一个“是否容易在浏览器地址栏上看到“的问题。</p>
+<p><strong>为什么这么做？</strong></p>
+<p>把HTTP设计得简单，为了可以更快的处理大量的事务，确保协议的可伸缩性。</p>
+<p><strong>那我要保存状态怎么做？</strong></p>
+<p><strong>HTTP/1.1 引入了COOKIE技术</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/2.jpg?raw=true" alt=""></p>
+<p><strong>HTTP 1.1 引入了流水线（Pipelining）处理</strong> ，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。</p>
+<p>例如：一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍然需要使用各自的连接。</p>
+<p>HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容。</p>
+<p><strong>HTTP/1.1加入了一个新的状态码100（Continue）。</strong> 客户端事先发送一个只带头域的请求，如果服务器因为权限拒绝了请求，就回送响应码401（Unauthorized）；如果服务器接收此请求就回送响应码100，客户端就可以继续发送带实体的完整请求了。100 (Continue) 状态代码的使用，允许客户端在发request消息body之前先用request header试探一下server，看server要不要接收request body，再决定要不要发request body。</p>
+<p><strong>HTTP/1.1中引入了Chunked transfer-coding</strong> 来解决上面这个问题，发送方将消息分割成若干个任意大小的数据块，每个数据块在发送时都会附上块的长度，最后用一个零长度的块作为消息结束的标志。这种方法允许发送方只缓冲消息的一个片段，避免缓冲整个消息带来的过载。</p>
+<p>HTTP/1.1在1.0的基础上加入了一些cache的新特性，当缓存对象的Age超过Expire时变为stale对象，cache不需要直接抛弃stale对象，而是与源服务器进行重新激活（revalidation）。</p>
+<p><strong>HTTP/1.1增加host字段</strong> ，在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。</p>
+<p>HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中如果没有Host头域会报告一个错误（400 Bad Request）。此外，服务器应该接受以绝对路径标记的资源请求。</p>
+<h3 id="http连接优化">HTTP连接优化</h3>
+<h4 id="并行连接">并行连接</h4>
+<p>服务端接受多条http连接。</p>
+<p><strong>优点：</strong> 宽带资源充足情况下，同时建立多个HTTP连接，加快页面加载速度。</p>
+<p><strong>缺点：</strong> 宽带资源不足情况下，效率会下降。同一时间建立多条连接消耗大量内存，对服务端来说，大量的用户产生大量的连接可能会超过服务端的处理能力。</p>
+<h4 id="持久连接">持久连接</h4>
+<p><strong>非持久连接：HTTP处理完后，TCP连接断开</strong></p>
+<p><strong>TCP连接不断开</strong></p>
+<p>http允许在事务处理结束后将TCP连接保持在打开状态，以便未来的HTTP请求重用现存的连接。</p>
+<p>在事务处理结束之后仍然保持在打开状态的TCP连接称之为持久连接。</p>
+<p>重用已对目标服务端打开的空暇持久连接，就能够避免缓慢的连接建立阶段。同一时候，已经打开的连接还能够避免慢启动的拥塞适应阶段。以便更快的进行传输数据。</p>
+<p><strong>目前WEB服务器基本使用 并行连接和持久连接</strong></p>
+<h4 id="持久连接类型">持久连接类型</h4>
+<h5 id="http10-keep-alive">HTTP/1.0 keep-alive</h5>
+<p>需要通过报文首部请求，默认是不支持持久连接的。</p>
+<p>客户端发生请求报文头部包含Connection：Keep-Alive 首部请求将连接保持在打开状态。</p>
+<p>如果服务器愿意为下一条请求将连接保持在打开状态，就在响应中包含相同的首部。</p>
+<p>如果响应中没有Connection：Keep-Alive首部，客户端就认为服务器不支持keep-alive，会在发回响应报文之后关闭连接。</p>
+<h5 id="http11-persistent">HTTP/1.1 persistent</h5>
+<p>默认情况下都是持久连接。</p>
+<p>请求报文中添加一个Connection:close首部用来关闭持久连接。</p>
+<p>当客户端收到响应报文中包含close首部，就会关闭连接。</p>
+<p>不是没有接受到close首部连接就会一直存在，前提是该连接的所有报文都正确。例如：自定义报文长度和实际报文长度一致时，才能保证连接持久，否则连接断开。</p>
+<h4 id="管道化连接">管道化连接</h4>
+<p>Http1.1允许在持久连接上使用请求管道。</p>
+<p>在响应到达之前，可以将多条请求放入队列，当第一条请求通过网络流向服务器时，第二条、第三条请求就可以开始发送。无需等到收到第一条响应再发送。</p>
+<p>降低网络的环回实际，提高i性能。</p>
+<p><strong>限制</strong></p>
+<p>如果HTTP客户端无法确定连接是否是持久的，不应该使用管道。</p>
+<p>必须按照请求的顺序返回响应。因为http报文中没有序列号标签。因此假设收到的响应失序了。那么就没办法将其与请求匹配起来了。</p>
+<p>HTTP客户端必须做好连接会在任意时刻关闭的准备，还要准备好重发所有未完成管道化的请求。</p>
+<p>HTTP客户端不应该用管道化的方式发送会产生副作用的请求（POST请求）。比方POST是要买一本书，再运行一次就又买了一本书，显然是不能运行的。</p>
+<h4 id="http连接的关闭">HTTP连接的关闭</h4>
+<p>HTTP通信建立在TCP连接之上，所以http连接的关闭事实上就是TCP连接的关闭。</p>
+<p>连接关闭分为全然关闭和半关闭，close会 <strong>同一时候关闭输入和输出信道</strong> ，shutdown仅仅会 <strong>单独关闭输入或者输出信道</strong> 。</p>
+<h1 id="https">HTTPS</h1>
+<p>https用SSL/TLS协议协商出的密钥加密明文的http数据,保证安全性</p>
+<p>假设客户端为爱丽丝，服务器为鲍勃</p>
+<p>SSL/TLS握手阶段分为五步：</p>
+<p>第一步，爱丽丝给出协议版本号、一个客户端生成的随机数（Client random），以及客户端支持的加密方法。
+第二步，鲍勃确认双方使用的加密方法，并给出数字证书、以及一个服务器生成的随机数（Server random）。
+第三步，爱丽丝确认数字证书有效，然后生成一个新的随机数（Premaster secret），并使用数字证书中的公钥，加密这个随机数，发给鲍勃。
+第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。
+第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成&quot;对话密钥&rdquo;（session key），用来加密接下来的整个对话过程。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/3.jpg?raw=true" alt=""></p>
+<pre><code>（1）生成对话密钥一共需要三个随机数。
+
+（2）握手之后的对话使用&quot;对话密钥&quot;加密（对称加密），服务器的公钥和私钥只用于加密和解密&quot;对话密钥&quot;（非对称加密），无其他作用。
+
+（3）服务器公钥放在服务器的数字证书之中。
+</code></pre><p>非对称加密：加密 解密用的不是同一个密匙</p>
+<p>对称加密：加密 解密用的是用一个密匙</p>
+<p><strong>CA证书：证书授权中心</strong>  用于证明自己是哪个服务器，安不安全等</p>
+<p><strong>CA证书在SSL中的作用？</strong></p>
+<p>客户端需要对服务端的证书进行检查，如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。如果证书没有问题，客户端就会从服务器证书中取出服务器的公钥( <strong>公钥从证书中获取,证书的正确性由CA保证</strong> )</p>
+<p><strong>证书的申请过程</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/4.jpg?raw=true" alt=""></p>
+<p><strong>HTTP请求报文</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/5.jpg?raw=true" alt=""></p>
+<p><strong>HTTP响应报文</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/6.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/28.jpg?raw=true" alt=""></p>
+<h4 id="http首部11">HTTP首部（1.1）</h4>
+<p>1.通用类型首部。请求报文和响应报文都会使用到的首部。</p>
+<p>2.请求首部字段。从客户端向服务端请求报文的时候使用的首部。</p>
+<p>补充了请求的附加内容、客户端信息、响应客户端内容优先级等信息。</p>
+<p>3.响应首部字段。</p>
+<p>4.实体首部字段。针对请求报文和响应报文中的实体部分使用的首部。补充了资源内容更新时间等与实体相关的信息。</p>
+<p>具体字段值及意义：https://www.cnblogs.com/xzsty/p/11452610.html</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/7.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/8.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/9.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/10.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/11.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/12.jpg?raw=true" alt=""></p>
+<h4 id="http方法">HTTP方法</h4>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/13.jpg?raw=true" alt=""></p>
+<h4 id="get-一般用于获取查询资源-从服务器上获取数据">GET: 一般用于获取/查询资源 从服务器上获取数据</h4>
+<p>根据HTTP规范，GET用于信息的获取，而且应该是安全的和幂等的。</p>
+<p>安全：即不修改信息，不产生副作用。</p>
+<p>幂等：对同一URL的多个请求应该返回相同的结果。数学中，对一个数进行多次相同的运算，结果一样，则该运算时幂等的。</p>
+<p>但在实际应用中，以上2条规定并没有这么严格。比如，新闻站点的头版不断更新。虽然第二次请求会返回不同的一批新闻，该操作仍然被认为是安全的和幂等的，因为它总是返回当前的新闻。从根本上说，如果目标是当用户打开一个链接时，他可以确信从自身的角度来看没有改变资源即可。</p>
+<p><strong>提交方式：</strong> 请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以‘?’分割URL和传输数据，多个参数用‘&amp;’连接；地址栏中会显示出参数。</p>
+<p>例如：login.action?name=hyddd&amp;password=idontknow&amp;verify=%E4%BD%A0%E5%A5%BD。</p>
+<p>如果数据是英文字母/数字，原样发送，如果是空格，转换为+，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如：%E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。</p>
+<p><strong>传输数据大小：</strong> HTTP规范中没有对传输数据大小限制，但因为参数值在URL后面，但因为特定浏览器和服务器对URL长度有限制。因此对于GET提交时，传输数据就会受到URL长度的 限制。</p>
+<p><strong>安全性：</strong> POST的安全性要比GET的安全性高。</p>
+<p>比如：通过GET提交数据，用户名和密码将明文出现在URL上。</p>
+<p>(1)登录页面有可能被浏览器缓存，(2)其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-siterequest forgery攻击</p>
+<h4 id="post-一般用于更新修改资源-往服务器上发送数据">POST: 一般用于更新/修改资源 往服务器上发送数据</h4>
+<p>根据HTTP规范，POST表示可能修改变服务器上的资源的请求。还是新闻以网站为例，读者对新闻发表自己的评论应该通过POST实现，因为在评论提交后站点的资源已经不同了，或者说资源被修改了。</p>
+<p><strong>提交方式：</strong> 把提交的数据放置在是HTTP包的包体中。地址栏不会有参数列表。</p>
+<p><strong>传输数据大小：</strong> 由于不是通过URL传值，理论上数据不受 限。但实际各个WEB服务器会规定对post提交数据大小进行限制。</p>
+<p><strong>安全性：</strong> 高于GET。</p>
+<h3 id="区别">区别</h3>
+<p>不同浏览器下，有些浏览器在POST在提交表单后，再刷新浏览器，会提示重新提交表单。</p>
+<p>刷新浏览器会重新发送已经发送过的最后一个请求。如果是post，那么会再次提交表单。</p>
+<p>解决：将最后一次的post改为get，get不会重新发送请求。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/29.jpg?raw=true" alt=""></p>
+<p>对于GET方式，服务器端用Request.QueryString获取变量的值，</p>
+<p>对于POST方式，服务器端用Request.Form获取提交的数据</p>
+<p>GET请求只能进行url编码，而POST支持多种编码方式。</p>
+<p>GET请求参数会被完整保留在浏览器历史记录里，而POST中的参数不会被保留。</p>
+<p><strong>GET产生一个TCP数据包；POST产生两个TCP数据包（http1.1）？</strong></p>
+<p>对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；</p>
+<p>而对于POST，浏览器先发送header，服务器响应100-continue，浏览器再发送data，服务器响应200 ok（返回数据）。</p>
+<p><strong>第一次发送目的是让服务器解析请求头，然后决定怎么处理这个请求，打算处理则返回100-continue，否则返回4xx表示拒绝</strong></p>
+<p><strong>收到100-continue后，则发送数据</strong></p>
+<p>这样，就可以避免浪费带宽传请求体。但是代价就是会多一次Round Trip。如果刚好请求体的数据也不多，那么一次性全部发给服务器可能反而更好。</p>
+<p>例如：比如写一个上传文件的服务，请求url中包含了文件名称，请求体中是个尺寸为几百兆的压缩二进制流。服务器端接收到请求后，就可以先拿到请求头部，查看用户是不是有权限上传，文件名是不是符合规范等。如果不符合，就不再处理请求体的数据了，直接丢弃。而不用等到整个请求都处理完了再拒绝。</p>
+<p>在网络环境好的情况下，发一次包的时间和发两次包的时间差别基本可以无视。而在网络环境差的情况下，两次包的TCP在验证数据包完整性上，有非常大的优点。</p>
+<p>并不是所有浏览器都会在POST中发送两次包，Firefox就只发送一次。</p>
+<p><strong>为什么浏览器在GET请求时，会主动缓存相应的css、js等静态文件 POST不会？</strong></p>
+<p>因为浏览器GET对服务器的第一次请求会获取很多相关文件，如果每次都加载大量的文件对带宽、时间等有很大的损耗，所以GET请求后，将资源下载到本地，下次直接从本地拿，加快速度、减轻服务器压力</p>
+<p>而POST请求一般是往服务器发送数据，每次发送的数据可能千奇百怪，服务端不会去缓存。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/14.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/15.jpg?raw=true" alt=""></p>
+<p><strong>【HEAD：获得报文首部】</strong>
+HEAD方法和GET方法一样，知识不返回报文的主体部分，用于确认URI的有效性及资源更新的日期时间等。
+具体来说：1、判断类型； 2、查看响应中的状态码，看对象是否存在（响应：请求执行成功了，但无数据返回）； 3、测试资源是否被修改过
+HEAD方法和GET方法的区别： GET方法有实体，HEAD方法无实体。</p>
+<p><strong>【PUT：传输文件】</strong>
+PUT方法用来传输文件，就像FTP协议的文件上传一样，要求在 <strong>请求报文的主体中包含文件内容</strong> ，然后 <strong>保存在请求URI指定的位置</strong> 。但是HTTP/1.1的PUT方法自身不带验证机制，任何人都可以上传文件，存在安全问题，故一般不用。</p>
+<p><strong>【DELETE：删除文件】</strong>
+指明客户端想让服务器删除某个资源，与PUT方法相反，按URI删除指定资源</p>
+<p><strong>【OPTIONS：询问支持的方法】</strong>
+OPTIONS方法用来查询针对请求URI指定资源支持的方法（客户端询问服务器可以提交哪些请求方法）</p>
+<p><strong>【TRACE：追踪路径】</strong>
+TRACE方法是让Web服务器端将之前的请求通信还给客户端的方法追踪路径。</p>
+<p>使得服务器原样返回任何客户端请求的内容。</p>
+<p>发送请求的时候，在Max-Forwards首部字段中加入数值，每经过一个服务器端该数字就减一，当数值刚好减到0的时候，就停止传输，最后收到请求的服务器返回的200OK的响应。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/16.jpg?raw=true" alt=""></p>
+<p><strong>【CONNECT：要求用隧道协议连接代理】</strong>
+CONNECT方法要求在与代理服务器通信时建立隧道，实现用隧道协议进行TCP通信。主要使用SSL（安全套接层）和TLS（传输层安全）协议把通信内容加密后经网络隧道传输。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/17.jpg?raw=true" alt=""></p>
+<h2 id="http-10">HTTP 1.0</h2>
+<p>规定浏览器与服务器只保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不跟踪每个客户也不记录过去的请求。</p>
+<p>在1.0时的会话方式：</p>
+<p>1.建立连接 2.发出请求信息 3.回送响应信息 4.关掉连接</p>
+<h2 id="http-11">HTTP 1.1</h2>
+<p>HTTP 1.1支持持久连接Persistent Connection, 并且默认使用persistent connection. 在同一个tcp的连接中可以传送多个HTTP请求和响应. 多个请求和响应可以重叠，多个请求和响应可以同时进行.</p>
+<p>HTTP1.1新增请求头：</p>
+<p>Connection请求头的值为Keep-Alive时，客户端通知服务器返回本次请求结果后保持连接；Connection请求头的值为close时，客户端通知服务器返回本次请求结果后关闭连接。</p>
+<p>HTTP 1.1还提供了与身份认证、状态管理和Cache缓存等机制相关的请求头和响应头。</p>
+<h3 id="从url输入一个网址发生了什么">从URL输入一个网址发生了什么？</h3>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/18.jpg?raw=true" alt=""></p>
+<h4 id="1输入网址">1.输入网址</h4>
+<p><a href="http://www.163.com">www.163.com</a></p>
+<h4 id="2浏览器通过dns服务器查找网址对应的ip地址">2.浏览器通过DNS服务器查找网址对应的IP地址</h4>
+<ol>
+<li>浏览器首先查看 <strong>本地硬盘的hosts文件</strong> ，查看里面的映射中有没有该域名 对应的IP 有则直接返回。</li>
+<li>浏览器发起一个DNS请求到 <strong>本地DNS服务器</strong> 。本地DNS服务器一般都是你的网络接入服务器商提供，比如中国电信，中国移动。</li>
+<li>本地DNS服务器首先查询缓存记录，如果缓存中含有此条记录（即对应的IP），直接返回。否则， <strong>本地DNS服务器</strong> 向 <strong>DNS根服务器查询。</strong></li>
+<li>根DNS服务器没有缓存具体的域名</li>
+<li>和IP的映射关系，而是记录了网址属于哪个区域(<a href="http://www.163.com">www.163.com</a>属于.com区域管理)，告诉本地DNS服务器到相应的 <strong>域服务器</strong> （.com服务器）上查询，给出相应的域服务器地址。</li>
+<li>本地DNS服务器向域服务器发出请求，域服务器返回相应的域名解析服务器地址。（163.com域服务器）</li>
+<li>本地DNS服务器向域名解析服务器发送请求，这时才收到域名和IP的映射关系，本地DNS把该IP地址返回给浏览器，还把该映射缓存起来，方便下次查询。</li>
+</ol>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/19.jpg?raw=true" alt=""></p>
+<h4 id="31-使用套接字">3.1 使用套接字</h4>
+<p>调用系统库函数 socket,请求一个TCP流套接字。</p>
+<p>请求首先在 <strong>传输层</strong> 封装成 <strong>TCP segment(片)</strong> ，在头部添加 <strong>目标端口</strong> 。</p>
+<p>TCP segment 被送往 <strong>网络层</strong> ，网络层会在其中再加入一个  <strong>IP 头部</strong> ，里面包含了目标服务器的IP地址以及本机的IP地址，把它封装成一个 <strong>IP packet</strong> 。</p>
+<p>这个 TCP packet 接下来会进入 <strong>链路层</strong> ，链路层会在封包中加入  <strong>frame 头部</strong> ，里面包含了 <strong>本地内置网卡的MAC地址以及网关（本地路由器）的 MAC 地址</strong> 。像前面说的一样，如果内核不知道网关的 MAC 地址，它必须进行 ARP 广播来查询其地址。</p>
+<h4 id="32-建立tcp连接三次握手">3.2 建立TCP连接（三次握手）</h4>
+<p>浏览器拿到IP地址后，会以随机端口（1024&ndash;65535）向WEB服务器程序80端口发起TCP连接。</p>
+<h4 id="4浏览器向web服务器发起http请求">4.浏览器向WEB服务器发起Http请求</h4>
+<p>HTTP请求：请求方法、URL、协议版本</p>
+<p>​					 请求头</p>
+<p>​					 请求体</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/20.jpg?raw=true" alt=""></p>
+<h4 id="5服务器端处理">5.服务器端处理</h4>
+<p>服务器端收到请求后的由web服务器（准确说应该是http服务器）处理请求，诸如Apache、Ngnix、IIS等。web服务器解析用户请求，知道了需要调度哪些资源文件，再通过相应的这些资源文件处理用户请求和参数，并调用数据库信息，最后将结果通过web服务器返回给浏览器客户端。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/21.jpg?raw=true" alt=""></p>
+<h4 id="6关闭tcp连接四次挥手">6.关闭TCP连接（四次挥手）</h4>
+<p>为了避免服务器与客户端双方的资源占用和损耗，当双方没有请求或响应传递时，任意一方都可以发起关闭请求。</p>
+<h4 id="7浏览器解析资源">7.浏览器解析资源</h4>
+<p>浏览器解析获取到的HTML、CSS、JS、图片等等资源。</p>
+<h4 id="8浏览器布局渲染">8.浏览器布局渲染</h4>
+<p>浏览器通过解析的资源渲染页面展示给用户</p>
+<p><strong>应用层寻找DNS 发起HTTP请求</strong></p>
+<p><strong>传输层建立TCP连接</strong></p>
+<p><strong>网络层IP地址</strong></p>
+<p><strong>链路层 MAC地址（物理地址）</strong></p>
+<h3 id="分布式session共享">分布式Session共享？</h3>
+<p><strong>问题：</strong> 在搭建完集群环境后，不得不考虑的一个问题就是用户访问产生的session如何处理。如果不做任何处理的话，用户将出现频繁登录的现象，比如集群中存在A、B两台服务器，用户在第一次访问网站时，Nginx通过其负载均衡机制将用户请求转发到A服务器，这时A服务器就会给用户创建一个Session。当用户第二次发送请求时，Nginx将其负载均衡到B服务器，而这时候B服务器并不存在Session，所以就会将用户踢到登录页面。这将大大降低用户体验度，导致用户的流失，这种情况是项目绝不应该出现的。</p>
+<h4 id="1粘性session">1.粘性Session</h4>
+<p><strong>原理：</strong> 将用户SessionId锁定到某一服务器上，如将用户a锁定到A服务器上后，以后每次请求都转发到服务器A上。</p>
+<p><strong>优点：</strong> 简单，直接</p>
+<p><strong>缺点：</strong> 缺乏容错率，当锁定的服务器发生故障，用户信息被转移到第二个服务器，而用户session还未过期时，用户还是得重新登录，之前的session信息失效。</p>
+<h4 id="2服务器session复制">2.服务器session复制</h4>
+<p><strong>原理：</strong> 任何一个服务器上的session发生变化（增删改），该服务器将该session序列化后，广播给其他所有服务器，保证session同步。</p>
+<p><strong>优点：</strong> 容错率高，各个服务器实时同步session</p>
+<p><strong>缺点：</strong> 对网络负荷造成一定压力，若同一时刻session量大，可能造成网络堵塞，拖慢服务器性能</p>
+<h4 id="3session基于缓存框架机制redismemcached等">3.session基于缓存框架机制（redis、memcached等）</h4>
+<p><strong>要求：</strong> redis、memcached是集群的，数据一致性。</p>
+<p><strong>①粘性session处理</strong></p>
+<p><strong>原理：</strong> 用户访问时，首先tomcat服务器创建并存放session（依旧是将用户锁定到某一服务器），然后将session复制一份到redis中做备份。（解决服务器挂了，用户得重新登录问题）</p>
+<p>​			当某一个服务器挂掉后，先取服务器找（挂了），所以去redis中找到相应的session，然后将该session复制一份到存活的服务器中。（锁到新的服务器中，用户不用重新登录）</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/22.jpg?raw=true" alt=""></p>
+<p><strong>②非粘性session处理  spring-session</strong></p>
+<p><strong>原理：</strong> 用户访问时，直接存放到主redis中，redis做主从复制，tomcat不保存sessioin，读写操作都直接访问主redis，当主redis崩了，就访问备份redis，不会影响到用户。</p>
+<p><strong>优点：</strong> 将服务器压力转移到redis中，减轻服务器压力同时，容错率高，实现session实时响应。</p>
+<p><strong>缺点：</strong> redis压力大，需要较大的内存，否则会出现用户session从缓存中移除，而且需要redis定期清楚较久的session</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/23.jpg?raw=true" alt=""></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/24.jpg?raw=true" alt=""></p>
+<h4 id="4session持久化到数据库">4.session持久化到数据库</h4>
+<p><strong>原理：</strong> 将session持久化到数据库</p>
+<p><strong>优点：</strong> 服务器崩，数据库中仍然存在着数据</p>
+<p><strong>缺点：</strong> 随着用户量增大，数据库压力不断增大</p>
+<h2 id="http2">Http2</h2>
+<p><strong>新特性</strong></p>
+<p><strong>1.二进制分帧</strong></p>
+<p>http1.x是文本格式传输，http2二进制格式传输，并且被切分未过个帧发送，帧可以根据头部流标识重新组装。</p>
+<p><strong>2. 单一长连接</strong></p>
+<p>同一个域名使用一个TCP连接,(http1.x 使用6-8个TCP连接，浏览器为减少消耗，进行的限制)，无论请求多少个资源，能减少握手带来的延时，减少创建多个TCP连接</p>
+<p>带来的网络开销，提高吞吐量</p>
+<p><strong>3. 多路复用</strong></p>
+<p>http1.x相当于单车道，同一个连接上的请求串行执行</p>
+<p>http2相当于多车道，同一个连接上的请求可以并行执行。由于请求被二进制分帧，每个帧都有流编号。同一个请求和响应的帧必须是有序的，不同的请求的帧可以</p>
+<p>互相穿插。然后按照流编号重组。</p>
+<p><strong>4.头部压缩</strong></p>
+<p>用HPACK压缩头部，使用首部表来进行首部字段存储，只有当首部表中的数据变更或为发送过时，才会发送http头部字段。</p>
+<p>首部表分为静态表和动态表，静态表包含常用字段，动态表包含自定义字段等非常用字段，当新增或改变字段时，会增加或修改动态表中的数据。</p>
+<p><strong>5.服务端推送</strong></p>
+<p>客户端请求资源X,服务端判断客户端还需要别的资源，可以主动推送这些资源。客户端需要显式允许服务器启用推送功能。并且，客户端可以发送一个RST_STREAM帧来中断推送流，推送受同源策略限制</p>
+<p>例如，请求index.html页面时，服务器同时将index.js和index.css push给浏览器，当浏览器解析html到请求index.css和index.js时，可以直接从缓存中读取</p>
+<h3 id="ping用的是什么协议">Ping用的是什么协议</h3>
+<p><strong>网络层协议：ICMP</strong> ，是TCP-IP的子协议，用于IP主机、路由器之间传递控制消息。</p>
+<p><strong>功能</strong></p>
+<p>1.确认IP包是否成功到达目标地址</p>
+<p>2.通知在发送过程中IP包被丢弃的原因</p>
+<p><strong>注意</strong></p>
+<p>ICMP基于IP协议，辅助IP协议，但是在 网络层 传输。</p>
+<h4 id="icmp报文格式"><strong>ICMP报文格式</strong></h4>
+<p>ICMP内容放在IP数据包的数据部分。</p>
+<p>当IP报头中的协议字段位<strong>1</strong>时，表明是ICMP报文。</p>
+<p><strong>包括 差错报文 询问报文</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/25.jpg?raw=true" alt=""></p>
+<p><strong>ICMP实现Ping命令</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/26.jpg?raw=true" alt=""></p>
+<p><strong>1.向目标服务器发送请求</strong></p>
+<p>发送请求报文 <strong>类型8 代码0</strong> 并且追加 <strong>标识符 序号 字段</strong>（这两个字段填入任意值）。</p>
+<p>对于 <strong>标识符</strong> 同一个Ping命令填入相同的值表明是同一个Ping。</p>
+<p>对于 <strong>序号</strong> 同一个Ping命令每送出一个报文 值+1。</p>
+<p>2.<strong>目标服务器返回响应</strong></p>
+<p>返回响应报文 <strong>类型0（表示成功） 代码0</strong> <strong>标识符</strong> <strong>序号</strong></p>
+<p>3.<strong>本机确认</strong></p>
+<p>通过 <strong>标识符 序号</strong> 确认是否是本次Ping,通过 <strong>类型</strong> 确认Ping是否成功。</p>
+<h5 id="icmp差错报文"><strong>ICMP差错报文</strong></h5>
+<p>对差错报文进行响应时，做特殊处理，不会生成另一份差错报文，防止出现死循环。</p>
+<p><strong>1.目标不可达 类型3</strong></p>
+<p>网络不可达，主机不可达，协议不可达，端口不可达，需要分片但DF比特已置为1，以及源路由失败等六种情况，其代码字段分别置为0至5。</p>
+<p><strong>2.源抑制 类型4</strong></p>
+<p>目标服务器 <strong>控制流量</strong>。</p>
+<p>当路由器或主机由于 <strong>拥塞而丢弃数据报</strong> 时，就向源站发送源站抑制报文，使源站知道应当将数据报的发送速率放慢。</p>
+<p><strong>3.超时报文 类型11</strong></p>
+<p>代码0 表示传输超时，代码1 表示分段重组超时。</p>
+<p>当路由器收到生存时间为零的数据报时，除丢弃该数据报外，还要向源站发送超时报文。</p>
+<p>当目的站在预先规定的时间内不能收到一个数据报的全部数据报片时，就将已收到的数据报片都丢弃，并向源站发送时间超过报文。</p>
+<p><strong>4.参数问题</strong></p>
+<p>当路由器或目的主机收到的数据报的 <strong>首部中的字段的值不正确</strong> 时，就丢弃该数据报，并向源站发送参数问题报文。</p>
+<p><strong>5.改变路由</strong></p>
+<p>改变路由（重定向）<strong>路由器</strong> 将 <strong>改变路由报文</strong> 发送给主机，让主机知道下次应将数据报发送给另外的路由器。</p>
+<p><strong>收到什么报文不会发送差错报文的情况</strong></p>
+<p><strong>1.ICMP差错报文</strong>（防止死循环）</p>
+<p><strong>2.作为链路层广播的数据报、目的地址为广播地址或多播地址的IP数据报</strong></p>
+<p>（防止ICMP差错报文对广播分组响应所带来的广播风暴）。</p>
+<p><strong>3.对特殊地址</strong> ，如 127.0.0.0或0.0.0.0</p>
+<p><strong>这些规则都是为了 防止差错报文广播 带来的广播风暴</strong></p>
+<p><strong>4.如果 IP数据过大导致分片，则只对第一个数据片发送差错报文</strong></p>
+<h5 id="icmp询问报文">ICMP询问报文</h5>
+<p>询问报文包括  <strong>回送请求回答 时间戳请求回答 掩码地址请求回答 路由器询问通过</strong></p>
+<p><strong>回送请求回答：</strong> 测试目标能否到达。</p>
+<p><strong>时间戳请求回答：</strong> 当前系统向另一个系统查询当前时间。</p>
+<p>优点是 提供 **毫秒级 ** 单位</p>
+<p>请求端填写 <strong>发起时间</strong> ，然后发送报文。应答系统收到请求报文时填写 <strong>接收时间戳</strong> ，在发送应答时填写 <strong>发送时间戳</strong> 。大多数的实现是把后面两个字段都设成相同的值。</p>
+<p><strong>路由器询问通过：</strong> 了解连接在本网络上的路由器是否正常工作</p>
+<p>主机将路由器询问报文进行广播（或多播）。收到询问报文的一个或几个路由器就使用路由器通过报文广播其路由选择信息。</p>
+<p><strong>掩码地址请求回答</strong></p>
+<p>向 <strong>子网掩码服务器</strong> 得到某个接口的地址掩码。系统广播它的ICMP请求报文。ICMP报文中的标识符和序列号字段由发送端任意选择设定，这些值在应答中将被返回，这样，发送端就可以把应答与请求进行匹配。</p>
+<p><strong>子网掩码：</strong> 判断两台计算机IP地址是否属于同一子网络</p>
+<p>将两台计算机IP地址分别与子网掩码进行AND运算（获取对外的唯一地址），如果结果相同。说明处于同一个子网络上。</p>
+<h5 id="traceroute命令">traceroute命令</h5>
+<p>与Ping并列，也是ICMP命令。</p>
+<p>返回从主机 到 目标主机 之间经历多少 路由器</p>
+<pre><code>[root@localhost ~]# traceroute www.baidu.com
+traceroute to www.baidu.com (61.135.169.125), 30 hops max, 40 byte packets
+ 192.168.74.2 (192.168.74.2)  2.606 ms  2.771 ms  2.950 ms
+ 211.151.56.57 (211.151.56.57)  0.596 ms  0.598 ms  0.591 ms
+ 211.151.227.206 (211.151.227.206)  0.546 ms  0.544 ms  0.538 (61.148.156.138)  1.899 ms  1.951 ms
+ * * *
+ * * *
+[root@localhost ~]#
+</code></pre><p>每个记录是 <strong>一跳</strong> ，每跳 表示一个 <strong>网关</strong>。</p>
+<p>每次探测 默认发送 三个数据包。</p>
+<p>*** 表示 防火墙 封掉了 ICMP返回信息。</p>
+<p>有时我们在某一网关处延时比较长，有可能是某台网关比较阻塞，也可能是物理设备本身的原因。</p>
+<p>如果在局域网中的不同网段之间，我们可以通过traceroute 来排查问题所在，是主机的问题还是网关的问题。如果我们通过远程来访问某台服务器遇到问题时，我们用到traceroute 追踪数据包所经过的网关，提交IDC服务商，也有助于解决问题。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/27.jpg?raw=true" alt=""></p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-02-20
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/http/">HTTP</a>
+          <a href="https://phantommmm.github.io/tags/session/">Session</a>
+          <a href="https://phantommmm.github.io/tags/icmp/">ICMP</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/tcp-ip/">
+            <span class="next-text nav-default">TCP-IP</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

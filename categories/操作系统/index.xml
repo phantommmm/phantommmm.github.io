@@ -7,45 +7,45 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 16 Feb 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>用户态和内核态</title>
-      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <title>IO模型</title>
+      <link>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Sun, 16 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
-      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
-    </item>
-    
-    <item>
-      <title>虚拟内存</title>
-      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
-      <description>虚拟内存 页： 将进程划分的块，对应的大小就叫页面大小 页框： 将内存划分的块 一个页里有一个页框，理论上，页和页框的大小相同 页表： 页和页框一一对应的</description>
+      <guid>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</guid>
+      <description>五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统</description>
     </item>
     
     <item>
       <title>进程与线程</title>
       <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <pubDate>Sat, 15 Feb 2020 13:39:23 +0800</pubDate>
       
       <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
       <description>进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系</description>
     </item>
     
     <item>
-      <title>进程通信</title>
-      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
+      <title>虚拟内存</title>
+      <link>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</link>
+      <pubDate>Fri, 14 Feb 2020 13:39:23 +0800</pubDate>
       
-      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</guid>
-      <description>五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统</description>
+      <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
+      <description>虚拟内存 页： 将进程划分的块，对应的大小就叫页面大小 页框： 将内存划分的块 一个页里有一个页框，理论上，页和页框的大小相同 页表： 页和页框一一对应的</description>
+    </item>
+    
+    <item>
+      <title>用户态和内核态</title>
+      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
+      <pubDate>Thu, 13 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
+      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
     </item>
     
   </channel>

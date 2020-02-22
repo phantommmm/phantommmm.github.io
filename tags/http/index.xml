@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HTTP on Phantom</title>
+    <link>https://phantommmm.github.io/tags/http/</link>
+    <description>Recent content in HTTP on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Thu, 20 Feb 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/http/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HTTP</title>
+      <link>https://phantommmm.github.io/post/http/</link>
+      <pubDate>Thu, 20 Feb 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/http/</guid>
+      <description>网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b</description>
+    </item>
+    
+  </channel>
+</rss>

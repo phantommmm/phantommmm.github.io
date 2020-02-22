@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TCP-IP - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/tcp-ip/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="TCP-IP" />
+<meta property="og:description" content="TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/tcp-ip/" />
+<meta property="article:published_time" content="2020-02-19T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-02-19T13:39:23+08:00" />
+<meta itemprop="name" content="TCP-IP">
+<meta itemprop="description" content="TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次">
+<meta itemprop="datePublished" content="2020-02-19T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-19T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="8738">
+
+
+
+<meta itemprop="keywords" content="TCP,RST,流量控制,拥塞控制," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TCP-IP"/>
+<meta name="twitter:description" content="TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">TCP-IP</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-02-19" class="post-time">
+          2020-02-19
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tcp首部格式">TCP首部格式</a>
+      <ul>
+        <li><a href="#滑动窗口">滑动窗口</a></li>
+        <li><a href="#rst标志位reset复位">RST标志位：reset复位</a></li>
+        <li><a href="#tcp连接异常断开">TCP连接异常断开</a></li>
+        <li><a href="#流量控制">流量控制</a></li>
+        <li><a href="#拥塞控制">拥塞控制</a></li>
+        <li><a href="#设计可靠的udp">设计可靠的UDP</a></li>
+        <li><a href="#tcp怎么可靠安全">TCP怎么可靠、安全</a></li>
+        <li><a href="#time_wait">time_wait</a></li>
+        <li><a href="#close_wait">close_wait</a></li>
+        <li><a href="#nat">NAT</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h2 id="tcp首部格式">TCP首部格式</h2>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/1.jpg?raw=true" alt=""></p>
+<p>三次握手过程中的报文是不含数据的，只包含tcp协议首部。</p>
+<p><strong>序号：</strong>  seq</p>
+<p>占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次方-1 后，下一个序列号就回到了1。也就是说，序号使用mod 2的32次方 运算。TCP是面向字节流的，TCP连接中传送的字节流中的每一个字节都按顺序编号。首部中的序号就是指本报文段所发送数据的第一个字节的序号。</p>
+<p><strong>确认号：</strong>  ack</p>
+<p>占4个字节，是期望收到对方下一个报文段的一个数据字节的序号。</p>
+<p><strong>确认ACK：</strong> 占一位  当携带数据时占一个序列号seq 4个字节 （第三次握手）</p>
+<p>当ACK=1时，确认号有效，当ACK=0时，确认号无效。当建立连接后所有传送的报文段都必须把ACK置1。 （区分开确认号和ACK）</p>
+<p><strong>同步SYN：</strong>  占一个序列号seq 4个字节 不能携带数据</p>
+<p>当SYN=1，ACK=0时，表明这是一个连接请求报文段。 （ 第一次握手）</p>
+<p>当SYN=1,   ACK=1时，表明这是一个连接响应报文段。    （第二次握手）</p>
+<p>握手完成后 SYN=0；</p>
+<p><strong>终止FIN：</strong>  占一个序列号seq 4个字节 不能携带数据</p>
+<p>当FIN=1时。表明此报文的发送方的数据已经发送完毕，并要求释放运输连接。</p>
+<p><strong>为什么SYN FIN占一个序列号？</strong></p>
+<p>由于报文在网络中路径不同，可能会导致报文的乱序，SYN带sn号，对方就知道你要发送的数据第一个字节的sn号了，这样对方就能根据sn号排序啦；
+FIN也会占一个sn号，当你收到FIN时，就可以根据这个sn号和你之前收到的数据进行对比，是不是还有数据没收到啊；
+sn号只是对方用来对数据进行重组排序，确认数据有没有丢失，因此空的ack当然不用占一个sn了；</p>
+<p><strong>什么时候完成连接?</strong></p>
+<p>客户端在第三次握手，发送完报文后，即进入established（已建立连接）状态</p>
+<p>服务器在收到报文后，才进入established（已建立连接）状态</p>
+<p><strong>ACK可以携带数据？</strong></p>
+<p>TCP标准规定，第三次握手的报文，可以携带数据。因为此时客户端已经处于established状态了呀。</p>
+<p>三次握手最后一个消息是客户端发过来的ACK，如果让应用层数据与这个信令数据合二为一，可以减少发送的IP包的数目，还可以提高效率，何乐不为呢？</p>
+<p>假设第三次握手客户端发送报文的seq是x+1，</p>
+<p><strong>如果有携带数据</strong>，下次客户端发送的报文，seq=服务器发回的ACK号。</p>
+<p><strong>如果没有携带数据</strong>，那么第三次握手的报文不消耗seq。下次客户端发送的报文，seq序列号还是和第三次握手的报文的seq一样，为x+1。这是因为，seq和报文中的数据在整条数据流流中的位置是一一对应的。如果报文没有携带数据，那么seq当然也不会更新。</p>
+<p><strong>什么时候完成断开？</strong></p>
+<p>服务器在收到客户端最后一次报文时，断开连接</p>
+<p>客户端在发送完最后一次报文时，等待2msl后，都断开连接</p>
+<p><strong>超时重传机制</strong></p>
+<p>首先客户端发送一个数据报，序号为1，数据长度是1000。这里有开启一个<strong>超时计时器</strong>。</p>
+<p>那么服务器接收到后，会发送一个确认报文，确认号为1000+1。表示你下一个该发送的是1001。</p>
+<p>那么如何处理发送丢包呢以及确认丢包呢 ？</p>
+<p>当客户端的<strong>超时计时器</strong>到期了，还没有收到服务器的确认，无论是发送的包丢了，还是确认的包丢了，都会重新发送数据报。</p>
+<h3 id="滑动窗口">滑动窗口</h3>
+<p><strong>TCP按顺序发送一个包接受一个包，怎么提高吞吐量？</strong></p>
+<p><strong>滑动窗口，同时发送多个包</strong></p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/2.jpg?raw=true" alt=""></p>
+<p>TCP双方都维护一个 <strong>接受窗口</strong>和<strong>发送窗口</strong></p>
+<p>各自的<code>接收窗口</code>大小取决于应用、系统、硬件的限制（TCP传输速率不能大于应用的数据处理速率）。各自的<code>发送窗口</code>则要求取决于对端通告的<code>接收窗口</code>，要求相同。</p>
+<p>发送方的发送缓存内的数据都可以被分为4类:         接收方的缓存数据分为3类：</p>
+<ol>
+<li>已发送，已收到ACK 											1.已接收</li>
+<li>已发送，未收到ACK                                             2.未接收但准备接收</li>
+<li>未发送，但允许发送                                            3.未接收而且不准备接收</li>
+<li>未发送，但不允许发送</li>
+</ol>
+<p>其中类型2和3都属于发送窗口。                               其中类型2属于接收窗口。</p>
+<p><strong>原理：</strong></p>
+<p>并不是一个报文段就回复一个ACK,可能对多个报文段回复一个ACK（累计ACK）</p>
+<p>比如说发送方有1/2/3    3个报文段，先发送了2,3 两个报文段，但是接收方期望收到1报文段，这个时候2,3报文段就只能放在缓存中等待报文1的空洞被填上，如果报文1，一直不来，报文2/3也将被丢弃，如果报文1来了，那么会发送一个ACK对这3个报文进行一次确认。</p>
+<p>1.接收窗口只有在<strong>前面的段</strong>确认收到的情况下，窗口右移。</p>
+<p>2.发送窗口只有收到ACK后，窗口才右移。</p>
+<pre><code>1. 假设32~45 这些数据，是上层Application发送给TCP的，TCP将其分成四个Segment来发往internet
+
+2. seg1 32~34 seg2 35~36 seg3 37~41 seg4 42~45  这四个片段，依次发送出去，此时假设接收端之接收到了seg1 seg2 seg4
+
+3. 此时接收端的行为是回复一个ACK包说明已经接收到了32~36的数据，并将seg4进行缓存（保证顺序，产生一个保存seg3 的hole）
+
+4. 发送端收到ACK之后，就会将32~36的数据包从发送并没有确认切到发送已经确认，提出窗口，这个时候窗口向右移动
+
+5. 假设接收端通告的Window Size仍然不变，此时窗口右移，产生一些新的空位，这些是接收端允许发送的范畴
+
+6. 对于丢失的seg3，如果超过一定时间，TCP就会重新传送（重传机制），重传成功会seg3 seg4一块被确认，不成功，seg4也将被丢弃
+
+</code></pre><p>接收端可以根据自己的状况通告窗口大小，从而控制发送端的接收，进行流量控制</p>
+<p>TCP是发送报文段为单位的，假如每发一个报文就要等ACK，那么对于大数据包，等待时间就太长了。只要发送的报文在滑动窗口里面，不用等每个ACK回来就可以向右滑动。</p>
+<p>窗口大小不能大于序号空间大小的一半。目的是为了不让两个窗口出现交迭，比如总大小为7，窗口大小都为4，接收窗口应当滑动4，但只剩3个序号，导致两个窗口交迭。</p>
+<h4 id="对比滑动窗口和拥塞窗口">对比滑动窗口和拥塞窗口</h4>
+<p>滑动窗口是控制接收以及同步数据范围的，通知发送端目前接收的数据范围，用于流量控制，接收端使用。</p>
+<p>拥塞窗口是控制发送速率的，避免发的过多，发送端使用。因为tcp是全双工，所以两边都有滑动窗口。
+两个窗口的维护是独立的，滑动窗口主要由接收方反馈缓存情况来维护，拥塞窗口主要由发送方的拥塞控制算法检测出的网络拥塞程度来决定的。</p>
+<p>拥塞窗口控制sender向connection传输数据的速率，使这个速率为网络拥堵状况的函数。</p>
+<h3 id="rst标志位reset复位">RST标志位：reset复位</h3>
+<p>RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包，而接收端收到RST包后，也不必发送ACK包确认，直接关闭连接资源即可。（然后可以重新发起连接）</p>
+<h4 id="rst包没有顺利到达对端">RST包没有顺利到达对端？</h4>
+<p>导致双方状态不同步，一方为 &ldquo;established(已建立连接)&quot;，一方为 &ldquo;closed&rdquo;。已建立连接方仍然能往closed方发送数据，就会触发closed方发送RST。</p>
+<p><strong>若已建立连接方，一直不发送消息，那么连接一直处于泄露状态？</strong></p>
+<p>理论上是这样的，但如今的TCP会在几十秒内发送一次KeepAlive(心跳检测)，便解决这个问题</p>
+<h4 id="rst攻击">RST攻击</h4>
+<p>A和服务器B之间建立了TCP连接，此时C伪造了一个TCP包发给B，使B异常的断开了与A之间的TCP连接，就是RST攻击了。</p>
+<p><strong>那么伪造什么样的TCP包可以达成目的呢？</strong></p>
+<p>（1）假定C伪装成A发过去的包，这个包如果是RST包的话，毫无疑问，B将会丢弃与A的缓冲区上所有数据，强制关掉连接。
+（2）假定C伪装成A发过去的包，这个包如果是SYN包的话，那么，B会表示A已经发疯了(AB已经正常连接时，A又来请求建立新连接) ==&gt; B会主动向A发个RST包，并在自己这端强制关掉连接。</p>
+<p><strong>如何能伪造成A发给B的包呢？这里有两个关键因素，源端口和序列号。</strong></p>
+<p>（1）一个TCP连接都是四元组，由源IP、源端口、目标IP、目标端口唯一确定一个连接。</p>
+<p>所以，如果C要伪造A发给B的包，要在上面提到的IP头和TCP头，把源IP、源端口、目标IP、目标端口都填对。这里B作为服务器，IP和端口是公开的，A是我们要下手的目标，IP当然知道，但A的源端口就不清楚了，因为这可能是A随机生成的。</p>
+<p>当然，如果能够对常见的OS如windows和linux找出生成source port规律的话，还是可以搞定的。</p>
+<p>（2）序列号问题是与滑动窗口对应的，伪造的TCP包里需要填序列号，如果序列号的值不在A之前向B发送时B的滑动窗口内，B是会主动丢弃的。所以我们要找到能落到当时的AB间滑动窗口的序列号。</p>
+<p>这个可以暴力解决，因为一个sequence（序列号）长度是32位，取值范围0-4294967296，如果窗口大小像上图中我抓到的windows下的65535的话，只需要相除，就知道最多只需要发65537（4294967296/65535=65537）个包就能有一个序列号落到滑动窗口内。RST包是很小的，IP头＋TCP头也才40字节，算算我们的带宽就知道这实在只需要几秒钟就能搞定。</p>
+<h4 id="什么情况下会收到对端的rst包">什么情况下，会收到对端的RST包？</h4>
+<ol>
+<li>
+<p>客户端<code>connect</code>一个不存在的端口，客户端会收到一条<code>RST</code>，报错<code>Connection refused</code>；</p>
+</li>
+<li>
+<p>程序崩溃或异常退出，会向对端发送。</p>
+</li>
+<li>
+<p>对端断电重启（连接断开），本端（不知道连接已经断开）<code>send</code>数据时会收到来自对端的<code>RST</code>。因为对端连接已经断开，通过RST告知异常断开情况。</p>
+</li>
+<li>
+<p>某些服务器对连接的IP有限制，对禁止连接的IP，会发送RST包禁止连接</p>
+</li>
+<li>
+<p>客户端发起TCP连接，经过服务器防火墙时，防火墙查询自己的安全策略，这是一个不被允许的连接请求，于是防火墙以服务器IP的名义，返还给用户一个Reset状态位，用户以为是服务器发的，其实服务器压根不知道，是防火墙作为中间人发的。</p>
+</li>
+</ol>
+<h3 id="tcp连接异常断开">TCP连接异常断开</h3>
+<p>如果客户端异常断开而服务器未及时清理这些连接，则发送连接泄露直至服务端资源耗尽拒绝提供服务（<code>connection refused exception</code>）</p>
+<h4 id="客户端程序崩溃或异常退出">客户端程序崩溃或异常退出</h4>
+<p>当客户端程序因未知原因崩溃或异常退出后，操作系统会给服务端发送一条<code>RST</code>消息</p>
+<h4 id="客户端断电或网络异常无法即时发送rst">客户端断电或网络异常：无法即时发送RST</h4>
+<p>如果客户端断电或网络异常，并且连接通道内没有任何数据交互，服务端是感知不到客户端掉线的，此时需要借助心跳机制来感知这种状况，客户端收到不明的消息包，返回RST告知连接状态</p>
+<h4 id="keep-alive-vs-heart-beart">keep alive VS heart beart</h4>
+<p>使用场景：客户端拔网线，服务器不知道。</p>
+<p>原理相似：都是发送一个信号给对方，如果多次发送都没有响应的话，则判断连接中断。</p>
+<p>它们的不同点在于，<strong>keepalive是tcp实现中内置的机制，是在创建tcp连接时通过设置参数启动keepalive机制</strong>；而<strong>heart-beat则需要在tcp之上的应用层实现（程序员自己实现逻辑）。</strong></p>
+<p>一个简单的heart-beat实现一般测试连接是否中断采用的时间间隔都比较短，可以很快的决定连接是否中断。并且，由于是在应用层实现，因为可以自行决定当判断连接中断后应该采取的行为，而keepalive在判断连接失败后只会将连接丢弃。</p>
+<p>Keep alive适用于清除死亡时间比较长的连接,它会先要求此连接一定时间没有活动（一般是几个小时），然后发出数据段，经过多次尝试后（每次尝试之间也有时间间隔），如果仍没有响应，则判断连接中断。可想而知，整个周期需要很长的时间。</p>
+<p>heart beart适用于快速或者实时监控连接状态的机制，分布式环境中。</p>
+<p>关于heart-beat，应该在传输真正数据的连接中发送“心跳”信号，还是可以专门创建一个发送“心跳”信号的连接呢？</p>
+<p>比如说，A，B两台机器之间通过连接m来传输数据，现在为了能够检测A，B之间的连接状态，我们是应该在连接m中传输“心跳”信号，还是创建新的连接n来专门传输“心跳”呢？</p>
+<p>我个人认为两者皆可。如果担心的是端到端的连接状态，那么就直接在该条连接中实现“心跳”。但很多时候，关注的是网络状况和两台主机间的连接状态，这种情况下， 创建专门的“心跳”连接也未尝不可。</p>
+<h3 id="流量控制">流量控制</h3>
+<p><strong>为什么要进行流量控制，是为了让发送方的发送速率不要太快，让接收方来得及接收，减少丢失。</strong>
+接收端处理数据的速度是有限的，如果发送方的速度太快，就会把缓冲区打满。这个时候如果继续发送数据，就会导致丢包等一系列连锁反应。</p>
+<p>TCP首部中, 有一个16位窗口字段存放了窗口大小信息;</p>
+<p>那么问题来了, 16位数字最大表示65535, 那么TCP窗口最大就是65535字节么?</p>
+<p>实际上, TCP首部40字节选项中还包含了一个窗口扩大因子M,
+实际窗口大小是 窗口字段的值左移 M 位;</p>
+<p>接收端将自己可以接收的缓冲区大小放入 TCP 首部中的 “窗口大小” 字段, 通过ACK端通知发送端;窗口大小字段越大, 说明网络的吞吐量越高;</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/3.jpg?raw=true" alt=""></p>
+<p>这里使用滑动窗口机制，例如在建立连接时，B告诉A接收窗口rwnd=400，那么发送方的窗口不能超过接收方给出的接收窗口数值。</p>
+<p><strong>若一开始就发送大量数据？</strong></p>
+<h3 id="拥塞控制"><strong>拥塞控制</strong></h3>
+<p>拥塞窗口：可以同时发送的数量</p>
+<p>拥塞窗口发送开始的时候, 定义拥塞窗口大小为1;每次收到一个ACK应答, 拥塞窗口加1;</p>
+<p>例如：刚开始A 只能同时发送一个数据</p>
+<p>​			接受到一个ACK后，拥塞窗口加1，可以同时发送两个数据</p>
+<p>​			接受到两个ACK后，拥塞窗口加2，可以同时发送四个数据</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/4.jpg?raw=true" alt=""></p>
+<p><strong>慢启动</strong></p>
+<p>以2-4个开始，以指数增长，阀值为 2^16=65535</p>
+<p><strong>拥塞避免&amp;阀值</strong></p>
+<p>不能单纯的让拥塞窗口指数增长，当拥塞窗口超过这个阈值的时候,进入拥塞避免， 不再按照指数方式增长, 而是按照线性方式增长，即无论收到多少个ACK，拥塞窗口都只加1</p>
+<p><strong>快速重传</strong></p>
+<p>进入拥塞避免之后，最终还是会碰到拥塞点，发送方此时迟迟得不到确认，当然得不到确认也有可能是因为<a href="http://www.cnblogs.com/iou123lg/p/8727598.html">延迟确认</a>导致的。发送方此时决定等待一段时间，如果一段时间后还是得不到确认，就发起重传，这个过程叫做超时重传。从发出原始包到重传该包的时间叫做RTO(Retransmission TimeOut)。</p>
+<p>在每次超时重发的时候（大概率是网络出现拥塞）, 慢启动阈值会变成原来的一半, 同时拥塞窗口置回1，重新进入慢启动</p>
+<p>少量的丢包, 我们仅仅是触发超时重传; 大量的丢包, 我们就认为网络拥塞;</p>
+<p>收到3个相同的ACK。TCP在收到乱序到达包时就会立即发送ACK，TCP利用3个相同的ACK来判定数据包的丢失，此时进行快速重传，不必等到重传计时器到期，快速重传做的事情有：</p>
+<p>1.把阀值设置为窗口的一半</p>
+<p>2.把窗口再设置为阀值的值(具体实现有些为ssthresh+3)</p>
+<p>3.重新进入拥塞避免阶段。</p>
+<p>为什么是3个？因为1-2个重复ACK，很有可能是乱序，只有在3个及以上的时候才是有可能丢包了。</p>
+<p>例子：</p>
+<p>B等待A发送首字节序号为3的报文段，给A发送“ack = 3”的确认报文段（ACK），而A在发送过程中出现了丢失，B收到的只有4、5字节的报文段；
+此时B给A发送的确认报文中ack字段仍然等于3（因为字节3还没收到）；
+接着，在B收到字节6后，给A发送的确认报文仍然是“ack = 3”</p>
+<p><strong>快速恢复</strong></p>
+<p>1.当收到3个重复ACK时，把阀值设置为窗口的一半，把窗口设置为阀值的值加3，然后重传丢失的报文段，加3的原因是因为收到3个重复的ACK，表明有3个“老”的数据包离开了网络（丢包）。</p>
+<p>2.再收到重复的ACK时，拥塞窗口增加1。</p>
+<p>3.当收到新的数据包的ACK时，把窗口设置为第一步中的阀值的值。原因是因为该ACK确认了新的数据，说明从重复ACK时的数据都已收到，该恢复过程已经结束，可以回到恢复之前的状态了，也即再次进入拥塞避免状态。</p>
+<p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/TCP-IP/5.jpg?raw=true" alt=""></p>
+<h3 id="设计可靠的udp">设计可靠的UDP</h3>
+<p>传输层无法保证数据的可靠传输，只能通过应用层来实现了。实现的方式可以参照tcp可靠性传输的方式，只是实现不在传输层，实现转移到了应用层。</p>
+<p><strong>应用层确认机制、重传机制、滑动窗口</strong></p>
+<p><strong>给数据包进行编号，按顺序接收并存储</strong>。</p>
+<p>接收端收到数据包后发送确认信息给发送端，发送端接收到确认信息后继续发送，若接收端接收的数据不是期望的顺序编号，则要求重发；（主要解决丢包和包无序的问题）</p>
+<h3 id="tcp怎么可靠安全">TCP怎么可靠、安全</h3>
+<p><strong>1.序列号 确认号 数据包分片</strong></p>
+<p><strong>2.超时重传 快速重传</strong></p>
+<p><strong>3.流量控制（滑动窗口）</strong></p>
+<p><strong>4.拥塞控制（拥塞窗口）</strong></p>
+<h3 id="time_wait">time_wait</h3>
+<p><strong>大量time_wait的危害</strong></p>
+<p>只有主动进行关闭连接的机器会进入time_wait状态。</p>
+<p>在<strong>高并发短连接</strong>的TCP服务器上，当客户端完成访问后立刻主动正常关闭连接，就会出现大量time_wait。</p>
+<p>这时该客户端在访问同一服务器，会启用另一个端口，因为刚刚那个端口处于time_wait状态。</p>
+<p>这时，如果客户端并发量持续很高，就会部分客户端连接不上。</p>
+<p><strong>1.高并发可以让客户端在短时间范围内同时占用大量端口</strong>，而端口有个0~65535的范围，并不是很多，刨除系统和其他服务要用的，剩下的就更少了。</p>
+<p><strong>2.短连接表示“业务处理+传输数据的时间 远远小于 TIMEWAIT超时的时间”的连接</strong>。</p>
+<p>比如取一个web页面，1秒钟的http短连接处理完业务，在关闭连接之后，这个业务用过的端口会停留在TIMEWAIT状态几分钟，而这几分钟，其他HTTP请求来临的时候是无法占用此端口的(占着茅坑不拉翔)。</p>
+<p><strong>解决</strong></p>
+<pre><code>调整 time_wait时间 net.ipv4.tcp_fin_timeout=30
+
+//首先打开 timestamps
+net.ipv4.tcp_timestamps = 1
+//机器作为客户端时起作用，开启后time_wait在一秒内回收
+net.ipv4.tcp_tw_reuse = 1
+（不要开启，现在互联网NAT结构很多，可能直接无法三次握手）
+net.ipv4.tcp_tw_recycle = 0 
+
+reuse:复用time_wait连接。
+recycle:快速回收。
+</code></pre><p><strong>timestamps</strong></p>
+<p>开启timestamps时间戳，实现打开同一个IP 不同端口，同一源IP的socket connect请求中的 timestamps必须是递增的。</p>
+<p><strong>reuse</strong></p>
+<p>这是因为一来TIME_WAIT创建时间必须超过一秒才可能会被复用；二来只有连接的时间戳是递增的时候才会被复用。</p>
+<p>满足以下任意一点即可复用</p>
+<p><strong>1.初始序列号比TW老连接的末序列号大</strong>
+<strong>2.如果使能了时间戳，那么新到来的连接的时间戳比老连接的时间戳大</strong></p>
+<p><strong>recycle</strong></p>
+<p><strong>先发送的数据包 后到达 导致被丢弃</strong></p>
+<p>Linux实现了一个TIME_WAIT状态快速回收的机制，即无需等待两倍的MSL这么久的时间，而是等待一个Retrans时间即释放，也就是等待一个重传时间(一般超级短，以至于你都来不及能在netstat -ant中看到TIME_WAIT状态)随即释放。</p>
+<pre><code>假设PC1和PC2均启用了TCP时间戳，它们经过NAT设备N1往服务器S1的22端口连接：
+PC1：192.168.100.1
+PC2：192.168.100.2
+N1外网口(即NAT后的地址)：172.16.100.1
+S1：172.16.100.2
+所有涉事机器的配置：
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_timestamps = 1
+由于有NAT设备，S1看来是同一台机器发出的，且出现了时间戳倒流，连接拒绝！
+仅仅两台机器就出现了这个问题，试问如果大量的源端机器在服务器的入口处遇到了NAT设备会怎样？即一台三层NAT设备部署在高负载网站的入口处...没有谁能保证时间戳小的机器一定先发起连接，各个机器频繁连接断开后依然按照时间戳从小到大的顺序连接！！
+</code></pre><p>经过nat之后，如果前面相同的端口被使用过，且时间戳大于这个链接发出的syn中的时间戳，服务器上就会忽略掉这个syn，不返会syn-ack消息，表现为用户无法正常完成tcp3次握手，从而不能打开web页面。在业务闲时，如果用户nat的端口没有被使用过时，就可以正常打开；业务忙时，nat端口重复使用的频率高，很难分到没有被使用的端口，从而产生这种问题。</p>
+<p>NAT设备为所有的内部设备代理一个IP地址即主机标识，然而<strong>却不触动其时间戳</strong>，而各个机器的时间戳并不满足任何规律&hellip;</p>
+<h3 id="close_wait">close_wait</h3>
+<p><strong>服务器保持了大量的close_wait</strong></p>
+<p>当客户端发送一个FIN后，服务器没有返回ACK确认。即程序没有检测到需要关闭连接。这个资源就一直被程序占着。</p>
+<p><strong>解决</strong></p>
+<p>（1）关闭正在运行的程序，这个需要视业务情况而定。
+（2）尽快的修改程序里的bug，然后测试提交到线上服务器。</p>
+<p><strong>HttpClient未释放连接，会造成close_wait</strong></p>
+<p>服务器A是一台爬虫服务器，它使用简单的HttpClient去请求资源服务器B上面的apache获取文件资源，正常情况下，如果请求成功，那么在抓取完资源后，服务器A会主动发出关闭连接的请求，这个时候就是主动关闭连接，服务器A的连接状态我们可以看到是TIME_WAIT。</p>
+<p>如果一旦发生异常呢？假设请求的资源服务器B上并不存在，那么这个时候就会由服务器B发出关闭连接的请求，服务器A就是被动的关闭了连接，如果服务器A被动关闭连接之后程序员忘了让HttpClient释放连接，那就会造成CLOSE_WAIT的状态了。</p>
+<h3 id="nat">NAT</h3>
+<p>**介绍：**在通信中将内网的ip和端口映射为外围的ip和端口。</p>
+<p>NAT是将私有IP地址通过边界路由转换成外网IP地址，在边界路由的<strong>NAT地址转换表</strong>记录下这个转换映射记录，当外部数据返回时，路由使用NAT技术查询NAT转换表，再将目标地址替换成内网用户IP地址。</p>
+<p><strong>出现原因：ip地址不够用</strong></p>
+<p><strong>三种NAT技术</strong></p>
+<p>**静态NAT：**静态NAT就是一对一映射，内部有多少私有地址需要和外部通信，就要配置多少外网IP地址与其对应</p>
+<p>**动态NAT：**动态NAT是在路由器上配置一个外网IP地址池，当内部有计算机需要和外部通信时，就从地址池里动态的取出一个外网IP，并将他们的对应关系绑定到NAT表中，通信结束后，这个外网IP才被释放，可供其他内部IP地址转换使用，这个DHCP租约IP有相似之处。</p>
+<p><strong>PAT(port address Translation，端口地址转换，也叫端口地址复用)：<strong>这是最常用的NAT技术，也是IPv4能够维持到今天的最重要的原因之一，它提供了一种多对一的方式，对多个内网IP地址，边界路由可以给他们分配</strong>一个外网IP</strong>，利用这个外网IP的不同端口和外部进行通信。</p>
+<p>**优点：**节约了公网ip，并且隐藏和保护了内网</p>
+<p>**缺点：**使网络报文被修改，增加了网络的转发时延。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-02-19
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/tcp/">TCP</a>
+          <a href="https://phantommmm.github.io/tags/rst/">RST</a>
+          <a href="https://phantommmm.github.io/tags/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/">流量控制</a>
+          <a href="https://phantommmm.github.io/tags/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">拥塞控制</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/http/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">HTTP</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/io%E6%A8%A1%E5%9E%8B/">
+            <span class="next-text nav-default">IO模型</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
