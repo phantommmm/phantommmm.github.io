@@ -93,14 +93,14 @@
   </url>
   
   <url>
-    <loc>https://phantommmm.github.io/tags/redis/</loc>
+    <loc>https://phantommmm.github.io/post/redis-lua/</loc>
     <lastmod>2020-07-15T13:39:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://phantommmm.github.io/post/redis-lua/</loc>
+    <loc>https://phantommmm.github.io/tags/redis/</loc>
     <lastmod>2020-07-15T13:39:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
