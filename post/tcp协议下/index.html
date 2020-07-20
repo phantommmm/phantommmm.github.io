@@ -69,7 +69,7 @@
 <meta itemprop="description" content="TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包">
 <meta itemprop="datePublished" content="2020-07-09T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-09T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="5113">
+<meta itemprop="wordCount" content="5120">
 
 
 
@@ -445,8 +445,8 @@ if (!doNotTrack) {
 <h3 id="为什么客服端最后要等待2msl">为什么客服端最后要等待2MSL？</h3>
 <p>MSL（Maximum Segment Lifetime），TCP允许不同的实现可以设置不同的MSL值。</p>
 <p>MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复片段所需的最大时间</p>
-<p>**第一，**保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，站在服务器的角度看来，我已经发送了FIN+ACK报文请求断开了，客户端还没有给我回应，应该是我发送的请求断开报文它没有收到，于是服务器又会重新发送一次，而客户端就能在这个2MSL时间段内收到这个重传的报文，接着给出回应报文，并且会重启2MSL计时器。</p>
-<p><strong>第二</strong>，防止类似与“三次握手”中提到了的“已经失效的连接请求报文段”出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样新的连接中不会出现旧连接的请求报文。</p>
+<p><strong>第一，</strong> 保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，站在服务器的角度看来，我已经发送了FIN+ACK报文请求断开了，客户端还没有给我回应，应该是我发送的请求断开报文它没有收到，于是服务器又会重新发送一次，而客户端就能在这个2MSL时间段内收到这个重传的报文，接着给出回应报文，并且会重启2MSL计时器。</p>
+<p><strong>第二</strong> ，防止类似与“三次握手”中提到了的“已经失效的连接请求报文段”出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样新的连接中不会出现旧连接的请求报文。</p>
 <h3 id="time_wait">Time_wait</h3>
 <p>只有主动进行关闭连接的机器会进入time_wait状态。</p>
 <p>在<strong>高并发短连接</strong>的TCP服务器上，当客户端完成访问后立刻主动正常关闭连接，就会出现大量time_wait。这时该客户端在访问同一服务器，会启用另一个端口，因为刚刚那个端口处于time_wait状态。</p>
@@ -457,7 +457,22 @@ if (!doNotTrack) {
 <p>比如取一个web页面，1秒钟的http短连接处理完业务，在关闭连接之后，这个业务用过的端口会停留在TIMEWAIT状态几分钟，而这几分钟，其他HTTP请求来临的时候是无法占用此端口的。</p>
 <p><strong>可优化的方案</strong></p>
 <p><strong>减小time+wait时间</strong></p>
-<pre><code>调整 time_wait时间 net.ipv4.tcp_fin_timeout=30
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">调整 time_wait时间 net.ipv4.tcp_fin_timeout=30
 
 //首先打开 timestamps
 net.ipv4.tcp_timestamps = 1
@@ -468,7 +483,9 @@ net.ipv4.tcp_tw_recycle = 0
 
 reuse:复用time_wait连接。
 recycle:快速回收。
-</code></pre><p><strong>timestamps</strong></p>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>timestamps</strong></p>
 <p>开启timestamps时间戳，实现打开同一个IP 不同端口，同一源IP的socket connect请求中的 timestamps必须是递增的。</p>
 <p><strong>reuse</strong></p>
 <p>这是因为一来TIME_WAIT创建时间必须超过一秒才可能会被复用；二来只有连接的时间戳是递增的时候才会被复用。</p>
@@ -647,7 +664,7 @@ recycle:快速回收。
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

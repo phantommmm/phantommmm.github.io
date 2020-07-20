@@ -69,7 +69,7 @@
 <meta itemprop="description" content="TCP协议（上） TCP 在 IP 协议不可靠（尽力而为也就是无服务）之上建立了可靠的全双工字节流数据传输服务。首先，它是基于字节流的，也就是说它是以字节">
 <meta itemprop="datePublished" content="2020-07-08T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-08T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="6157">
+<meta itemprop="wordCount" content="6168">
 
 
 
@@ -445,7 +445,22 @@ FIN也会占一个序列号，当你收到FIN时，就可以根据这个序列�
 <p>TCP为每个连接设有一个<strong>持续计时器</strong>。只要TCP连接的一方收到对方的零窗口通知，就启动持续计时器，若持续计时器设置的时间到期，就发送一个零窗口探测报文段（仅携带1字节的数据），而对方就在确认这个探测报文段时给出了现在的窗口值。</p>
 <p>接收端可以根据自己的状况通告窗口大小，从而控制发送端的接收，进行流量控制</p>
 <p>窗口大小不能大于序号空间大小的一半。目的是为了不让两个窗口出现交迭，比如总大小为7，窗口大小都为4，接收窗口应当滑动4，但只剩3个序号，导致两个窗口交迭。</p>
-<pre><code>1. 假设32~45 这些数据，是上层Application发送给TCP的，TCP将其分成四个Segment来发往internet
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1. 假设32~45 这些数据，是上层Application发送给TCP的，TCP将其分成四个Segment来发往internet
 
 2. seg1 32~34 seg2 35~36 seg3 37~41 seg4 42~45  这四个片段，依次发送出去，此时假设接收端之接收到了seg1 seg2 seg4
 
@@ -456,7 +471,9 @@ FIN也会占一个序列号，当你收到FIN时，就可以根据这个序列�
 5. 假设接收端通告的Window Size仍然不变，此时窗口右移，产生一些新的空位，这些是接收端允许发送的范畴
 
 6. 对于丢失的seg3，如果超过一定时间，TCP就会重新传送（重传机制），重传成功会seg3 seg4一块被确认，不成功，seg4也将被丢弃
-</code></pre><h2 id="流量控制">流量控制</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="流量控制">流量控制</h2>
 <p><strong>为什么要进行流量控制，是为了让发送方的发送速率不要太快，让接收方来得及接收，减少丢失。</strong>
 接收端处理数据的速度是有限的，如果发送方的速度太快，就会把缓冲区打满。这个时候如果继续发送数据，就会导致丢包等一系列连锁反应。</p>
 <p><strong>滑动窗口最大值？</strong></p>
@@ -705,7 +722,7 @@ FIN也会占一个序列号，当你收到FIN时，就可以根据这个序列�
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

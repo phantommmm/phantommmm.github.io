@@ -69,7 +69,7 @@
 <meta itemprop="description" content="Redis高级数据结构 平常我们接触最多的是5个入门级数据结构：String，Hash，List，Set，Sorted Set。本文介绍3个高级">
 <meta itemprop="datePublished" content="2020-06-27T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-06-27T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="2000">
+<meta itemprop="wordCount" content="1997">
 
 
 
@@ -359,38 +359,70 @@ if (!doNotTrack) {
 3.二进制数据的存储，进行相关计算的时候非常快。
 4.方便扩容</p>
 <p>通过对某个bit进行0或1的设置，表示某个元素的状态</p>
-<pre><code>SETBIT key offset value
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">SETBIT key offset value
 GETBIT key offset
-</code></pre><p>SETBIT命令第一个参数是位编号，第二个参数是这个位的值，只能是0或者1。如果bit地址超过当前string长度，会自动增大string</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>SETBIT命令第一个参数是位编号，第二个参数是这个位的值，只能是0或者1。如果bit地址超过当前string长度，会自动增大string</p>
 <p>GETBIT命令指示返回指定位置bit的值。超过范围（寻址地址在目标key的string长度以外的位）的GETBIT总是返回0</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.png" alt="img"></p>
 <p><strong>适用场景</strong></p>
 <p><strong>用户签到</strong>，比如用户一年的签到数只需记录签到位为1，否则默认为0即可。</p>
 <p>例如 用户id123在19年9月1号 签到</p>
-<pre><code>setbit sign:123:1909 1 1
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">setbit sign:123:1909 1 1
 getbit sign:123:1909 1
-</code></pre><p><strong>用户在线状态</strong>，比如用户id123在线</p>
-<pre><code>setbit online 123 1
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>用户在线状态</strong>，比如用户id123在线</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">setbit online 123 1
 getbit online 123
-</code></pre><h2 id="hyperloglogs">HyperLogLogs</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="hyperloglogs">HyperLogLogs</h2>
 <p>HyperLogLog是用于计算唯一事物的概率数据结构，如果统计唯一项，项目越多，需要的内存就越多，因为需要记住过去已经看过的项，从而避免多次统计这些项。传统的数据结构如Set在数据量大时，Set占用的空间会非常大，非常浪费空间。</p>
 <p>HyperLogLog算法能够提供不精确的去重计数，能够使用极少的内存来统计巨量的数据，在 <code>Redis</code> 中实现的 <code>HyperLogLog</code>，只需要<code>12K</code>内存就能统计<code>2^64</code>个数据，计算存在一定的误差，标准误差为 0.81%</p>
 <p><strong>场景</strong></p>
-<p>**UV:**页面访问量，一天内同一用户多次访问，只算一次</p>
+<p><strong>UV:</strong> 页面访问量，一天内同一用户多次访问，只算一次</p>
 <p>统计UV，首先思路，为每个页面设置一个set存储当天访问的用户Id。当请求来时，使用sadd将用户Id塞进去即可，通过scard获取集合大小，即UV。</p>
 <p><strong>问题</strong></p>
 <p>当页面访问量很大，比如几千万时，得维护很大的set浪费空间。</p>
 <p><strong>使用HLL</strong></p>
 <p>UV为150w和160w差别不大，与使用Set花费大量空间相比可以接受，因此使用HLL</p>
-<pre><code>pfadd codehole user1 //添加元素
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">pfadd codehole user1 //添加元素
 pfcount codehole //统计数量
-</code></pre><h2 id="布隆过滤器">布隆过滤器</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="布隆过滤器">布隆过滤器</h2>
 <p>本质上布隆过滤器是一种数据结构，比较巧妙的概率型数据结构，特点是高效地插入和查询，可以用来告诉你 <strong>“某样东西一定不存在或者可能存在”</strong>。</p>
 <p>相比于传统的 List、Set、Map 等数据结构，它更高效、占用空间更少，但是缺点是其返回的结果是<strong>概率性</strong>的，而不是确切的。</p>
 <h3 id="结构">结构</h3>
 <p>布隆过滤器是一个 bit 向量或者说 bit 数组，长这样：</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/2.jpg" alt="img"></p>
-<p>如果我们要映射一个值到布隆过滤器中，我们需要使用<strong>多个不同的哈希函数</strong>生成**多个哈希值，**并对每个生成的哈希值指向的 bit 位置 1，例如针对值 “baidu” 和三个不同的哈希函数分别生成了哈希值 1、4、7，则上图转变为：</p>
+<p>如果我们要映射一个值到布隆过滤器中，我们需要使用<strong>多个不同的哈希函数</strong>生成 <strong>多个哈希值，</strong> 并对每个生成的哈希值指向的 bit 位置 1，例如针对值 “baidu” 和三个不同的哈希函数分别生成了哈希值 1、4、7，则上图转变为：</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/3.jpg" alt="img"></p>
 <p>Ok，我们现在再存一个值 “tencent”，如果哈希函数返回 3、4、8 的话，图继续变为：</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/4.jpg" alt="img"></p>
@@ -409,11 +441,20 @@ pfcount codehole //统计数量
 <p>例如：识别垃圾邮件，只要布隆过滤器中存在该邮箱则认为是垃圾邮件。</p>
 <p>把黑名单都存放在布隆过滤器中，通过布隆过滤器判断是否是黑名单。</p>
 <h2 id="使用">使用</h2>
-<p>**注意：**redis原生并不自带布隆过滤器, 需要专门下载并自行编译和加载</p>
-<pre><code>1.读方: BF.EXISTS KEY element
+<p><strong>注意：</strong> redis原生并不自带布隆过滤器, 需要专门下载并自行编译和加载</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1.读方: BF.EXISTS KEY element
 
 2.写方: BF.ADD KEY element
-</code></pre><p>两个API即可完成布隆过滤器元素的增加和查找操作(注: 这里的KEY就是布隆过滤器)。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>两个API即可完成布隆过滤器元素的增加和查找操作(注: 这里的KEY就是布隆过滤器)。</p>
 
     </div>
 
@@ -576,7 +617,7 @@ pfcount codehole //统计数量
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

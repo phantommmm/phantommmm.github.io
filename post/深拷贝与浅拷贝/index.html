@@ -69,7 +69,7 @@
 <meta itemprop="description" content="深拷贝与浅拷贝 创建对象的五种方式 ​ ①、通过 new 关键字 这是最常用的一种方式，通过 new 关键字调用类的有参或无参构造方法来创建对象。比如 Object obj = new Object(); ②、">
 <meta itemprop="datePublished" content="2020-07-16T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-16T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="1467">
+<meta itemprop="wordCount" content="1482">
 
 
 
@@ -377,8 +377,15 @@ if (!doNotTrack) {
 <h2 id="beanutilscopyproperties">BeanUtils.copyProperties</h2>
 <p>如果你有两个具有很多相同属性的JavaBean，一个很常见的情况就是Struts里的PO对象（持久对象）和对应的ActionForm，传统方式是对属性逐个赋值，当属性值多时逐个赋值花费时间较多。</p>
 <p>因此可以使用BeanUtils.copyProperties方法，该方法会对两个Bean中<strong>相同名称</strong>的属性进行赋值，名称不相同的则不进行处理。</p>
-<pre><code>BeanUtils.copyProperties(formBean,toBean);
-</code></pre><p><strong>那么该方法为浅拷贝 or 深拷贝？</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">BeanUtils.copyProperties(formBean,toBean);
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>那么该方法为浅拷贝 or 深拷贝？</strong></p>
 <p>浅拷贝的现象就是对象指向同一个内存地址，修改了拷贝前的对象的值就会影响拷贝后的值。</p>
 <p>BeanUtils只能算是简单的属性复制并不能算浅拷贝或深拷贝。</p>
 <h2 id="深拷贝">深拷贝</h2>
@@ -395,21 +402,41 @@ if (!doNotTrack) {
 <p><strong>序列化方法</strong></p>
 <p>​		序列化是将对象写到流中便于传输，而反序列化则是把对象从流中读取出来。这里写到流中的对象则是原始对象的一个拷贝，因为原始对象还存在 JVM 中，所以我们可以利用对象的序列化产生克隆对象，然后通过反序列化获取这个对象。</p>
 <p>　　注意每个需要序列化的类都要实现 Serializable 接口，如果有某个属性不需要序列化，可以将其声明为 transient，即将其排除在克隆属性之外。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//深度拷贝
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">deepClone</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception<span style="color:#f92672">{</span>
-    <span style="color:#75715e">// 序列化
-</span><span style="color:#75715e"></span>    ByteArrayOutputStream bos <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ByteArrayOutputStream<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    ObjectOutputStream oos <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ObjectOutputStream<span style="color:#f92672">(</span>bos<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//深度拷贝
+</span><span class="c1"></span><span class="kd">public</span> <span class="n">Object</span> <span class="nf">deepClone</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+    <span class="c1">// 序列化
+</span><span class="c1"></span>    <span class="n">ByteArrayOutputStream</span> <span class="n">bos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">ObjectOutputStream</span> <span class="n">oos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="n">bos</span><span class="o">)</span><span class="o">;</span>
 
-    oos<span style="color:#f92672">.</span><span style="color:#a6e22e">writeObject</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="n">oos</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="k">this</span><span class="o">)</span><span class="o">;</span>
 
-    <span style="color:#75715e">// 反序列化
-</span><span style="color:#75715e"></span>    ByteArrayInputStream bis <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ByteArrayInputStream<span style="color:#f92672">(</span>bos<span style="color:#f92672">.</span><span style="color:#a6e22e">toByteArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    ObjectInputStream ois <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ObjectInputStream<span style="color:#f92672">(</span>bis<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="c1">// 反序列化
+</span><span class="c1"></span>    <span class="n">ByteArrayInputStream</span> <span class="n">bis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayInputStream</span><span class="o">(</span><span class="n">bos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">ObjectInputStream</span> <span class="n">ois</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="n">bis</span><span class="o">)</span><span class="o">;</span>
 
-    <span style="color:#66d9ef">return</span> ois<span style="color:#f92672">.</span><span style="color:#a6e22e">readObject</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+    <span class="k">return</span> <span class="n">ois</span><span class="o">.</span><span class="na">readObject</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     
@@ -572,7 +599,7 @@ if (!doNotTrack) {
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

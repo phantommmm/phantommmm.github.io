@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title> - Phantom</title>
+  <title>Netty中的Reactor模型 - Phantom</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -22,11 +22,8 @@
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<meta name="author" content="Phantom" />
-  <meta name="description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模型
-单线程模型 EventLoopGroup bossGroup = new NioEventLoopGroup(1);ServerBootstrap b = new ServerBootstrap();b.group(bossGroup).channel(NioServerSocketChannel.class)...注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 b.group(bossGroup) 设置了服务器端的 EventLoopGroup
-有些朋友可能会有疑惑: 我记得在启动服务器端的 Netty 程序时, 是需要设置 bossGroup 和 workerGroup 的, 为什么这里就只有一个 bossGroup? 其实很简单, ServerBootstrap 重写了 group 方法:
-@Overridepublic ServerBootstrap group(EventLoopGroup group) {return group(group, group);}因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了." />
+<meta name="author" content="phantom" />
+  <meta name="description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模" />
 
   <meta name="keywords" content="Hugo, theme, Phantom" />
 
@@ -62,30 +59,23 @@
 
 
 
-<meta property="og:title" content="" />
-<meta property="og:description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模型
-单线程模型 EventLoopGroup bossGroup = new NioEventLoopGroup(1);ServerBootstrap b = new ServerBootstrap();b.group(bossGroup).channel(NioServerSocketChannel.class)...注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 b.group(bossGroup) 设置了服务器端的 EventLoopGroup
-有些朋友可能会有疑惑: 我记得在启动服务器端的 Netty 程序时, 是需要设置 bossGroup 和 workerGroup 的, 为什么这里就只有一个 bossGroup? 其实很简单, ServerBootstrap 重写了 group 方法:
-@Overridepublic ServerBootstrap group(EventLoopGroup group) {return group(group, group);}因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了." />
+<meta property="og:title" content="Netty中的Reactor模型" />
+<meta property="og:description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://phantommmm.github.io/post/netty%E4%B8%AD%E7%9A%84-reactor%E6%A8%A1%E5%9E%8B/" />
-
-<meta itemprop="name" content="">
-<meta itemprop="description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模型
-单线程模型 EventLoopGroup bossGroup = new NioEventLoopGroup(1);ServerBootstrap b = new ServerBootstrap();b.group(bossGroup).channel(NioServerSocketChannel.class)...注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 b.group(bossGroup) 设置了服务器端的 EventLoopGroup
-有些朋友可能会有疑惑: 我记得在启动服务器端的 Netty 程序时, 是需要设置 bossGroup 和 workerGroup 的, 为什么这里就只有一个 bossGroup? 其实很简单, ServerBootstrap 重写了 group 方法:
-@Overridepublic ServerBootstrap group(EventLoopGroup group) {return group(group, group);}因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了.">
-
-<meta itemprop="wordCount" content="1228">
-
+<meta property="article:published_time" content="2020-07-18T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-18T13:39:23+08:00" />
+<meta itemprop="name" content="Netty中的Reactor模型">
+<meta itemprop="description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模">
+<meta itemprop="datePublished" content="2020-07-18T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-18T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="4213">
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模型
-单线程模型 EventLoopGroup bossGroup = new NioEventLoopGroup(1);ServerBootstrap b = new ServerBootstrap();b.group(bossGroup).channel(NioServerSocketChannel.class)...注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 b.group(bossGroup) 设置了服务器端的 EventLoopGroup
-有些朋友可能会有疑惑: 我记得在启动服务器端的 Netty 程序时, 是需要设置 bossGroup 和 workerGroup 的, 为什么这里就只有一个 bossGroup? 其实很简单, ServerBootstrap 重写了 group 方法:
-@Overridepublic ServerBootstrap group(EventLoopGroup group) {return group(group, group);}因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了."/>
+
+<meta itemprop="keywords" content="Netty,Reactor," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Netty中的Reactor模型"/>
+<meta name="twitter:description" content="Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -316,13 +306,16 @@ if (!doNotTrack) {
           <article class="post bg-white">
     
     <header class="post-header">
-      <h1 class="post-title"></h1>
+      <h1 class="post-title">Netty中的Reactor模型</h1>
       
       <div class="post-meta">
-        <time datetime="0001-01-01" class="post-time">
-          0001-01-01
+        <time datetime="2020-07-18" class="post-time">
+          2020-07-18
         </time>
-        
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/netty/"> Netty </a>
+            
+          </div>
         
 
         
@@ -365,36 +358,81 @@ if (!doNotTrack) {
       <h1 id="netty中的reactor模型">Netty中的Reactor模型</h1>
 <p>前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模型</p>
 <h2 id="单线程模型">单线程模型</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EventLoopGroup bossGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NioEventLoopGroup<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-ServerBootstrap b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerBootstrap<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-b<span style="color:#f92672">.</span><span style="color:#a6e22e">group</span><span style="color:#f92672">(</span>bossGroup<span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">(</span>NioServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-</code></pre></div><p>注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 <strong>b.group(bossGroup)</strong> 设置了服务器端的 EventLoopGroup</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">EventLoopGroup</span> <span class="n">bossGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="n">1</span><span class="o">)</span><span class="o">;</span>
+<span class="n">ServerBootstrap</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerBootstrap</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">b</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="n">bossGroup</span><span class="o">)</span>
+ <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">NioServerSocketChannel</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+ <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>注意, 我们实例化了一个 NioEventLoopGroup, 构造器参数是1, 表示 NioEventLoopGroup 的线程池大小是1然后接着我们调用 <strong>b.group(bossGroup)</strong> 设置了服务器端的 EventLoopGroup</p>
 <p>有些朋友可能会有疑惑: 我记得在启动服务器端的 Netty 程序时, 是需要设置 bossGroup 和 workerGroup 的, 为什么这里就只有一个 bossGroup?
 其实很简单, ServerBootstrap 重写了 group 方法:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
-<span style="color:#66d9ef">public</span> ServerBootstrap <span style="color:#a6e22e">group</span><span style="color:#f92672">(</span>EventLoopGroup group<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> group<span style="color:#f92672">(</span>group<span style="color:#f92672">,</span> group<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了.
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">ServerBootstrap</span> <span class="nf">group</span><span class="o">(</span><span class="n">EventLoopGroup</span> <span class="n">group</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">group</span><span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">group</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>因此当传入一个 group 时, 那么 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup 了.
 这时候呢, 因为 bossGroup 和 workerGroup 就是同一个 NioEventLoopGroup, 并且这个 NioEventLoopGroup 只有一个线程, 这样就会导致 Netty 中的 acceptor 和后续的所有客户端连接的 IO 操作都是在一个线程中处理的. 那么对应到 Reactor 的线程模型中, 我们这样设置 NioEventLoopGroup 时, 就相当于 <strong>Reactor 单线程模型</strong>.</p>
 <h2 id="多线程模型">多线程模型</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EventLoopGroup bossGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NioEventLoopGroup<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-EventLoopGroup workerGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NioEventLoopGroup<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-ServerBootstrap b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerBootstrap<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-b<span style="color:#f92672">.</span><span style="color:#a6e22e">group</span><span style="color:#f92672">(</span>bossGroup<span style="color:#f92672">,</span> workerGroup<span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">(</span>NioServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-</code></pre></div><p>bossGroup 中只有一个线程, 而 workerGroup 中的线程是 CPU 核心数乘以2, 因此对应的到 Reactor 线程模型中, 我们知道, 这样设置的 NioEventLoopGroup 其实就是 <strong>Reactor 多线程模型</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">EventLoopGroup</span> <span class="n">bossGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="n">1</span><span class="o">)</span><span class="o">;</span>
+<span class="n">EventLoopGroup</span> <span class="n">workerGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">ServerBootstrap</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerBootstrap</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">b</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="n">bossGroup</span><span class="o">,</span> <span class="n">workerGroup</span><span class="o">)</span>
+ <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">NioServerSocketChannel</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+ <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>bossGroup 中只有一个线程, 而 workerGroup 中的线程是 CPU 核心数乘以2, 因此对应的到 Reactor 线程模型中, 我们知道, 这样设置的 NioEventLoopGroup 其实就是 <strong>Reactor 多线程模型</strong></p>
 <h2 id="主从多线程模型">主从多线程模型</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EventLoopGroup bossGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NioEventLoopGroup<span style="color:#f92672">(</span>4<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-EventLoopGroup workerGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NioEventLoopGroup<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-ServerBootstrap b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerBootstrap<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-b<span style="color:#f92672">.</span><span style="color:#a6e22e">group</span><span style="color:#f92672">(</span>bossGroup<span style="color:#f92672">,</span> workerGroup<span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">(</span>NioServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
- <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-</code></pre></div><p>bossGroup 线程池中的线程数我们设置为4, 而 workerGroup 中的线程是 CPU 核心数乘以2, 因此对应的到 Reactor 线程模型中, 我们知道, 这样设置的 NioEventLoopGroup 其实就是 <strong>Reactor 主从多线程模型</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">EventLoopGroup</span> <span class="n">bossGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="n">4</span><span class="o">)</span><span class="o">;</span>
+<span class="n">EventLoopGroup</span> <span class="n">workerGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">ServerBootstrap</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerBootstrap</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">b</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="n">bossGroup</span><span class="o">,</span> <span class="n">workerGroup</span><span class="o">)</span>
+ <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">NioServerSocketChannel</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+ <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>bossGroup 线程池中的线程数我们设置为4, 而 workerGroup 中的线程是 CPU 核心数乘以2, 因此对应的到 Reactor 线程模型中, 我们知道, 这样设置的 NioEventLoopGroup 其实就是 <strong>Reactor 主从多线程模型</strong></p>
 <p><strong>可真是这样吗？</strong></p>
 <p>stackoverflow上有这样一个问题</p>
 <blockquote>
@@ -439,153 +477,324 @@ b<span style="color:#f92672">.</span><span style="color:#a6e22e">group</span><sp
 <li>SingleThreadEventExecutor ：实现任务队列</li>
 <li>AbstractScheduledEventExecutor：主要是实现定时任务</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">SingleThreadEventLoop</span><span style="color:#f92672">(</span>EventLoopGroup parent<span style="color:#f92672">,</span> Executor executor<span style="color:#f92672">,</span>
-                                <span style="color:#66d9ef">boolean</span> addTaskWakesUp<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> maxPendingTasks<span style="color:#f92672">,</span>
-                                RejectedExecutionHandler rejectedExecutionHandler<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">,</span> executor<span style="color:#f92672">,</span> addTaskWakesUp<span style="color:#f92672">,</span> maxPendingTasks<span style="color:#f92672">,</span> rejectedExecutionHandler<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    tailTasks <span style="color:#f92672">=</span> newTaskQueue<span style="color:#f92672">(</span>maxPendingTasks<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">SingleThreadEventExecutor</span><span style="color:#f92672">(</span>EventExecutorGroup parent<span style="color:#f92672">,</span> Executor executor<span style="color:#f92672">,</span>
-                                        <span style="color:#66d9ef">boolean</span> addTaskWakesUp<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> maxPendingTasks<span style="color:#f92672">,</span>
-                                        RejectedExecutionHandler rejectedHandler<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">addTaskWakesUp</span> <span style="color:#f92672">=</span> addTaskWakesUp<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">maxPendingTasks</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>16<span style="color:#f92672">,</span> maxPendingTasks<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">executor</span> <span style="color:#f92672">=</span> ObjectUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">checkNotNull</span><span style="color:#f92672">(</span>executor<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;executor&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        taskQueue <span style="color:#f92672">=</span> newTaskQueue<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">maxPendingTasks</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        rejectedExecutionHandler <span style="color:#f92672">=</span> ObjectUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">checkNotNull</span><span style="color:#f92672">(</span>rejectedHandler<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;rejectedHandler&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/Netty%E4%B8%AD%E7%9A%84Reactor%E6%A8%A1%E5%9E%8B/image-20200716154624517.png" alt="image-20200716154624517"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="nf">SingleThreadEventLoop</span><span class="o">(</span><span class="n">EventLoopGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="n">Executor</span> <span class="n">executor</span><span class="o">,</span>
+                                <span class="kt">boolean</span> <span class="n">addTaskWakesUp</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxPendingTasks</span><span class="o">,</span>
+                                <span class="n">RejectedExecutionHandler</span> <span class="n">rejectedExecutionHandler</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">(</span><span class="n">parent</span><span class="o">,</span> <span class="n">executor</span><span class="o">,</span> <span class="n">addTaskWakesUp</span><span class="o">,</span> <span class="n">maxPendingTasks</span><span class="o">,</span> <span class="n">rejectedExecutionHandler</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">tailTasks</span> <span class="o">=</span> <span class="n">newTaskQueue</span><span class="o">(</span><span class="n">maxPendingTasks</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="nf">SingleThreadEventExecutor</span><span class="o">(</span><span class="n">EventExecutorGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="n">Executor</span> <span class="n">executor</span><span class="o">,</span>
+                                        <span class="kt">boolean</span> <span class="n">addTaskWakesUp</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxPendingTasks</span><span class="o">,</span>
+                                        <span class="n">RejectedExecutionHandler</span> <span class="n">rejectedHandler</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">parent</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">addTaskWakesUp</span> <span class="o">=</span> <span class="n">addTaskWakesUp</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">maxPendingTasks</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">16</span><span class="o">,</span> <span class="n">maxPendingTasks</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">executor</span> <span class="o">=</span> <span class="n">ObjectUtil</span><span class="o">.</span><span class="na">checkNotNull</span><span class="o">(</span><span class="n">executor</span><span class="o">,</span> <span class="s">&#34;executor&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">taskQueue</span> <span class="o">=</span> <span class="n">newTaskQueue</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">maxPendingTasks</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">rejectedExecutionHandler</span> <span class="o">=</span> <span class="n">ObjectUtil</span><span class="o">.</span><span class="na">checkNotNull</span><span class="o">(</span><span class="n">rejectedHandler</span><span class="o">,</span> <span class="s">&#34;rejectedHandler&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/Netty%E4%B8%AD%E7%9A%84Reactor%E6%A8%A1%E5%9E%8B/image-20200716154624517.png" alt="image-20200716154624517"></p>
 <p>从上图可知，三个类分别有三种队列。</p>
-<pre><code>AbstractScheduledEventExecutor --scheduledTaskQueue 定时任务队列
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">AbstractScheduledEventExecutor --scheduledTaskQueue 定时任务队列
 SingleThreadEventExecutor --taskQueue LinkedBlockingQueue
 SingleThreadEventLoop --tailQueue LinkedBlockingQueue
-</code></pre><p>Task 里面都是一些非 IO 任务。就是通过 execute 提交的那些任务，都会添加到task 中</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Task 里面都是一些非 IO 任务。就是通过 execute 提交的那些任务，都会添加到task 中</p>
 <p>其中tailTasks和taskQueue均是任务队列，而优先级不同，taskQueue的优先级高于tailTasks，而定时任务的优先级高于taskQueue</p>
 <p>tailQueue主要存放一些优先级别不高的任务</p>
 <h3 id="run方法">Run方法</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">switch</span> <span style="color:#f92672">(</span>selectStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">calculateStrategy</span><span style="color:#f92672">(</span>selectNowSupplier<span style="color:#f92672">,</span> hasTasks<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">case</span> SelectStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">CONTINUE</span><span style="color:#f92672">:</span>
-                        <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">case</span> SelectStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">SELECT</span><span style="color:#f92672">:</span>
-                        select<span style="color:#f92672">(</span>wakenUp<span style="color:#f92672">.</span><span style="color:#a6e22e">getAndSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>wakenUp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                            selector<span style="color:#f92672">.</span><span style="color:#a6e22e">wakeup</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                        <span style="color:#f92672">}</span>
-                        <span style="color:#75715e">// fall through
-</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-                <span style="color:#f92672">}</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="o">;</span><span class="o">;</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">switch</span> <span class="o">(</span><span class="n">selectStrategy</span><span class="o">.</span><span class="na">calculateStrategy</span><span class="o">(</span><span class="n">selectNowSupplier</span><span class="o">,</span> <span class="n">hasTasks</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">case</span> <span class="n">SelectStrategy</span><span class="o">.</span><span class="na">CONTINUE</span><span class="o">:</span>
+                        <span class="k">continue</span><span class="o">;</span>
+                    <span class="k">case</span> <span class="n">SelectStrategy</span><span class="o">.</span><span class="na">SELECT</span><span class="o">:</span>
+                        <span class="n">select</span><span class="o">(</span><span class="n">wakenUp</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">wakenUp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">selector</span><span class="o">.</span><span class="na">wakeup</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="c1">// fall through
+</span><span class="c1"></span>                    <span class="k">default</span><span class="o">:</span>
+                <span class="o">}</span>
 
-                cancelledKeys <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-                needsToSelectAgain <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> ioRatio <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ioRatio</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ioRatio <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 100<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        processSelectedKeys<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-                        <span style="color:#75715e">// Ensure we always run tasks.
-</span><span style="color:#75715e"></span>                        runAllTasks<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> ioStartTime <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        processSelectedKeys<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-                        <span style="color:#75715e">// Ensure we always run tasks.
-</span><span style="color:#75715e"></span>                        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> ioTime <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> ioStartTime<span style="color:#f92672">;</span>
-                        runAllTasks<span style="color:#f92672">(</span>ioTime <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>100 <span style="color:#f92672">-</span> ioRatio<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> ioRatio<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                handleLoopException<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#75715e">// Always handle shutdown even if the loop processing threw an exception.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isShuttingDown<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    closeAll<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>confirmShutdown<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                handleLoopException<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>run方法中主要执行<strong>processSelectedKeys()</strong> 和 <strong>runAllTasks()</strong> 方法</p>
+                <span class="n">cancelledKeys</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+                <span class="n">needsToSelectAgain</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="kd">final</span> <span class="kt">int</span> <span class="n">ioRatio</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">ioRatio</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">ioRatio</span> <span class="o">=</span><span class="o">=</span> <span class="n">100</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">processSelectedKeys</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                        <span class="c1">// Ensure we always run tasks.
+</span><span class="c1"></span>                        <span class="n">runAllTasks</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                    <span class="kd">final</span> <span class="kt">long</span> <span class="n">ioStartTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">processSelectedKeys</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                        <span class="c1">// Ensure we always run tasks.
+</span><span class="c1"></span>                        <span class="kd">final</span> <span class="kt">long</span> <span class="n">ioTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">(</span><span class="o">)</span> <span class="o">-</span> <span class="n">ioStartTime</span><span class="o">;</span>
+                        <span class="n">runAllTasks</span><span class="o">(</span><span class="n">ioTime</span> <span class="o">*</span> <span class="o">(</span><span class="n">100</span> <span class="o">-</span> <span class="n">ioRatio</span><span class="o">)</span> <span class="o">/</span> <span class="n">ioRatio</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">handleLoopException</span><span class="o">(</span><span class="n">t</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// Always handle shutdown even if the loop processing threw an exception.
+</span><span class="c1"></span>            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">isShuttingDown</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">closeAll</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">confirmShutdown</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">return</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">handleLoopException</span><span class="o">(</span><span class="n">t</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>run方法中主要执行<strong>processSelectedKeys()</strong> 和 <strong>runAllTasks()</strong> 方法</p>
 <h3 id="io事件处理">IO事件处理</h3>
-<p>**processSelectedKeys()**主要查询就绪的IO事件并处理</p>
+<p><strong>processSelectedKeys()</strong> 主要查询就绪的IO事件并处理</p>
 <p>这里的代码还有一个十分有意思的地方, 即 <strong>ioRatio</strong>. 那什么是 <strong>ioRatio</strong>呢?</p>
 <p>它表示的是此线程分配给 IO 操作所占的时间比(即运行 processSelectedKeys 耗时在整个循环中所占用的时间)</p>
 <p>例如 ioRatio 默认是 50, 则表示 IO 操作和执行 task 的所占用的线程执行时间比是 1 : 1. 当知道了 IO 操作耗时和它所占用的时间比, 那么执行 task 的时间就可以很方便的计算出来了:</p>
-<pre><code>设 IO 操作耗时为 ioTime, ioTime 占的时间比例为 ioRatio, 则:
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">设 IO 操作耗时为 ioTime, ioTime 占的时间比例为 ioRatio, 则:
 	ioTime / ioRatio = taskTime / taskRatio
 	taskRatio = 100 - ioRatio
 	=&gt; taskTime = ioTime * (100 - ioRatio) / ioRatio
-</code></pre><p>根据上面的公式, 当我们设置 ioRate = 70 时, 则表示 IO 运行耗时占比为70%, 即假设某次循环一共耗时为 100ms, 那么根据公式, 我们知道 <strong>processSelectedKeys()</strong> 方法调用所耗时大概为70ms(即 IO 耗时), 而 <strong>runAllTasks()</strong> 耗时大概为 30ms(即执行 task 耗时).
+</code></pre></td></tr></table>
+</div>
+</div><p>根据上面的公式, 当我们设置 ioRate = 70 时, 则表示 IO 运行耗时占比为70%, 即假设某次循环一共耗时为 100ms, 那么根据公式, 我们知道 <strong>processSelectedKeys()</strong> 方法调用所耗时大概为70ms(即 IO 耗时), 而 <strong>runAllTasks()</strong> 耗时大概为 30ms(即执行 task 耗时).
 当 ioRatio 为 100 时, Netty 就不考虑 IO 耗时的占比, 而是分别调用 <strong>processSelectedKeys()</strong>、<strong>runAllTasks()</strong>; 而当 ioRatio 不为 100时, 则执行到 else 分支, 在这个分支中, 首先记录下 <strong>processSelectedKeys()</strong> 所执行的时间(即 IO 操作的耗时), 然后根据公式, 计算出执行 task 所占用的时间, 然后以此为参数, 调用 <strong>runAllTasks()</strong>.</p>
 <p>进入方法后，发现主要实现方法为processSelectedKeysOptimized，因此主要分析该方法</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processSelectedKeysOptimized</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">[</span><span style="color:#f92672">]</span> selectedKeys<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span><span style="color:#f92672">;</span> i <span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">final</span> SelectionKey k <span style="color:#f92672">=</span> selectedKeys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        selectedKeys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">processSelectedKeysOptimized</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">[</span><span class="o">]</span> <span class="n">selectedKeys</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span><span class="o">;</span> <span class="n">i</span> <span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">SelectionKey</span> <span class="n">k</span> <span class="o">=</span> <span class="n">selectedKeys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">selectedKeys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 
-        <span style="color:#66d9ef">final</span> Object a <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span><span style="color:#a6e22e">attachment</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span class="kd">final</span> <span class="n">Object</span> <span class="n">a</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="na">attachment</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#66d9ef">instanceof</span> AbstractNioChannel<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            processSelectedKey<span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>AbstractNioChannel<span style="color:#f92672">)</span> a<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
-            NioTask<span style="color:#f92672">&lt;</span>SelectableChannel<span style="color:#f92672">&gt;</span> task <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>NioTask<span style="color:#f92672">&lt;</span>SelectableChannel<span style="color:#f92672">&gt;</span><span style="color:#f92672">)</span> a<span style="color:#f92672">;</span>
-            processSelectedKey<span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> task<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>迭代 <strong>selectedKeys</strong> 获取就绪的 IO 事件, 然后为每个事件都调用 <strong>processSelectedKey</strong> 来处理它</p>
+        <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="k">instanceof</span> <span class="n">AbstractNioChannel</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">processSelectedKey</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="o">(</span><span class="n">AbstractNioChannel</span><span class="o">)</span> <span class="n">a</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&#34;unchecked&#34;</span><span class="o">)</span>
+            <span class="n">NioTask</span><span class="o">&lt;</span><span class="n">SelectableChannel</span><span class="o">&gt;</span> <span class="n">task</span> <span class="o">=</span> <span class="o">(</span><span class="n">NioTask</span><span class="o">&lt;</span><span class="n">SelectableChannel</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">a</span><span class="o">;</span>
+            <span class="n">processSelectedKey</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">task</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>迭代 <strong>selectedKeys</strong> 获取就绪的 IO 事件, 然后为每个事件都调用 <strong>processSelectedKey</strong> 来处理它</p>
 <p><strong>processSelectedKey</strong>源码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processSelectedKey</span><span style="color:#f92672">(</span>SelectionKey k<span style="color:#f92672">,</span> AbstractNioChannel ch<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">final</span> NioUnsafe unsafe <span style="color:#f92672">=</span> ch<span style="color:#f92672">.</span><span style="color:#a6e22e">unsafe</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> readyOps <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span><span style="color:#a6e22e">readyOps</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">processSelectedKey</span><span class="o">(</span><span class="n">SelectionKey</span> <span class="n">k</span><span class="o">,</span> <span class="n">AbstractNioChannel</span> <span class="n">ch</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">NioUnsafe</span> <span class="n">unsafe</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="na">unsafe</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">readyOps</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="na">readyOps</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
         
-        <span style="color:#75715e">// 可读事件
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>readyOps <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span> <span style="color:#f92672">|</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> readyOps <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            unsafe<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>ch<span style="color:#f92672">.</span><span style="color:#a6e22e">isOpen</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// Connection already closed - no need to handle write.
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
+        <span class="c1">// 可读事件
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">readyOps</span> <span class="o">&amp;</span> <span class="o">(</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_READ</span> <span class="o">|</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_ACCEPT</span><span class="o">)</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="n">0</span> <span class="o">|</span><span class="o">|</span> <span class="n">readyOps</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">unsafe</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">ch</span><span class="o">.</span><span class="na">isOpen</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// Connection already closed - no need to handle write.
+</span><span class="c1"></span>                <span class="k">return</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
 		
-		<span style="color:#75715e">// 可写事件
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>readyOps <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_WRITE</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// Call forceFlush which will also take care of clear the OP_WRITE once there is nothing left to write
-</span><span style="color:#75715e"></span>            ch<span style="color:#f92672">.</span><span style="color:#a6e22e">unsafe</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">forceFlush</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
+		<span class="c1">// 可写事件
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">readyOps</span> <span class="o">&amp;</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_WRITE</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// Call forceFlush which will also take care of clear the OP_WRITE once there is nothing left to write
+</span><span class="c1"></span>            <span class="n">ch</span><span class="o">.</span><span class="na">unsafe</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">forceFlush</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
         
-        <span style="color:#75715e">// 连接建立事件
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>readyOps <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_CONNECT</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// See https://github.com/netty/netty/issues/924
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> ops <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            ops <span style="color:#f92672">&amp;</span><span style="color:#f92672">=</span> <span style="color:#f92672">~</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_CONNECT</span><span style="color:#f92672">;</span>
-            k<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span>ops<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span class="c1">// 连接建立事件
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">readyOps</span> <span class="o">&amp;</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_CONNECT</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking
+</span><span class="c1"></span>            <span class="c1">// See https://github.com/netty/netty/issues/924
+</span><span class="c1"></span>            <span class="kt">int</span> <span class="n">ops</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">ops</span> <span class="o">&amp;</span><span class="o">=</span> <span class="o">~</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_CONNECT</span><span class="o">;</span>
+            <span class="n">k</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="n">ops</span><span class="o">)</span><span class="o">;</span>
 
-            unsafe<span style="color:#f92672">.</span><span style="color:#a6e22e">finishConnect</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>CancelledKeyException ignored<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        unsafe<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">(</span>unsafe<span style="color:#f92672">.</span><span style="color:#a6e22e">voidPromise</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>该方法源码也即是NIO的Selector的处理流程</p>
+            <span class="n">unsafe</span><span class="o">.</span><span class="na">finishConnect</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">CancelledKeyException</span> <span class="n">ignored</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">unsafe</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="n">unsafe</span><span class="o">.</span><span class="na">voidPromise</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该方法源码也即是NIO的Selector的处理流程</p>
 <ul>
 <li>OP_READ, 可读事件, 即 Channel 中收到了新数据可供上层读取.</li>
 <li>OP_WRITE, 可写事件, 即上层可以向 Channel 写入数据.</li>
@@ -593,73 +802,157 @@ SingleThreadEventLoop --tailQueue LinkedBlockingQueue
 </ul>
 <h4 id="attch">attch</h4>
 <p><strong>注意</strong> processSelectedKeysOptimized方法中的下面一行</p>
-<pre><code>final Object a = k.attachment();
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">final</span> <span class="n">Object</span> <span class="n">a</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="na">attachment</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-if (a instanceof AbstractNioChannel) {
-    processSelectedKey(k, (AbstractNioChannel) a);
-} else {
-    @SuppressWarnings(&quot;unchecked&quot;)
-    NioTask&lt;SelectableChannel&gt; task = (NioTask&lt;SelectableChannel&gt;) a;
-    processSelectedKey(k, task);
-}
-</code></pre><p>我们可以调用 <strong>selectionKey.attach(object)</strong> 给一个 selectionKey 设置一个附加的字段, 然后可以通过 <strong>Object attachedObj = selectionKey.attachment()</strong> 获取它.</p>
+<span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="k">instanceof</span> <span class="n">AbstractNioChannel</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">processSelectedKey</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="o">(</span><span class="n">AbstractNioChannel</span><span class="o">)</span> <span class="n">a</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&#34;unchecked&#34;</span><span class="o">)</span>
+    <span class="n">NioTask</span><span class="o">&lt;</span><span class="n">SelectableChannel</span><span class="o">&gt;</span> <span class="n">task</span> <span class="o">=</span> <span class="o">(</span><span class="n">NioTask</span><span class="o">&lt;</span><span class="n">SelectableChannel</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">a</span><span class="o">;</span>
+    <span class="n">processSelectedKey</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">task</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可以调用 <strong>selectionKey.attach(object)</strong> 给一个 selectionKey 设置一个附加的字段, 然后可以通过 <strong>Object attachedObj = selectionKey.attachment()</strong> 获取它.</p>
 <p>上面的代码正是通过了 <strong>k.attachment()</strong> 来获取一个附加在 selectionKey 中的对象</p>
 <p>那么这个对象是什么呢? 它又是在哪里设置的呢?</p>
 <p>我们再来回忆一下 SocketChannel 是如何注册到 Selector 中的</p>
 <p>在客户端的 Channel 注册过程中, 会有如下调用链:</p>
-<pre><code>Bootstrap.initAndRegister -&gt; 
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Bootstrap.initAndRegister -&gt; 
 	AbstractBootstrap.initAndRegister -&gt; 
 		MultithreadEventLoopGroup.register -&gt; 
 			SingleThreadEventLoop.register -&gt; 
 				AbstractUnsafe.register -&gt;
 					AbstractUnsafe.register0 -&gt;
 						AbstractNioChannel.doRegister
-</code></pre><p>最后的 AbstractNioChannel.doRegister 方法会调用 <strong>SocketChannel.register</strong> 方法注册一个 SocketChannel 到指定的 Selector:</p>
-<pre><code>@Override
-protected void doRegister() throws Exception {
-	// 省略错误处理
-    selectionKey = javaChannel().register(eventLoop().selector, 0, this);
-}
-</code></pre><p>特别注意一下 <strong>register</strong> 的第三个参数, 这个参数是设置 selectionKey 的附加对象的, 和调用 <strong>selectionKey.attach(object)</strong> 的效果一样. 而调用 <strong>register</strong> 所传递的第三个参数是 <strong>this</strong>, 它其实就是一个 <code>NioSocketChannel</code> 的实例. 那么这里就很清楚了, 我们在将 SocketChannel 注册到 Selector 中时, 将 SocketChannel 所对应的 NioSocketChannel 以附加字段的方式添加到了selectionKey 中.
+</code></pre></td></tr></table>
+</div>
+</div><p>最后的 AbstractNioChannel.doRegister 方法会调用 <strong>SocketChannel.register</strong> 方法注册一个 SocketChannel 到指定的 Selector:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doRegister</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+	<span class="c1">// 省略错误处理
+</span><span class="c1"></span>    <span class="n">selectionKey</span> <span class="o">=</span> <span class="n">javaChannel</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">eventLoop</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">selector</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>特别注意一下 <strong>register</strong> 的第三个参数, 这个参数是设置 selectionKey 的附加对象的, 和调用 <strong>selectionKey.attach(object)</strong> 的效果一样. 而调用 <strong>register</strong> 所传递的第三个参数是 <strong>this</strong>, 它其实就是一个 <code>NioSocketChannel</code> 的实例. 那么这里就很清楚了, 我们在将 SocketChannel 注册到 Selector 中时, 将 SocketChannel 所对应的 NioSocketChannel 以附加字段的方式添加到了selectionKey 中.
 再回到 <strong>processSelectedKeysOptimized</strong> 方法中, 当我们获取到附加的对象后, 我们就调用 <strong>processSelectedKey</strong> 来处理这个 IO 事件</p>
 <h3 id="任务执行">任务执行</h3>
-<p>**runAllTasks()**主要执行队列中的任务</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">runAllTasks</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    fetchFromScheduledTaskQueue<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    Runnable task <span style="color:#f92672">=</span> pollTask<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+<p><strong>runAllTasks()</strong> 主要执行队列中的任务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">runAllTasks</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">fetchFromScheduledTaskQueue</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">Runnable</span> <span class="n">task</span> <span class="o">=</span> <span class="n">pollTask</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">task</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            task<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            logger<span style="color:#f92672">.</span><span style="color:#a6e22e">warn</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;A task raised an exception.&#34;</span><span style="color:#f92672">,</span> t<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
+    <span class="k">for</span> <span class="o">(</span><span class="o">;</span><span class="o">;</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">task</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;A task raised an exception.&#34;</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
 
-        task <span style="color:#f92672">=</span> pollTask<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            lastExecutionTime <span style="color:#f92672">=</span> ScheduledFutureTask<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>我们前面已经提到过, EventLoop 可以通过调用 <strong>EventLoop.execute</strong> 来将一个 Runnable 提交到taskQueue 中, 也可以通过调用 <strong>EventLoop.schedule</strong> 来提交一个 schedule 任务到 <strong>scheduledTaskQueue</strong> 中。</p>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">pollTask</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">task</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">lastExecutionTime</span> <span class="o">=</span> <span class="n">ScheduledFutureTask</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们前面已经提到过, EventLoop 可以通过调用 <strong>EventLoop.execute</strong> 来将一个 Runnable 提交到taskQueue 中, 也可以通过调用 <strong>EventLoop.schedule</strong> 来提交一个 schedule 任务到 <strong>scheduledTaskQueue</strong> 中。</p>
 <p>在此方法的一开始调用的 <strong>fetchFromScheduledTaskQueue()</strong> 其实就是将 <strong>scheduledTaskQueue</strong> 中已经可以执行的(即定时时间已到的 schedule 任务) 拿出来并添加到 taskQueue 中, 作为可执行的 task 等待被调度执行。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fetchFromScheduledTaskQueue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasScheduledTasks<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">long</span> nanoTime <span style="color:#f92672">=</span> AbstractScheduledEventExecutor<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            Runnable scheduledTask <span style="color:#f92672">=</span> pollScheduledTask<span style="color:#f92672">(</span>nanoTime<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>scheduledTask <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            taskQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>scheduledTask<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>接下来 <strong>runAllTasks()</strong> 方法就会不断调用 <strong>task = pollTask()</strong> 从 <strong>taskQueue</strong> 中获取一个可执行的 task, 然后调用它的 <strong>run()</strong> 方法来运行此 task</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">fetchFromScheduledTaskQueue</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">hasScheduledTasks</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">nanoTime</span> <span class="o">=</span> <span class="n">AbstractScheduledEventExecutor</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="o">;</span><span class="o">;</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Runnable</span> <span class="n">scheduledTask</span> <span class="o">=</span> <span class="n">pollScheduledTask</span><span class="o">(</span><span class="n">nanoTime</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">scheduledTask</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">taskQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">scheduledTask</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>接下来 <strong>runAllTasks()</strong> 方法就会不断调用 <strong>task = pollTask()</strong> 从 <strong>taskQueue</strong> 中获取一个可执行的 task, 然后调用它的 <strong>run()</strong> 方法来运行此 task</p>
 <p><strong>注意</strong>, 因为 EventLoop 既需要执行 IO 操作, 又需要执行 task, 因此我们在调用 EventLoop.execute 方法提交任务时, 不要提交耗时任务, 更不能提交一些会造成阻塞的任务, 不然会导致我们的 IO 线程得不到调度, 影响整个程序的并发量.</p>
 <h3 id="实例化过程"><strong>实例化过程</strong></h3>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Netty%E4%B8%AD%E7%9A%84Reactor%E6%A8%A1%E5%9E%8B/image-20200716161925863.png" alt="image-20200716161925863"></p>
@@ -667,48 +960,95 @@ protected void doRegister() throws Exception {
 <p>每个Channel有且只有一个EventLoop与之关联</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Netty%E4%B8%AD%E7%9A%84Reactor%E6%A8%A1%E5%9E%8B/image-20200716162212469.png" alt="image-20200716162212469"></p>
 <p>从上图可知，register方法完成了Channel与EventLoop的关联</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>EventLoop eventLoop<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> ChannelPromise promise<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#75715e">// 删除条件检查.
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-    AbstractChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">eventLoop</span> <span style="color:#f92672">=</span> eventLoop<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">register</span><span class="o">(</span><span class="n">EventLoop</span> <span class="n">eventLoop</span><span class="o">,</span> <span class="kd">final</span> <span class="n">ChannelPromise</span> <span class="n">promise</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 删除条件检查.
+</span><span class="c1"></span>    <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="n">AbstractChannel</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">eventLoop</span> <span class="o">=</span> <span class="n">eventLoop</span><span class="o">;</span>
 
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>eventLoop<span style="color:#f92672">.</span><span style="color:#a6e22e">inEventLoop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        register0<span style="color:#f92672">(</span>promise<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            eventLoop<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> OneTimeTask<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#a6e22e">@Override</span>
-                <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    register0<span style="color:#f92672">(</span>promise<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>关键点在于 AbstractChannel.this.eventLoop = eventLoop 即完成关联过程</p>
+    <span class="k">if</span> <span class="o">(</span><span class="n">eventLoop</span><span class="o">.</span><span class="na">inEventLoop</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">register0</span><span class="o">(</span><span class="n">promise</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">eventLoop</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">OneTimeTask</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">register0</span><span class="o">(</span><span class="n">promise</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+            <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>关键点在于 AbstractChannel.this.eventLoop = eventLoop 即完成关联过程</p>
 <h3 id="eventloop启动">EventLoop启动</h3>
 <p>从前面可知，EventLoop启动即绑定的本地线程的启动</p>
 <p>阅读源码后可知，线程的启动追踪到 SingleThreadEventExecutor.execute方法</p>
 <p>那么问题就变为哪里调用这个方法了</p>
 <p>而从前面可知，EventLoop与Channel的注册过程中调用了该方法</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>eventLoop<span style="color:#f92672">.</span><span style="color:#a6e22e">inEventLoop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    register0<span style="color:#f92672">(</span>promise<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-        eventLoop<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> OneTimeTask<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#a6e22e">@Override</span>
-            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                register0<span style="color:#f92672">(</span>promise<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>因此EventLoop的启动时机为EventLoop与Channel注册时</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">eventLoop</span><span class="o">.</span><span class="na">inEventLoop</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">register0</span><span class="o">(</span><span class="n">promise</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">eventLoop</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">OneTimeTask</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">register0</span><span class="o">(</span><span class="n">promise</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>因此EventLoop的启动时机为EventLoop与Channel注册时</p>
 <p>完整时序图</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Netty%E4%B8%AD%E7%9A%84Reactor%E6%A8%A1%E5%9E%8B/image-20200716164157833.png" alt="image-20200716164157833"></p>
 
@@ -719,12 +1059,12 @@ protected void doRegister() throws Exception {
 <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
-    <span class="item-content">Phantom</span>
+    <span class="item-content">phantom</span>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-      0001-01-01
+      2020-07-18
       
     </span>
   </p>
@@ -740,25 +1080,29 @@ protected void doRegister() throws Exception {
     
 
     <footer class="post-footer">
-      
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/netty/">Netty</a>
+          <a href="https://phantommmm.github.io/tags/reactor/">Reactor</a>
+          
+        </div>
 
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/%E5%85%B3%E4%BA%8E/">
+        
+          <a class="next" href="/post/java%E5%81%87%E6%B3%9B%E5%9E%8B/">
+            <span class="next-text nav-default">Java假泛型</span>
+            <span class="prev-text nav-mobile">下一篇</span>
             
             <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
   xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
   width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
 </svg>
 
             </i>
-            <span class="prev-text nav-default">关于</span>
-            <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        
       </nav>
     </footer>
   </article>
@@ -767,47 +1111,6 @@ protected void doRegister() throws Exception {
   
 
   
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  <div class="disqus-comment">
-  <div class="disqus-button" id="load_disqus" onclick="load_disqus()">
-    显示 Disqus 评论
-  </div>
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-    var disqus_config = function () {
-      this.page.url = "https://phantommmm.github.io/post/netty%E4%B8%AD%E7%9A%84-reactor%E6%A8%A1%E5%9E%8B/";
-    };
-    function load_disqus() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = '12';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-
-      $('#load_disqus').remove();
-    };
-  </script>
-  <noscript>Please enable JavaScript to view the
-    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-  </noscript>
-  
-  </div>
-
-    
-
   
 
         </div>
@@ -897,7 +1200,7 @@ protected void doRegister() throws Exception {
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

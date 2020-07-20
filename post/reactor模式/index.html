@@ -69,7 +69,7 @@
 <meta itemprop="description" content="Reactor模式 Reactor模式也叫反应器模式，大多数IO相关组件如Netty、Redis在使用的IO模式，为什么需要这种模式，它是如何">
 <meta itemprop="datePublished" content="2020-06-15T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-06-15T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="3067">
+<meta itemprop="wordCount" content="3446">
 
 
 
@@ -351,25 +351,52 @@ if (!doNotTrack) {
 <p>Reactor模式也叫反应器模式，大多数IO相关组件如Netty、Redis在使用的IO模式，为什么需要这种模式，它是如何设计来解决高性能并发的呢？</p>
 <h2 id="原始网络编程">原始网络编程</h2>
 <p>最最原始的网络编程思路就是服务器用一个while循环，不断监听端口是否有新的套接字连接，如果有，那么就调用一个处理函数处理</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">while</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-socket <span style="color:#f92672">=</span> accept<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-handle<span style="color:#f92672">(</span>socket<span style="color:#f92672">)</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>这种方法的最大问题是无法并发，效率太低，如果当前的请求没有处理完，那么后面的请求只能被阻塞，服务器的吞吐量太低。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">{</span>
+<span class="n">socket</span> <span class="o">=</span> <span class="n">accept</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">handle</span><span class="o">(</span><span class="n">socket</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这种方法的最大问题是无法并发，效率太低，如果当前的请求没有处理完，那么后面的请求只能被阻塞，服务器的吞吐量太低。</p>
 <h2 id="多线程网络编程">多线程网络编程</h2>
 <p>比起原始网络编程，可以想到多线程，<code>即每个连接使用一个线程处理</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BasicModel</span> <span style="color:#66d9ef">implements</span> Runnable <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            ServerSocket ss <span style="color:#f92672">=</span>
-                    <span style="color:#66d9ef">new</span> ServerSocket<span style="color:#f92672">(</span>SystemConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">SOCKET_SERVER_PORT</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">(</span>ss<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-             <span style="color:#75715e">//创建新线程来handle
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// or, single-threaded, or a thread pool
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>对于每一个请求都分发给一个线程，每个线程中都独自处理上面的流程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nc">BasicModel</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">ServerSocket</span> <span class="n">ss</span> <span class="o">=</span>
+                    <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">SystemConfig</span><span class="o">.</span><span class="na">SOCKET_SERVER_PORT</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">while</span> <span class="o">(</span><span class="o">!</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+                <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Handler</span><span class="o">(</span><span class="n">ss</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+             <span class="c1">//创建新线程来handle
+</span><span class="c1"></span>            <span class="c1">// or, single-threaded, or a thread pool
+</span><span class="c1"></span>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对于每一个请求都分发给一个线程，每个线程中都独自处理上面的流程。</p>
 <p><strong>优点</strong></p>
 <p>一定程度上极大地提高了服务器的吞吐量，因为之前的请求在read阻塞以后，不会影响到后续的请求，因为他们在不同的线程中。这也是为什么通常会讲“一个线程只能对应一个socket”的原因。</p>
 <p><strong>缺点</strong></p>
@@ -384,189 +411,375 @@ handle<span style="color:#f92672">(</span>socket<span style="color:#f92672">)</s
 <p>Reactor模式将每个步骤映射为一个Task,服务端线程执行的最小逻辑单元不再是一个完整的网络请求而是一个个Task,且采用非阻塞方式执行。</p>
 <p><strong>事件驱动</strong></p>
 <p>每个Task对应特定网络事件，当Task准备就绪时，Reactor收到对应的网络事件通知，并将Task分发给绑定了对应事件的Handler处理</p>
-<p>**Reactor：**负责响应事件，将事件分发给绑定了该事件的Handler处理；</p>
-<p>**Handler：**事件处理器，绑定了某类事件，负责执行对应事件的Task对事件进行处理；</p>
-<p>**Acceptor：**Handler的一种，绑定了connect事件。当客户端发起connect请求时，Reactor会将accept事件分发给Acceptor处理</p>
+<p><strong>Reactor：</strong> 负责响应事件，将事件分发给绑定了该事件的Handler处理；</p>
+<p><strong>Handler：</strong> 事件处理器，绑定了某类事件，负责执行对应事件的Task对事件进行处理；</p>
+<p><strong>Acceptor：</strong> Handler的一种，绑定了connect事件。当客户端发起connect请求时，Reactor会将accept事件分发给Acceptor处理</p>
 <h2 id="单线程reactor">单线程Reactor</h2>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Reactor%E6%A8%A1%E5%BC%8F/2.jpg" alt="img"></p>
 <p>Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到Handler处理器中。</p>
 <p><strong>简单的例子</strong></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.crazymakercircle.ReactorModel<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.crazymakercircle.ReactorModel</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.net.InetSocketAddress<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.ByteBuffer<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SelectionKey<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.Selector<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.ServerSocketChannel<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SocketChannel<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.Iterator<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.Set<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.ByteBuffer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SelectionKey</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.Selector</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.ServerSocketChannel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SocketChannel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Reactor</span> <span style="color:#66d9ef">implements</span> Runnable
-<span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">final</span> Selector selector<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">final</span> ServerSocketChannel serverSocket<span style="color:#f92672">;</span>
+<span class="kd">class</span> <span class="nc">Reactor</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+<span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Selector</span> <span class="n">selector</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">ServerSocketChannel</span> <span class="n">serverSocket</span><span class="o">;</span>
 
-    Reactor<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> port<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span> <span style="color:#75715e">//Reactor初始化
-</span><span style="color:#75715e"></span>        selector <span style="color:#f92672">=</span> Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        serverSocket <span style="color:#f92672">=</span> ServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">socket</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">bind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InetSocketAddress<span style="color:#f92672">(</span>port<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//非阻塞
-</span><span style="color:#75715e"></span>        serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="n">Reactor</span><span class="o">(</span><span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span> <span class="c1">//Reactor初始化
+</span><span class="c1"></span>        <span class="n">selector</span> <span class="o">=</span> <span class="n">Selector</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">serverSocket</span> <span class="o">=</span> <span class="n">ServerSocketChannel</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">serverSocket</span><span class="o">.</span><span class="na">socket</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="k">new</span> <span class="n">InetSocketAddress</span><span class="o">(</span><span class="n">port</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//非阻塞
+</span><span class="c1"></span>        <span class="n">serverSocket</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#75715e">//分步处理,第一步,接收accept事件
-</span><span style="color:#75715e"></span>        SelectionKey sk <span style="color:#f92672">=</span>
-                serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//attach callback object, Acceptor
-</span><span style="color:#75715e"></span>        sk<span style="color:#f92672">.</span><span style="color:#a6e22e">attach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Acceptor<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+        <span class="c1">//分步处理,第一步,接收accept事件
+</span><span class="c1"></span>        <span class="n">SelectionKey</span> <span class="n">sk</span> <span class="o">=</span>
+                <span class="n">serverSocket</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">selector</span><span class="o">,</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_ACCEPT</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//attach callback object, Acceptor
+</span><span class="c1"></span>        <span class="n">sk</span><span class="o">.</span><span class="na">attach</span><span class="o">(</span><span class="k">new</span> <span class="n">Acceptor</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span>
-        <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                selector<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                Set selected <span style="color:#f92672">=</span> selector<span style="color:#f92672">.</span><span style="color:#a6e22e">selectedKeys</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                Iterator it <span style="color:#f92672">=</span> selected<span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>it<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                <span style="color:#f92672">{</span>
-                    <span style="color:#75715e">//Reactor负责dispatch收到的事件
-</span><span style="color:#75715e"></span>                    dispatch<span style="color:#f92672">(</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>it<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-                selected<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">try</span>
+        <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="o">!</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">selector</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">Set</span> <span class="n">selected</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="na">selectedKeys</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">Iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">selected</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="c1">//Reactor负责dispatch收到的事件
+</span><span class="c1"></span>                    <span class="n">dispatch</span><span class="o">(</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">)</span> <span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">selected</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span>
+        <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dispatch</span><span style="color:#f92672">(</span>SelectionKey k<span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        Runnable r <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Runnable<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>k<span style="color:#f92672">.</span><span style="color:#a6e22e">attachment</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//调用之前注册的callback对象
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            r<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="kt">void</span> <span class="nf">dispatch</span><span class="o">(</span><span class="n">SelectionKey</span> <span class="n">k</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Runnable</span> <span class="n">r</span> <span class="o">=</span> <span class="o">(</span><span class="n">Runnable</span><span class="o">)</span> <span class="o">(</span><span class="n">k</span><span class="o">.</span><span class="na">attachment</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//调用之前注册的callback对象
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">r</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    <span style="color:#75715e">// inner class
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Acceptor</span> <span style="color:#66d9ef">implements</span> Runnable
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">try</span>
-            <span style="color:#f92672">{</span>
-                SocketChannel channel <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>channel <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-                    <span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> channel<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>Handler的代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.crazymakercircle.ReactorModel<span style="color:#f92672">;</span>
+    <span class="c1">// inner class
+</span><span class="c1"></span>    <span class="kd">class</span> <span class="nc">Acceptor</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+    <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="k">try</span>
+            <span class="o">{</span>
+                <span class="n">SocketChannel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">channel</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+                    <span class="k">new</span> <span class="n">Handler</span><span class="o">(</span><span class="n">selector</span><span class="o">,</span> <span class="n">channel</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span>
+            <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Handler的代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span><span class="lnt">97
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.crazymakercircle.ReactorModel</span><span class="o">;</span>
 
 
-<span style="color:#f92672">import</span> com.crazymakercircle.config.SystemConfig<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">com.crazymakercircle.config.SystemConfig</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.ByteBuffer<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SelectionKey<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.Selector<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SocketChannel<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.ByteBuffer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SelectionKey</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.Selector</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SocketChannel</span><span class="o">;</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Handler</span> <span style="color:#66d9ef">implements</span> Runnable
-<span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">final</span> SocketChannel channel<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">final</span> SelectionKey sk<span style="color:#f92672">;</span>
-    ByteBuffer input <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>SystemConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">INPUT_SIZE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    ByteBuffer output <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>SystemConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">SEND_SIZE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> READING <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> SENDING <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> state <span style="color:#f92672">=</span> READING<span style="color:#f92672">;</span>
+<span class="kd">class</span> <span class="nc">Handler</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+<span class="o">{</span>
+    <span class="kd">final</span> <span class="n">SocketChannel</span> <span class="n">channel</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">SelectionKey</span> <span class="n">sk</span><span class="o">;</span>
+    <span class="n">ByteBuffer</span> <span class="n">input</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">SystemConfig</span><span class="o">.</span><span class="na">INPUT_SIZE</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">ByteBuffer</span> <span class="n">output</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">SystemConfig</span><span class="o">.</span><span class="na">SEND_SIZE</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">READING</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span> <span class="n">SENDING</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="n">READING</span><span class="o">;</span>
 
-    Handler<span style="color:#f92672">(</span>Selector selector<span style="color:#f92672">,</span> SocketChannel c<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        channel <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
-        c<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">// Optionally try first read now
-</span><span style="color:#75715e"></span>        sk <span style="color:#f92672">=</span> channel<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="n">Handler</span><span class="o">(</span><span class="n">Selector</span> <span class="n">selector</span><span class="o">,</span> <span class="n">SocketChannel</span> <span class="n">c</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">c</span><span class="o">;</span>
+        <span class="n">c</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">// Optionally try first read now
+</span><span class="c1"></span>        <span class="n">sk</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">selector</span><span class="o">,</span> <span class="n">0</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#75715e">//将Handler作为callback对象
-</span><span style="color:#75715e"></span>        sk<span style="color:#f92672">.</span><span style="color:#a6e22e">attach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span class="c1">//将Handler作为callback对象
+</span><span class="c1"></span>        <span class="n">sk</span><span class="o">.</span><span class="na">attach</span><span class="o">(</span><span class="k">this</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#75715e">//第二步,注册Read就绪事件
-</span><span style="color:#75715e"></span>        sk<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        selector<span style="color:#f92672">.</span><span style="color:#a6e22e">wakeup</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+        <span class="c1">//第二步,注册Read就绪事件
+</span><span class="c1"></span>        <span class="n">sk</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_READ</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">selector</span><span class="o">.</span><span class="na">wakeup</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">inputIsComplete</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    <span class="kt">boolean</span> <span class="nf">inputIsComplete</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="cm">/* ... */</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">outputIsComplete</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
+    <span class="kt">boolean</span> <span class="nf">outputIsComplete</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
 
-        <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+        <span class="cm">/* ... */</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="cm">/* ... */</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span>
-        <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>state <span style="color:#f92672">=</span><span style="color:#f92672">=</span> READING<span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                read<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>state <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SENDING<span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                send<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">try</span>
+        <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="o">=</span><span class="o">=</span> <span class="n">READING</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">read</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="o">=</span><span class="o">=</span> <span class="n">SENDING</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">send</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span>
+        <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        channel<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>input<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>inputIsComplete<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
+    <span class="kt">void</span> <span class="nf">read</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">input</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">inputIsComplete</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+        <span class="o">{</span>
 
-            process<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span class="n">process</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-            state <span style="color:#f92672">=</span> SENDING<span style="color:#f92672">;</span>
-            <span style="color:#75715e">// Normally also do first write now
-</span><span style="color:#75715e"></span>
-            <span style="color:#75715e">//第三步,接收write就绪事件
-</span><span style="color:#75715e"></span>            sk<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_WRITE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">SENDING</span><span class="o">;</span>
+            <span class="c1">// Normally also do first write now
+</span><span class="c1"></span>
+            <span class="c1">//第三步,接收write就绪事件
+</span><span class="c1"></span>            <span class="n">sk</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_WRITE</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">send</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        channel<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>output<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">output</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#75715e">//write完就结束了, 关闭select key
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>outputIsComplete<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            sk<span style="color:#f92672">.</span><span style="color:#a6e22e">cancel</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p><strong>缺点</strong></p>
+        <span class="c1">//write完就结束了, 关闭select key
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">outputIsComplete</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">sk</span><span class="o">.</span><span class="na">cancel</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>缺点</strong></p>
 <p>1、 当其中某个 handler 阻塞时， 会导致其他所有的 client 的 handler 都得不到执行， 并且更严重的是， handler 的阻塞也会导致整个服务不能接收新的 client 请求(因为 acceptor 也被阻塞了)。 因为有这么多的缺陷， 因此单线程Reactor 模型用的比较少。这种单线程模型不能充分利用多核资源，所以实际使用的不多。</p>
 <p>2、因此，单线程模型仅仅适用于handler 中业务处理组件能快速完成的场景。</p>
 <p>3、一旦线程意外跑飞或者进入死循环，会导致整个系统通信模块不可用</p>
@@ -577,215 +790,429 @@ handle<span style="color:#f92672">(</span>socket<span style="color:#f92672">)</s
 <p>（2）而对于Reactor而言，可以仍为单个线程,专门用于监听接收客户端的连接请求。</p>
 <p>一个NIO线程可以同时处理N条链路（客户端），但是一个链路（客户端）只注册在一个NIO线程上处理，防止发生并发操作问题。</p>
 <p><strong>简单例子</strong></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.crazymakercircle.ReactorModel<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.crazymakercircle.ReactorModel</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> com.crazymakercircle.config.SystemConfig<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">com.crazymakercircle.config.SystemConfig</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.ByteBuffer<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SelectionKey<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.Selector<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SocketChannel<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.concurrent.ExecutorService<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.concurrent.Executors<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.ByteBuffer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SelectionKey</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.Selector</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SocketChannel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MthreadHandler</span> <span style="color:#66d9ef">implements</span> Runnable
-<span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">final</span> SocketChannel channel<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">final</span> SelectionKey selectionKey<span style="color:#f92672">;</span>
-    ByteBuffer input <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>SystemConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">INPUT_SIZE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    ByteBuffer output <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>SystemConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">SEND_SIZE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> READING <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> SENDING <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> state <span style="color:#f92672">=</span> READING<span style="color:#f92672">;</span>
-
-
-    ExecutorService pool <span style="color:#f92672">=</span> Executors<span style="color:#f92672">.</span><span style="color:#a6e22e">newFixedThreadPool</span><span style="color:#f92672">(</span>2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> PROCESSING <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span>
-
-    MthreadHandler<span style="color:#f92672">(</span>Selector selector<span style="color:#f92672">,</span> SocketChannel c<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        channel <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
-        c<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">// Optionally try first read now
-</span><span style="color:#75715e"></span>        selectionKey <span style="color:#f92672">=</span> channel<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-        <span style="color:#75715e">//将Handler作为callback对象
-</span><span style="color:#75715e"></span>        selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">attach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-        <span style="color:#75715e">//第二步,注册Read就绪事件
-</span><span style="color:#75715e"></span>        selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        selector<span style="color:#f92672">.</span><span style="color:#a6e22e">wakeup</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">inputIsComplete</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-       <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">outputIsComplete</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-
-       <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-       <span style="color:#75715e">/* ... */</span>
-        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span>
-        <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>state <span style="color:#f92672">=</span><span style="color:#f92672">=</span> READING<span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                read<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>state <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SENDING<span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                send<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+<span class="kd">class</span> <span class="nc">MthreadHandler</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+<span class="o">{</span>
+    <span class="kd">final</span> <span class="n">SocketChannel</span> <span class="n">channel</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">SelectionKey</span> <span class="n">selectionKey</span><span class="o">;</span>
+    <span class="n">ByteBuffer</span> <span class="n">input</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">SystemConfig</span><span class="o">.</span><span class="na">INPUT_SIZE</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">ByteBuffer</span> <span class="n">output</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">SystemConfig</span><span class="o">.</span><span class="na">SEND_SIZE</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">READING</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span> <span class="n">SENDING</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="n">READING</span><span class="o">;</span>
 
 
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>        channel<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>input<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>inputIsComplete<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            state <span style="color:#f92672">=</span> PROCESSING<span style="color:#f92672">;</span>
-            <span style="color:#75715e">//使用线程pool异步执行
-</span><span style="color:#75715e"></span>            pool<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Processer<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="n">ExecutorService</span> <span class="n">pool</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="n">2</span><span class="o">)</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">PROCESSING</span> <span class="o">=</span> <span class="n">3</span><span class="o">;</span>
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">send</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span>
-        channel<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>output<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span class="n">MthreadHandler</span><span class="o">(</span><span class="n">Selector</span> <span class="n">selector</span><span class="o">,</span> <span class="n">SocketChannel</span> <span class="n">c</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">c</span><span class="o">;</span>
+        <span class="n">c</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">// Optionally try first read now
+</span><span class="c1"></span>        <span class="n">selectionKey</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">selector</span><span class="o">,</span> <span class="n">0</span><span class="o">)</span><span class="o">;</span>
 
-        <span style="color:#75715e">//write完就结束了, 关闭select key
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>outputIsComplete<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">cancel</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+        <span class="c1">//将Handler作为callback对象
+</span><span class="c1"></span>        <span class="n">selectionKey</span><span class="o">.</span><span class="na">attach</span><span class="o">(</span><span class="k">this</span><span class="o">)</span><span class="o">;</span>
 
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processAndHandOff</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        process<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        state <span style="color:#f92672">=</span> SENDING<span style="color:#f92672">;</span>
-        <span style="color:#75715e">// or rebind attachment
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//process完,开始等待write就绪
-</span><span style="color:#75715e"></span>        selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">interestOps</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_WRITE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+        <span class="c1">//第二步,注册Read就绪事件
+</span><span class="c1"></span>        <span class="n">selectionKey</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_READ</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">selector</span><span class="o">.</span><span class="na">wakeup</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Processer</span> <span style="color:#66d9ef">implements</span> Runnable
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            processAndHandOff<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="kt">boolean</span> <span class="nf">inputIsComplete</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+       <span class="cm">/* ... */</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
 
-<span style="color:#f92672">}</span>
-</code></pre></div><p><strong>可能存在的问题</strong></p>
+    <span class="kt">boolean</span> <span class="nf">outputIsComplete</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+
+       <span class="cm">/* ... */</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+       <span class="cm">/* ... */</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">try</span>
+        <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="o">=</span><span class="o">=</span> <span class="n">READING</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">read</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="o">=</span><span class="o">=</span> <span class="n">SENDING</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">send</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span>
+        <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="c1">// ...
+</span><span class="c1"></span>        <span class="n">channel</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">input</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">inputIsComplete</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">PROCESSING</span><span class="o">;</span>
+            <span class="c1">//使用线程pool异步执行
+</span><span class="c1"></span>            <span class="n">pool</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">Processer</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">send</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">output</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="c1">//write完就结束了, 关闭select key
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">outputIsComplete</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">selectionKey</span><span class="o">.</span><span class="na">cancel</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">processAndHandOff</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">process</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">SENDING</span><span class="o">;</span>
+        <span class="c1">// or rebind attachment
+</span><span class="c1"></span>        <span class="c1">//process完,开始等待write就绪
+</span><span class="c1"></span>        <span class="n">selectionKey</span><span class="o">.</span><span class="na">interestOps</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_WRITE</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">class</span> <span class="nc">Processer</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+    <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">processAndHandOff</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>可能存在的问题</strong></p>
 <p>当acceptor线程出现问题时，导致服务不可用。</p>
 <h2 id="主从多线程reactor">主从多线程Reactor</h2>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/Reactor%E6%A8%A1%E5%BC%8F/4.jpg" alt="img"></p>
 <p>一个NIO线程负责监听和处理所有的客户端连接可能会存在性能问题</p>
 <p>因此acceptor由单个线程优化为多个线程即线程池，保证可用性。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.crazymakercircle.ReactorModel<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.crazymakercircle.ReactorModel</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.net.InetSocketAddress<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.net.Socket<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SelectionKey<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.Selector<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.ServerSocketChannel<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.nio.channels.SocketChannel<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.Iterator<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.Set<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SelectionKey</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.Selector</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.ServerSocketChannel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.channels.SocketChannel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MthreadReactor</span> <span style="color:#66d9ef">implements</span> Runnable
-<span style="color:#f92672">{</span>
+<span class="kd">class</span> <span class="nc">MthreadReactor</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+<span class="o">{</span>
 
-    <span style="color:#75715e">//subReactors集合, 一个selector代表一个subReactor
-</span><span style="color:#75715e"></span>    Selector<span style="color:#f92672">[</span><span style="color:#f92672">]</span> selectors<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Selector<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> next <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">final</span> ServerSocketChannel serverSocket<span style="color:#f92672">;</span>
+    <span class="c1">//subReactors集合, 一个selector代表一个subReactor
+</span><span class="c1"></span>    <span class="n">Selector</span><span class="o">[</span><span class="o">]</span> <span class="n">selectors</span><span class="o">=</span><span class="k">new</span> <span class="n">Selector</span><span class="o">[</span><span class="n">2</span><span class="o">]</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">next</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+    <span class="kd">final</span> <span class="n">ServerSocketChannel</span> <span class="n">serverSocket</span><span class="o">;</span>
 
-    MthreadReactor<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> port<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-    <span style="color:#f92672">{</span> <span style="color:#75715e">//Reactor初始化
-</span><span style="color:#75715e"></span>        selectors<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">=</span>Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        selectors<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">=</span> Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        serverSocket <span style="color:#f92672">=</span> ServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">socket</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">bind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InetSocketAddress<span style="color:#f92672">(</span>port<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//非阻塞
-</span><span style="color:#75715e"></span>        serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-
-        <span style="color:#75715e">//分步处理,第一步,接收accept事件
-</span><span style="color:#75715e"></span>        SelectionKey sk <span style="color:#f92672">=</span>
-                serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span> selectors<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//attach callback object, Acceptor
-</span><span style="color:#75715e"></span>        sk<span style="color:#f92672">.</span><span style="color:#a6e22e">attach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Acceptor<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span>
-        <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span>2 <span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span>
-                <span style="color:#f92672">{</span>
-                    selectors<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    Set selected <span style="color:#f92672">=</span>  selectors<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">selectedKeys</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    Iterator it <span style="color:#f92672">=</span> selected<span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>it<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                    <span style="color:#f92672">{</span>
-                        <span style="color:#75715e">//Reactor负责dispatch收到的事件
-</span><span style="color:#75715e"></span>                        dispatch<span style="color:#f92672">(</span><span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>it<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                    selected<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span> <span style="color:#75715e">/* ... */</span> <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dispatch</span><span style="color:#f92672">(</span>SelectionKey k<span style="color:#f92672">)</span>
-    <span style="color:#f92672">{</span>
-        Runnable r <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Runnable<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>k<span style="color:#f92672">.</span><span style="color:#a6e22e">attachment</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#75715e">//调用之前注册的callback对象
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">{</span>
-            r<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
+    <span class="n">MthreadReactor</span><span class="o">(</span><span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span> <span class="c1">//Reactor初始化
+</span><span class="c1"></span>        <span class="n">selectors</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">=</span><span class="n">Selector</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">selectors</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="o">=</span> <span class="n">Selector</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">serverSocket</span> <span class="o">=</span> <span class="n">ServerSocketChannel</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">serverSocket</span><span class="o">.</span><span class="na">socket</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="k">new</span> <span class="n">InetSocketAddress</span><span class="o">(</span><span class="n">port</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//非阻塞
+</span><span class="c1"></span>        <span class="n">serverSocket</span><span class="o">.</span><span class="na">configureBlocking</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>
 
 
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Acceptor</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException
-        <span style="color:#f92672">{</span>
-            SocketChannel connection <span style="color:#f92672">=</span>
-                    serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">//主selector负责accept
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>connection <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-            <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">(</span>selectors<span style="color:#f92672">[</span>next<span style="color:#f92672">]</span><span style="color:#f92672">,</span> connection<span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">//选个subReactor去负责接收到的connection
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>next <span style="color:#f92672">=</span><span style="color:#f92672">=</span> selectors<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> next <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h2 id="总结">总结</h2>
+        <span class="c1">//分步处理,第一步,接收accept事件
+</span><span class="c1"></span>        <span class="n">SelectionKey</span> <span class="n">sk</span> <span class="o">=</span>
+                <span class="n">serverSocket</span><span class="o">.</span><span class="na">register</span><span class="o">(</span> <span class="n">selectors</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">SelectionKey</span><span class="o">.</span><span class="na">OP_ACCEPT</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//attach callback object, Acceptor
+</span><span class="c1"></span>        <span class="n">sk</span><span class="o">.</span><span class="na">attach</span><span class="o">(</span><span class="k">new</span> <span class="n">Acceptor</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">try</span>
+        <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="o">!</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span><span class="n">2</span> <span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="n">selectors</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="n">Set</span> <span class="n">selected</span> <span class="o">=</span>  <span class="n">selectors</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">.</span><span class="na">selectedKeys</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="n">Iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">selected</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                    <span class="k">while</span> <span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">)</span>
+                    <span class="o">{</span>
+                        <span class="c1">//Reactor负责dispatch收到的事件
+</span><span class="c1"></span>                        <span class="n">dispatch</span><span class="o">(</span><span class="o">(</span><span class="n">SelectionKey</span><span class="o">)</span> <span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="n">selected</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span>
+        <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">dispatch</span><span class="o">(</span><span class="n">SelectionKey</span> <span class="n">k</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Runnable</span> <span class="n">r</span> <span class="o">=</span> <span class="o">(</span><span class="n">Runnable</span><span class="o">)</span> <span class="o">(</span><span class="n">k</span><span class="o">.</span><span class="na">attachment</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">//调用之前注册的callback对象
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">r</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">class</span> <span class="nc">Acceptor</span> <span class="o">{</span> <span class="c1">// ...
+</span><span class="c1"></span>        <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+        <span class="o">{</span>
+            <span class="n">SocketChannel</span> <span class="n">connection</span> <span class="o">=</span>
+                    <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="c1">//主selector负责accept
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">connection</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="k">new</span> <span class="n">Handler</span><span class="o">(</span><span class="n">selectors</span><span class="o">[</span><span class="n">next</span><span class="o">]</span><span class="o">,</span> <span class="n">connection</span><span class="o">)</span><span class="o">;</span> <span class="c1">//选个subReactor去负责接收到的connection
+</span><span class="c1"></span>            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="o">+</span><span class="o">+</span><span class="n">next</span> <span class="o">=</span><span class="o">=</span> <span class="n">selectors</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="n">next</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
 <p><strong>Reactor的优点和缺点</strong></p>
 <p><strong>优点</strong></p>
 <p>1）响应快，不必为单个同步时间所阻塞，虽然Reactor本身依然是同步的；</p>
@@ -957,7 +1384,7 @@ handle<span style="color:#f92672">(</span>socket<span style="color:#f92672">)</s
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

@@ -69,7 +69,7 @@
 <meta itemprop="description" content="静态分派与动态分派 背景 Java 的动态分派和静态分派也是 Java 方法的执行原理。 Java 源代码的编译之后，方法之间的调用是使用符号引用来表示的。当字节码被 JVM 加载">
 <meta itemprop="datePublished" content="2020-06-20T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-06-20T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="2074">
+<meta itemprop="wordCount" content="2150">
 
 
 
@@ -360,90 +360,184 @@ if (!doNotTrack) {
 <p>静态分派指的是在编译期间进行的方法选择，通常以方法名称，方法接收者和方法参数的静态类型来作为方法选择的依据。这些可以静态分派的方法一般都具有“签名唯一性”的特点（签名只考虑参数的静态类型而不管参数的实际类型），即不会出现相同签名的方法，因此可以在<strong>编译期就实现方法确定</strong>。</p>
 <p>Java中的非虚方法（主要包括静态方法，私有方法，final方法等，这些方法一般不可重写，故而不会有相同签名的情况出现）通常仅需要静态分派就可以实现方法的最终确定。</p>
 <p>虚方法的重载在编译时也用到了静态分派（尽管虚方法的调用在运行时还会涉及动态分派）</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Human</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span>Human human<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Human&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span>Man human<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Man&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span>Woman human<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Woman&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="n">Human</span> <span class="n">human</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Human&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="n">Man</span> <span class="n">human</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Man&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="n">Woman</span> <span class="n">human</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Woman&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Human human<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Human<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Human man<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Man<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Human woman<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Woman<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        say<span style="color:#f92672">(</span>human<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        say<span style="color:#f92672">(</span>man<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        say<span style="color:#f92672">(</span>woman<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Man</span> <span style="color:#66d9ef">extends</span> Human<span style="color:#f92672">{</span>
-<span style="color:#f92672">}</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Woman</span> <span style="color:#66d9ef">extends</span> Human<span style="color:#f92672">{</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/1.png" alt="img"></p>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Human</span> <span class="n">human</span><span class="o">=</span><span class="k">new</span> <span class="n">Human</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Human</span> <span class="n">man</span><span class="o">=</span><span class="k">new</span> <span class="n">Man</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Human</span> <span class="n">woman</span><span class="o">=</span><span class="k">new</span> <span class="n">Woman</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">say</span><span class="o">(</span><span class="n">human</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">say</span><span class="o">(</span><span class="n">man</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">say</span><span class="o">(</span><span class="n">woman</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">Man</span> <span class="kd">extends</span> <span class="n">Human</span><span class="o">{</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">Woman</span> <span class="kd">extends</span> <span class="n">Human</span><span class="o">{</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/1.png" alt="img"></p>
 <h2 id="动态分派">动态分派</h2>
 <p>动态分派的典型应用是<strong>方法重写override</strong></p>
 <p>动态分派是指方法的确定在<strong>运行时run-time才能最终完成</strong>。使用动态分派来实现方法确定的方法一般在编译期间都是一些“不明确”的方法（比如一些重写方法，拥有相同的方法签名并且方法接收者的静态类型可能也相同），因此只能在运行时期根据方法接收者和方法参数的实际类型最终实现方法确定。</p>
 <p>Java中的虚方法（主要指实例方法） 通常需要在运行期采用动态分派来实现方法确定（利用invokevirtual指令获取方法接收者的实际类型）</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Human</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Human&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="o">{</span>
+    <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Human&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Human human<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Human<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Human man<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Man<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Human woman<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Woman<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        human<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        man<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        woman<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Man</span> <span style="color:#66d9ef">extends</span> Human<span style="color:#f92672">{</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Man&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Human</span> <span class="n">human</span><span class="o">=</span><span class="k">new</span> <span class="n">Human</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Human</span> <span class="n">man</span><span class="o">=</span><span class="k">new</span> <span class="n">Man</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Human</span> <span class="n">woman</span><span class="o">=</span><span class="k">new</span> <span class="n">Woman</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">human</span><span class="o">.</span><span class="na">say</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">man</span><span class="o">.</span><span class="na">say</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">woman</span><span class="o">.</span><span class="na">say</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">Man</span> <span class="kd">extends</span> <span class="n">Human</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Man&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Woman</span> <span style="color:#66d9ef">extends</span> Human<span style="color:#f92672">{</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Woman&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/2.png" alt="img"></p>
+<span class="kd">class</span> <span class="nc">Woman</span> <span class="kd">extends</span> <span class="n">Human</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">say</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Woman&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/2.png" alt="img"></p>
 <p><strong>看看反编译后的字节码</strong></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">String</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    descriptor<span style="color:#f92672">:</span> <span style="color:#f92672">(</span><span style="color:#f92672">[</span>Ljava<span style="color:#f92672">/</span>lang<span style="color:#f92672">/</span>String<span style="color:#f92672">;</span><span style="color:#f92672">)</span>V
-    flags<span style="color:#f92672">:</span> ACC_PUBLIC<span style="color:#f92672">,</span> ACC_STATIC
-    Code<span style="color:#f92672">:</span>
-      stack<span style="color:#f92672">=</span>2<span style="color:#f92672">,</span> locals<span style="color:#f92672">=</span>4<span style="color:#f92672">,</span> args_size<span style="color:#f92672">=</span>1
-         0<span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span>           <span style="color:#960050;background-color:#1e0010">#</span>5                  <span style="color:#75715e">// class com/lizhi/tc/newtask/linjie/manager/Human
-</span><span style="color:#75715e"></span>         3<span style="color:#f92672">:</span> dup
-         4<span style="color:#f92672">:</span> invokespecial <span style="color:#960050;background-color:#1e0010">#</span>6                  <span style="color:#75715e">// Method &#34;&lt;init&gt;&#34;:()V
-</span><span style="color:#75715e"></span>         7<span style="color:#f92672">:</span> astore_1
-         8<span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span>           <span style="color:#960050;background-color:#1e0010">#</span>7                  <span style="color:#75715e">// class com/lizhi/tc/newtask/linjie/manager/Man
-</span><span style="color:#75715e"></span>        11<span style="color:#f92672">:</span> dup
-        12<span style="color:#f92672">:</span> invokespecial <span style="color:#960050;background-color:#1e0010">#</span>8                  <span style="color:#75715e">// Method com/lizhi/tc/newtask/linjie/manager/Man.&#34;&lt;init&gt;&#34;:()V
-</span><span style="color:#75715e"></span>        15<span style="color:#f92672">:</span> astore_2
-        16<span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span>           <span style="color:#960050;background-color:#1e0010">#</span>9                  <span style="color:#75715e">// class com/lizhi/tc/newtask/linjie/manager/Woman
-</span><span style="color:#75715e"></span>        19<span style="color:#f92672">:</span> dup
-        20<span style="color:#f92672">:</span> invokespecial <span style="color:#960050;background-color:#1e0010">#</span>10                 <span style="color:#75715e">// Method com/lizhi/tc/newtask/linjie/manager/Woman.&#34;&lt;init&gt;&#34;:()V
-</span><span style="color:#75715e"></span>        23<span style="color:#f92672">:</span> astore_3
-        24<span style="color:#f92672">:</span> aload_1
-        25<span style="color:#f92672">:</span> invokevirtual <span style="color:#960050;background-color:#1e0010">#</span>11                 <span style="color:#75715e">// Method say:()V
-</span><span style="color:#75715e"></span>        28<span style="color:#f92672">:</span> aload_2
-        29<span style="color:#f92672">:</span> invokevirtual <span style="color:#960050;background-color:#1e0010">#</span>11                 <span style="color:#75715e">// Method say:()V
-</span><span style="color:#75715e"></span>        32<span style="color:#f92672">:</span> aload_3
-        33<span style="color:#f92672">:</span> invokevirtual <span style="color:#960050;background-color:#1e0010">#</span>11                 <span style="color:#75715e">// Method say:()V
-</span><span style="color:#75715e"></span>        36<span style="color:#f92672">:</span> <span style="color:#66d9ef">return</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span><span class="o">[</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">descriptor</span><span class="o">:</span> <span class="o">(</span><span class="o">[</span><span class="n">Ljava</span><span class="o">/</span><span class="n">lang</span><span class="o">/</span><span class="n">String</span><span class="o">;</span><span class="o">)</span><span class="n">V</span>
+    <span class="n">flags</span><span class="o">:</span> <span class="n">ACC_PUBLIC</span><span class="o">,</span> <span class="n">ACC_STATIC</span>
+    <span class="n">Code</span><span class="o">:</span>
+      <span class="n">stack</span><span class="o">=</span><span class="n">2</span><span class="o">,</span> <span class="n">locals</span><span class="o">=</span><span class="n">4</span><span class="o">,</span> <span class="n">args_size</span><span class="o">=</span><span class="n">1</span>
+         <span class="n">0</span><span class="o">:</span> <span class="k">new</span>           <span class="err">#</span><span class="n">5</span>                  <span class="c1">// class com/lizhi/tc/newtask/linjie/manager/Human
+</span><span class="c1"></span>         <span class="n">3</span><span class="o">:</span> <span class="n">dup</span>
+         <span class="n">4</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="n">6</span>                  <span class="c1">// Method &#34;&lt;init&gt;&#34;:()V
+</span><span class="c1"></span>         <span class="n">7</span><span class="o">:</span> <span class="n">astore_1</span>
+         <span class="n">8</span><span class="o">:</span> <span class="k">new</span>           <span class="err">#</span><span class="n">7</span>                  <span class="c1">// class com/lizhi/tc/newtask/linjie/manager/Man
+</span><span class="c1"></span>        <span class="n">11</span><span class="o">:</span> <span class="n">dup</span>
+        <span class="n">12</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="n">8</span>                  <span class="c1">// Method com/lizhi/tc/newtask/linjie/manager/Man.&#34;&lt;init&gt;&#34;:()V
+</span><span class="c1"></span>        <span class="n">15</span><span class="o">:</span> <span class="n">astore_2</span>
+        <span class="n">16</span><span class="o">:</span> <span class="k">new</span>           <span class="err">#</span><span class="n">9</span>                  <span class="c1">// class com/lizhi/tc/newtask/linjie/manager/Woman
+</span><span class="c1"></span>        <span class="n">19</span><span class="o">:</span> <span class="n">dup</span>
+        <span class="n">20</span><span class="o">:</span> <span class="n">invokespecial</span> <span class="err">#</span><span class="n">10</span>                 <span class="c1">// Method com/lizhi/tc/newtask/linjie/manager/Woman.&#34;&lt;init&gt;&#34;:()V
+</span><span class="c1"></span>        <span class="n">23</span><span class="o">:</span> <span class="n">astore_3</span>
+        <span class="n">24</span><span class="o">:</span> <span class="n">aload_1</span>
+        <span class="n">25</span><span class="o">:</span> <span class="n">invokevirtual</span> <span class="err">#</span><span class="n">11</span>                 <span class="c1">// Method say:()V
+</span><span class="c1"></span>        <span class="n">28</span><span class="o">:</span> <span class="n">aload_2</span>
+        <span class="n">29</span><span class="o">:</span> <span class="n">invokevirtual</span> <span class="err">#</span><span class="n">11</span>                 <span class="c1">// Method say:()V
+</span><span class="c1"></span>        <span class="n">32</span><span class="o">:</span> <span class="n">aload_3</span>
+        <span class="n">33</span><span class="o">:</span> <span class="n">invokevirtual</span> <span class="err">#</span><span class="n">11</span>                 <span class="c1">// Method say:()V
+</span><span class="c1"></span>        <span class="n">36</span><span class="o">:</span> <span class="k">return</span>
 
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li>load 命令：用于将局部变量表的指定位置的相应类型变量加载到栈顶；</li>
 <li>store命令：用于将栈顶的相应类型数据保入局部变量表的指定位置；</li>
 </ul>
@@ -621,7 +715,7 @@ if (!doNotTrack) {
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

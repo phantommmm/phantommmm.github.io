@@ -69,7 +69,7 @@
 <meta itemprop="description" content="QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机">
 <meta itemprop="datePublished" content="2020-07-08T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-08T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="3118">
+<meta itemprop="wordCount" content="3122">
 
 
 
@@ -428,18 +428,46 @@ if (!doNotTrack) {
 <p>而 QUIC 由于没采用累积确认，因此它的窗口右滑只取决于收到的确认字节数。</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/7.jpg" alt="img"></p>
 <p>对于每条 Stream:</p>
-<pre><code>可用窗口大小 = 最大窗口大小 - 已收到的最大数量（读取+收到未读取）
-</code></pre><p>对于每个 QUIC 连接：</p>
-<pre><code>可用窗口大小 = 可用窗口1 + 可用窗口2 + 可用窗口N
-</code></pre><p>并且可以发现，我们其实可以对不同的 Stream 设置不同的窗口大小。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">可用窗口大小 = 最大窗口大小 - 已收到的最大数量（读取+收到未读取）
+</code></pre></td></tr></table>
+</div>
+</div><p>对于每个 QUIC 连接：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">可用窗口大小 = 可用窗口1 + 可用窗口2 + 可用窗口N
+</code></pre></td></tr></table>
+</div>
+</div><p>并且可以发现，我们其实可以对不同的 Stream 设置不同的窗口大小。</p>
 <h2 id="ack-延迟问题">ACK 延迟问题</h2>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/8.jpg" alt="img"></p>
 <p>对于 TCP 的 RTT 计算，它只考虑了接收 ACK 的时间与发出报文的时间之差，也就是说：</p>
-<pre><code>RTT = ackTime - sendTime
-</code></pre><p>但我们知道 TCP 实际上存在一种 ACK 延迟机制，它并没有考虑 ACK 延迟机制所带来的时间延迟。显然，计算出来的 RTT 是偏长了的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">RTT = ackTime - sendTime
+</code></pre></td></tr></table>
+</div>
+</div><p>但我们知道 TCP 实际上存在一种 ACK 延迟机制，它并没有考虑 ACK 延迟机制所带来的时间延迟。显然，计算出来的 RTT 是偏长了的。</p>
 <p>而对于 QUIC，它对 ACK 延迟造成的时间差进行了考虑从而使得 RTT 的时间计算更精准</p>
-<pre><code>RTT = ackTime - sendTime - ackDelay
-</code></pre><h2 id="有序性的保证">有序性的保证</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">RTT = ackTime - sendTime - ackDelay
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="有序性的保证">有序性的保证</h2>
 <p>为了保证数据的有序性，QUIC 还引入了 Stream Offset。这个 Stream Offset 就是为了用来保证数据的有序性的。一个 Stream 可以由多个 Packet 进行传输，由于 PacketNumber 是单调递增的，无法表示次序，因此 QUIC 引入了 Stream Offet，通过 Offset 可以确定 Packet 的顺序，使得这个 Stream 的数据传输仍然能够按序到达。</p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/9.jpg" alt="img"></p>
 <p>可以看到，Stream Offset 为 x 的 Packet 进行了重发，虽然它重发的 Packet Number 并不同，但是由于 Stream Offset 是有序的，因此接收方可以根据这个 Stream Offset 将 Packet 的顺序重新组织起来。</p>
@@ -617,7 +645,7 @@ if (!doNotTrack) {
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

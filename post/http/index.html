@@ -69,7 +69,7 @@
 <meta itemprop="description" content="网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b">
 <meta itemprop="datePublished" content="2020-02-20T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-02-20T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="10703">
+<meta itemprop="wordCount" content="10712">
 
 
 
@@ -429,12 +429,23 @@ if (!doNotTrack) {
 第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。
 第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成&quot;对话密钥&rdquo;（session key），用来加密接下来的整个对话过程。</p>
 <p><img src="https://github.com/phantommmm/phantommmm.github.io/blob/master/image/HTTP/3.jpg?raw=true" alt=""></p>
-<pre><code>（1）生成对话密钥一共需要三个随机数。
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">（1）生成对话密钥一共需要三个随机数。
 
-（2）握手之后的对话使用&quot;对话密钥&quot;加密（对称加密），服务器的公钥和私钥只用于加密和解密&quot;对话密钥&quot;（非对称加密），无其他作用。
+（2）握手之后的对话使用&#34;对话密钥&#34;加密（对称加密），服务器的公钥和私钥只用于加密和解密&#34;对话密钥&#34;（非对称加密），无其他作用。
 
 （3）服务器公钥放在服务器的数字证书之中。
-</code></pre><p>非对称加密：加密 解密用的不是同一个密匙</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>非对称加密：加密 解密用的不是同一个密匙</p>
 <p>对称加密：加密 解密用的是用一个密匙</p>
 <p><strong>CA证书：证书授权中心</strong>  用于证明自己是哪个服务器，安不安全等</p>
 <p><strong>CA证书在SSL中的作用？</strong></p>
@@ -670,7 +681,19 @@ CONNECT方法要求在与代理服务器通信时建立隧道，实现用隧道�
 <h5 id="traceroute命令">traceroute命令</h5>
 <p>与Ping并列，也是ICMP命令。</p>
 <p>返回从主机 到 目标主机 之间经历多少 路由器</p>
-<pre><code>[root@localhost ~]# traceroute www.baidu.com
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[root@localhost ~]# traceroute www.baidu.com
 traceroute to www.baidu.com (61.135.169.125), 30 hops max, 40 byte packets
  192.168.74.2 (192.168.74.2)  2.606 ms  2.771 ms  2.950 ms
  211.151.56.57 (211.151.56.57)  0.596 ms  0.598 ms  0.591 ms
@@ -678,7 +701,9 @@ traceroute to www.baidu.com (61.135.169.125), 30 hops max, 40 byte packets
  * * *
  * * *
 [root@localhost ~]#
-</code></pre><p>每个记录是 <strong>一跳</strong> ，每跳 表示一个 <strong>网关</strong>。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>每个记录是 <strong>一跳</strong> ，每跳 表示一个 <strong>网关</strong>。</p>
 <p>每次探测 默认发送 三个数据包。</p>
 <p>*** 表示 防火墙 封掉了 ICMP返回信息。</p>
 <p>有时我们在某一网关处延时比较长，有可能是某台网关比较阻塞，也可能是物理设备本身的原因。</p>
@@ -847,7 +872,7 @@ traceroute to www.baidu.com (61.135.169.125), 30 hops max, 40 byte packets
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

@@ -184,7 +184,7 @@ var fnTooltip = function () {
 /**
  * highlight
  */
- /**
+ /*
 var highlight = function () {
   document.querySelectorAll('.chroma>table')
     .forEach((element) => {
@@ -194,7 +194,8 @@ var highlight = function () {
       }
     });
 }
-**/
+*/
+
 function mapLang(name) {
   return {
     coffeescript: 'CoffeeScript',

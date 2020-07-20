@@ -69,7 +69,7 @@
 <meta itemprop="description" content="开发中的设计模式&ndash;责任链 背景 开发项目中涉及到当用户接入客服系统时，会按顺序依次经过留言、建立连接、插队、排队的处理器进行处理判断">
 <meta itemprop="datePublished" content="2020-07-03T13:39:23&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-03T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="1951">
+<meta itemprop="wordCount" content="1946">
 
 
 
@@ -363,7 +363,7 @@ if (!doNotTrack) {
 <p><strong>缺点：</strong> 会把发送者和接收者耦合在一起，当想去除某个Handler或改变顺序时，需要修改List顺序，并且关心Handler处理结果和传递请求，代码不够优雅。</p>
 <h2 id="优化"><strong>优化</strong></h2>
 <p>消除for循环，顺序执行Handler容易联想到链式，便可使用<strong>责任链模式</strong>，避免请求发送者与接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止，当需要添加新的Handler，只需实现抽象处理器，并加入链即可。</p>
-<p>**注意：**必须注意责任链的循环调用问题。</p>
+<p><strong>注意：</strong> 必须注意责任链的循环调用问题。</p>
 <h2 id="责任链模式">责任链模式</h2>
 <p><strong>定义抽象处理请求的接口</strong></p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E8%B4%A3%E4%BB%BB%E9%93%BE/3.png" alt="img"></p>
@@ -403,7 +403,7 @@ if (!doNotTrack) {
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E8%B4%A3%E4%BB%BB%E9%93%BE/15.png" alt="img"></p>
 <p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E8%B4%A3%E4%BB%BB%E9%93%BE/16.png" alt="img"></p>
 <p>由上图可知，执行顺序为：</p>
-<p>InboundHandler1 =&gt; InboundHandler2 =&gt; **OutboundHandler2 =&gt; OutboundHander1 **</p>
+<p>InboundHandler1 =&gt; InboundHandler2 =&gt;  <strong>OutboundHandler2 =&gt; OutboundHander1</strong></p>
 <p>所以，我们得到以下几个结论：</p>
 <p>1、InboundHandler是按照Pipleline的加载顺序，<strong>顺序</strong>执行。</p>
 <p>2、OutboundHandler是按照Pipeline的加载顺序，<strong>逆序</strong>执行。</p>
@@ -583,7 +583,7 @@ if (!doNotTrack) {
 
 
 
-<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
 
 
 

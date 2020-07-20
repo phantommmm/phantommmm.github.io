@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>设计模式-适配器 - Phantom</title>
+  <title>Netty · Phantom</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -22,9 +22,7 @@
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<meta name="author" content="phantom" />
-  <meta name="description" content="开发中的设计模式&amp;ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接" />
-
+<meta name="author" content="Phantom" />
   <meta name="keywords" content="Hugo, theme, Phantom" />
 
 
@@ -35,8 +33,8 @@
 <meta name="generator" content="Hugo 0.64.1" />
 
 
-<link rel="canonical" href="https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/" />
-
+<link rel="canonical" href="https://phantommmm.github.io/categories/netty/" />
+<link href="/categories/netty/index.xml" rel="alternate" type="application/rss+xml" title="Phantom" />
 
 
 
@@ -59,23 +57,15 @@
 
 
 
-<meta property="og:title" content="设计模式-适配器" />
-<meta property="og:description" content="开发中的设计模式&ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/" />
-<meta property="article:published_time" content="2020-07-01T13:39:23+08:00" />
-<meta property="article:modified_time" content="2020-07-01T13:39:23+08:00" />
-<meta itemprop="name" content="设计模式-适配器">
-<meta itemprop="description" content="开发中的设计模式&ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接">
-<meta itemprop="datePublished" content="2020-07-01T13:39:23&#43;08:00" />
-<meta itemprop="dateModified" content="2020-07-01T13:39:23&#43;08:00" />
-<meta itemprop="wordCount" content="363">
-
-
-
-<meta itemprop="keywords" content="设计模式,适配器," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="设计模式-适配器"/>
-<meta name="twitter:description" content="开发中的设计模式&ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接"/>
+<meta property="og:title" content="Netty" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://phantommmm.github.io/categories/netty/" />
+<meta property="og:updated_time" content="2020-07-18T13:39:23+08:00" />
+<meta itemprop="name" content="Netty">
+<meta itemprop="description" content=""><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Netty"/>
+<meta name="twitter:description" content=""/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -303,138 +293,55 @@ if (!doNotTrack) {
     <main id="main" class="main bg-llight">
       <div class="content-wrapper">
         <div id="content" class="content container">
-          <article class="post bg-white">
-    
-    <header class="post-header">
-      <h1 class="post-title">设计模式-适配器</h1>
-      
-      <div class="post-meta">
-        <time datetime="2020-07-01" class="post-time">
-          2020-07-01
-        </time>
-        <div class="post-category">
-            <a href="https://phantommmm.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"> 设计模式 </a>
-            
-          </div>
-        
-
-        
-        
-
-        
-        
-      </div>
-    </header>
-
-    
-    
-<div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content">
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#背景">背景</a></li>
-    <li><a href="#适配器">适配器</a></li>
-    <li><a href="#实际案例">实际案例</a></li>
-  </ul>
-</nav>
-  </div>
-</div>
-
-    
-    <div class="post-content">
-      <h1 id="开发中的设计模式--适配器">开发中的设计模式&ndash;适配器</h1>
-<h2 id="背景"><strong>背景</strong></h2>
-<p>开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接口中有许多方法，但是我们只需要使用这个接口中的一个或很少的方法，如果实现这个接口的话会有许多方法是空的，适配者模式则可以解决这种有许多空的方法的问题，使得程序更加灵活。</p>
-<h2 id="适配器">适配器</h2>
-<p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%80%82%E9%85%8D%E5%99%A8/1.jpg" alt="img"></p>
-<p>适配器模式就是将原本两个不兼容的接口，通过某种方式使其能够共同工作。</p>
-<p><strong>核心思想</strong></p>
-<p>通过适配器，开发者可以重用原有的代码，无需修改即可调用。同时将目标接口和适配者解耦，解决了目标接口和适配者不一致的问题。</p>
-<h2 id="实际案例">实际案例</h2>
-<p><strong>目标接口</strong></p>
-<p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%80%82%E9%85%8D%E5%99%A8/2.png" alt="img"></p>
-<p>定义序列化接口，包括序列化方法和反序列化方法。</p>
-<p><strong>适配器</strong></p>
-<p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%80%82%E9%85%8D%E5%99%A8/3.png" alt="img"></p>
-<p>定义抽象类实现接口，共用相同反序列化方法，只需实现部分方法，并且可以额外添加抽象方法，提高灵活性。</p>
-<p><strong>适配者</strong></p>
-<p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E9%80%82%E9%85%8D%E5%99%A8/4.png" alt="img"></p>
-<p>具体适配器实现类，实现相应的序列化方法即可。</p>
-
-    </div>
-
-    
-    
-<div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">phantom</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-      2020-07-01
-      
-    </span>
-  </p>
-  
-  <p class="copyright-item">
-    <span class="item-title">许可协议</span>
-    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
-  </p>
-</div>
-
-
-    
-    
-
-    <footer class="post-footer">
-      <div class="post-tags">
-          <a href="https://phantommmm.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-          <a href="https://phantommmm.github.io/tags/%E9%80%82%E9%85%8D%E5%99%A8/">适配器</a>
           
-        </div>
 
-      
-      <nav class="post-nav">
-        
-          <a class="prev" href="/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
+<section id="archive" class="archive">
+  
+    
+      <div class="archive-title category">
+        <h2 class="archive-name">分类： Netty</h2>
+      </div>
+    
+  
 
-            </i>
-            <span class="prev-text nav-default">设计模式-责任链</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        
-          <a class="next" href="/post/redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
-            <span class="next-text nav-default">Redis高级数据结构</span>
-            <span class="prev-text nav-mobile">下一篇</span>
-            
-            <i class="iconfont">
-              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
-</svg>
+  
+    <div class="archive-post">
+      <time datetime="2020-07-18" class="archive-post-time">
+        2020-07-18
+      </time>
+      <span class="archive-post-title">
+        <a href="/post/netty%E4%B8%AD%E7%9A%84-reactor%E6%A8%A1%E5%9E%8B/" class="archive-post-link">
+          Netty中的Reactor模型
+        </a>
+      </span>
+    </div>
+  
+</section>
 
-            </i>
-          </a>
-      </nav>
-    </footer>
-  </article>
+
+
+
+
+
+  
+  
+  
+
+  
+  
 
   
   
 
   
   
+
+  
+  
+
+
+
+
 
         </div>
       </div>
