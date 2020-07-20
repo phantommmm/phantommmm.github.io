@@ -7,10 +7,145 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Thu, 20 Feb 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 16 Jul 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java假泛型</title>
+      <link>https://phantommmm.github.io/post/java%E5%81%87%E6%B3%9B%E5%9E%8B/</link>
+      <pubDate>Thu, 16 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/java%E5%81%87%E6%B3%9B%E5%9E%8B/</guid>
+      <description>Java泛型 Java的泛型是JDK5带来的新特性，其本质是参数化类型，也就是说所操作的数据类型被指定为一个参数（type parameter）</description>
+    </item>
+    
+    <item>
+      <title>深拷贝与浅拷贝</title>
+      <link>https://phantommmm.github.io/post/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/</link>
+      <pubDate>Thu, 16 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/</guid>
+      <description>深拷贝与浅拷贝 创建对象的五种方式 ​ ①、通过 new 关键字 这是最常用的一种方式，通过 new 关键字调用类的有参或无参构造方法来创建对象。比如 Object obj = new Object(); ②、</description>
+    </item>
+    
+    <item>
+      <title>Redis LUA</title>
+      <link>https://phantommmm.github.io/post/redis-lua/</link>
+      <pubDate>Wed, 15 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/redis-lua/</guid>
+      <description>Redis LUA 背景 简单的需求如下 公司运营为了提高用户活跃而设计了一个积分策略，规定用户只要在指定时间段内上线打卡就有机会获得积分，积分可以换取礼物。每</description>
+    </item>
+    
+    <item>
+      <title>TCP协议（下）</title>
+      <link>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/</link>
+      <pubDate>Thu, 09 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/</guid>
+      <description>TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包</description>
+    </item>
+    
+    <item>
+      <title>QUIC协议</title>
+      <link>https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Wed, 08 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/</guid>
+      <description>QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机</description>
+    </item>
+    
+    <item>
+      <title>TCP协议（上）</title>
+      <link>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/</link>
+      <pubDate>Wed, 08 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/</guid>
+      <description>TCP协议（上） TCP 在 IP 协议不可靠（尽力而为也就是无服务）之上建立了可靠的全双工字节流数据传输服务。首先，它是基于字节流的，也就是说它是以字节</description>
+    </item>
+    
+    <item>
+      <title>UDP协议</title>
+      <link>https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Sat, 04 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/</guid>
+      <description>UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文</description>
+    </item>
+    
+    <item>
+      <title>设计模式-责任链</title>
+      <link>https://phantommmm.github.io/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/</link>
+      <pubDate>Fri, 03 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/</guid>
+      <description>开发中的设计模式&amp;ndash;责任链 背景 开发项目中涉及到当用户接入客服系统时，会按顺序依次经过留言、建立连接、插队、排队的处理器进行处理判断</description>
+    </item>
+    
+    <item>
+      <title>设计模式-适配器</title>
+      <link>https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/</link>
+      <pubDate>Wed, 01 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/</guid>
+      <description>开发中的设计模式&amp;ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接</description>
+    </item>
+    
+    <item>
+      <title>Redis高级数据结构</title>
+      <link>https://phantommmm.github.io/post/redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Sat, 27 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/redis%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>Redis高级数据结构 平常我们接触最多的是5个入门级数据结构：String，Hash，List，Set，Sorted Set。本文介绍3个高级</description>
+    </item>
+    
+    <item>
+      <title>SpringBoot-Starter</title>
+      <link>https://phantommmm.github.io/post/springbootstarter/</link>
+      <pubDate>Thu, 25 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/springbootstarter/</guid>
+      <description>SpringBoot-Starter springboot相较于spring的一大优点就是提供给我们开箱即用的一些组件，例如spring-starter依赖。它内部引入相关组件</description>
+    </item>
+    
+    <item>
+      <title>静态分派与动态分派</title>
+      <link>https://phantommmm.github.io/post/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/</link>
+      <pubDate>Sat, 20 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%E4%B8%8E%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE/</guid>
+      <description>静态分派与动态分派 背景 Java 的动态分派和静态分派也是 Java 方法的执行原理。 Java 源代码的编译之后，方法之间的调用是使用符号引用来表示的。当字节码被 JVM 加载</description>
+    </item>
+    
+    <item>
+      <title>Reactor模式</title>
+      <link>https://phantommmm.github.io/post/reactor%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 15 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/reactor%E6%A8%A1%E5%BC%8F/</guid>
+      <description>Reactor模式 Reactor模式也叫反应器模式，大多数IO相关组件如Netty、Redis在使用的IO模式，为什么需要这种模式，它是如何</description>
+    </item>
+    
+    <item>
+      <title>负载均衡算法</title>
+      <link>https://phantommmm.github.io/post/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Sat, 13 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/</guid>
+      <description>负载均衡算法 负载均衡建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高</description>
+    </item>
+    
+    <item>
+      <title>Redis是单线程？</title>
+      <link>https://phantommmm.github.io/post/redis6.0/</link>
+      <pubDate>Sat, 06 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/redis6.0/</guid>
+      <description>Redis是单线程？ Redis 6.0之前 单线程 如何理解Redis单线程？ 单线程指的是网络请求模块使用了一个线程（所以不需考虑并发安全性），即一个线程</description>
+    </item>
     
     <item>
       <title>HTTP</title>
@@ -55,24 +190,6 @@
       
       <guid>https://phantommmm.github.io/post/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</guid>
       <description>虚拟内存 页： 将进程划分的块，对应的大小就叫页面大小 页框： 将内存划分的块 一个页里有一个页框，理论上，页和页框的大小相同 页表： 页和页框一一对应的</description>
-    </item>
-    
-    <item>
-      <title>用户态和内核态</title>
-      <link>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</link>
-      <pubDate>Thu, 13 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/</guid>
-      <description>用户态和内核态 内核态（Kernel Mode）：运行操作系统程序，操作硬件，访问系统资源（硬盘文件 内存 IO等），共享的 用户态（User Mode</description>
-    </item>
-    
-    <item>
-      <title>关于</title>
-      <link>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</link>
-      <pubDate>Wed, 12 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E5%85%B3%E4%BA%8E/</guid>
-      <description>关于内容 本博客发布的部分内容，可能并不能称之为文章，因为这些内容大多是本人学习过程的笔记。 若文章内容有误或读者有好的建议，欢迎通过邮件或qq</description>
     </item>
     
   </channel>

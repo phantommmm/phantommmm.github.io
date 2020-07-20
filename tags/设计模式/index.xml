@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计模式 on Phantom</title>
+    <link>https://phantommmm.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+    <description>Recent content in 设计模式 on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Fri, 03 Jul 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>设计模式-责任链</title>
+      <link>https://phantommmm.github.io/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/</link>
+      <pubDate>Fri, 03 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/</guid>
+      <description>开发中的设计模式&amp;ndash;责任链 背景 开发项目中涉及到当用户接入客服系统时，会按顺序依次经过留言、建立连接、插队、排队的处理器进行处理判断</description>
+    </item>
+    
+    <item>
+      <title>设计模式-适配器</title>
+      <link>https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/</link>
+      <pubDate>Wed, 01 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E9%80%82%E9%85%8D%E5%99%A8/</guid>
+      <description>开发中的设计模式&amp;ndash;适配器 背景 开发中如果我们要用到接口的话，我们需要实现接口，我们需要实现接口中的所有方法，但是在有些场景，一个接</description>
+    </item>
+    
+  </channel>
+</rss>

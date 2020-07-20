@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>UDP协议 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="UDP协议" />
+<meta property="og:description" content="UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/" />
+<meta property="article:published_time" content="2020-07-04T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-04T13:39:23+08:00" />
+<meta itemprop="name" content="UDP协议">
+<meta itemprop="description" content="UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文">
+<meta itemprop="datePublished" content="2020-07-04T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-04T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="2221">
+
+
+
+<meta itemprop="keywords" content="UDP,拥塞控制," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="UDP协议"/>
+<meta name="twitter:description" content="UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">UDP协议</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-07-04" class="post-time">
+          2020-07-04
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#报文格式">报文格式</a></li>
+    <li><a href="#udp-的伪首部">UDP 的伪首部</a></li>
+    <li><a href="#udp-的使用场景">UDP 的使用场景</a></li>
+    <li><a href="#udp-如何实现可靠传输">UDP 如何实现可靠传输</a>
+      <ul>
+        <li><a href="#重传">重传</a></li>
+        <li><a href="#拥塞控制">拥塞控制</a></li>
+      </ul>
+    </li>
+    <li><a href="#与-tcp-的对比">与 TCP 的对比</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="udp协议">UDP协议</h1>
+<p>UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。</p>
+<h2 id="报文格式">报文格式</h2>
+<p>我们先来看看它的报文格式：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/1.jpg" alt="img"></p>
+<p>可以看到，它的首部只有以下四个字段：</p>
+<ul>
+<li>源端口号：数据源进程的端口号</li>
+<li>目的端口号：目的进程的端口号</li>
+<li>UDP 长度：表示 UDP 报文的长度（包括首部）</li>
+<li>UDP 检验和：用于进行差错检测的检验和。</li>
+</ul>
+<p>同时，<strong>只需要 <code>目的 IP 地址</code>、<code>目的端口号</code> 这样一个二元组即可唯一确定一个 UDP Socket</strong>。</p>
+<p>这里不得不思考一下，为什么 UDP 只需要这样一个二元组就可以唯一确定一个 Socket 呢？</p>
+<p>因为 UDP 它并不是面向连接的，接收方完全可以用一个 Socket 来接收不同的源发来的数据，并不需要像 TCP 一样向源回馈是否收到，因为对方并不关心。</p>
+<h2 id="udp-的伪首部">UDP 的伪首部</h2>
+<p>UDP 的检验和不仅仅包含了数据及 UDP 首部，还包含了一个 12 字节的 『伪首部』。它添加在 UDP 首部前面，<strong>只是为了用于计算检验和而临时存在</strong>，目的是让 UDP 判断目的是否正确到达目的地。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/2.jpg" alt="img"></p>
+<h2 id="udp-的使用场景">UDP 的使用场景</h2>
+<p>UDP 的使用场景主要在于一些不是那么在意对方是否收到的场景下，这些场景往往需要对方能更快地收到数据而并不在意数据是否一定能够收到。</p>
+<p>例如日常生活中常见的一些视频播放、网络直播，以及一些在线游戏，这些服务的即时性非常强，需要即时收到最新的数据，因此之前发出的数据是否收到就显得没那么重要了。</p>
+<h2 id="udp-如何实现可靠传输">UDP 如何实现可靠传输</h2>
+<p>以下内容参考自 <a href="https://zhuanlan.zhihu.com/p/30770889">RUDP传输那些事儿</a>：</p>
+<p>这个标题可能非常奇怪，UDP 本来就是不可靠的，为什么还要把它变成可靠的呢？如果需要可靠性直接使用 TCP 不就好了么？</p>
+<p>实际上 TCP 所实现的可靠性是一种完全可靠，也就是说，发送端发送的数据必须<strong>完整</strong>、<strong>按序</strong>的到达接收端。</p>
+<p>但这样完全可靠带来的后果就是在一些比较苛刻的条件下 TCP 无法保证通信的质量，并且要进行 TCP 传输，还需要首先进行三次握手，关闭时还需要进行四次挥手，也就是说：<strong>TCP 带来的可靠性成本在某些场景下过高了</strong>。</p>
+<p>因此，出现了一种 RUDP（Reliable UDP）协议，也就是可靠的 UDP 协议，它基于 UDP 实现了一个介于 UDP 与 TCP 之间的基本可靠的保证，同时相比 TCP 它的成本更低，传输效率更高。像 Google 推出的 QUIC 协议中就采用了 RUDP 来实现。</p>
+<h3 id="重传">重传</h3>
+<p>为了实现 UDP 的可靠，首先我们要引入重传机制。下面是 RUDP 的基本框架：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/3.jpg" alt="img"></p>
+<p>RUDP 的重传通过接收端 ACK 的丢包信息进行数据重传，发送端会根据场景来设计自己的重传方式：</p>
+<h4 id="超时重传">超时重传</h4>
+<p>定时重传就是指发送方在经过一个超时时间（RTO）之后还是没有收到对方的 ACK，则对这个数据包进行重传，这与 TCP 的超时重传机制类似。</p>
+<p>如果使用的场景对延迟较敏感但不在意流量成本，可以将 RTO 设置的小一些，例如在线游戏等。</p>
+<h4 id="请求重传">请求重传</h4>
+<p>请求重传指接收端进行 ACK 时在报文中携带丢失的报文信息，发送端收到 ACK 时会提取丢失的报文信息并进行重传。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/4.jpg" alt="img"></p>
+<p>由于 UDP 在传输过程中不保证按序，会造成包的乱序，因此不能像上图中这样理想的认为 104 到达就把前面没有到达的进行请求重传。我们可以设定一个时延 RTT，如果在发现丢包的情况的时候，还不把这个包视为丢包，而是等它被视为丢包的时间超过了 RTT 时，再将其确定为丢包，进行请求重传。</p>
+<p>也就是说，假设发现丢包的时间为 <code>time</code>，则当 <code>time + RTT &lt; currentTime</code> 时再进行请求重传。</p>
+<h4 id="fec-选择重传">FEC 选择重传</h4>
+<p>除了超时重传和请求重传之外，还存在着一种前向纠错（FEC）选择重传。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/5.jpg" alt="img"></p>
+<p>FEC 选择重传的方式是给予 FEC 前向纠错技术。发送方发送报文的时候会通过 FEC 算法根据前面几个报文生成 FEC 报文，当接收方发现丢包时，首先会尝试通过 FEC 算法来尝试恢复出丢失的报文。如果能够恢复，就不再向发送方请求重传。但显然，如果没有发生丢包，那 FEC 报文就是冗余的，会增大带宽压力。</p>
+<h3 id="拥塞控制">拥塞控制</h3>
+<p>为了实现拥塞控制，RUDP 往往也在接收方和发送方分别维护了接收窗口和发送窗口。</p>
+<p>但接收窗口是否进行排序、缓冲就取决于 RUDP 的具体策略。如果 RUDP 要实现可靠、有序的数据传输，就会对接收窗口进行排序、缓冲，否则往往就不进行窗口缓冲，直接进行位置滑动。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/UDP%E5%8D%8F%E8%AE%AE/6.jpg" alt="img"></p>
+<h4 id="经典拥塞控制算法">经典拥塞控制算法</h4>
+<p>经典拥塞控制算法就是 TCP 所使用的那一套拥塞控制算法，也就是<strong>慢启动</strong>、<strong>拥塞避免</strong>、<strong>快速恢复</strong></p>
+<h5 id="慢启动">慢启动</h5>
+<p><code>cwnd</code> 从 1 开始呈指数增长，每次乘以 2（每收到一个 ACK 加 1）。</p>
+<h5 id="拥塞避免">拥塞避免</h5>
+<p><code>cwnd</code> 呈线性增长，每次加 1（收到一组 ACk 加 1）。</p>
+<h5 id="快速恢复">快速恢复</h5>
+<p><code>cwnd</code> 固定，每收到一个向前滑动 1。</p>
+<h4 id="bbr-拥塞控制算法">BBR 拥塞控制算法</h4>
+<p>经典拥塞控制算法存在对延迟和带宽的压榨问题，因此 Google 设计了一种基于发送端延迟和带宽评估的 BBR 拥塞控制。它的主要目的是实现如下两个功能：</p>
+<ol>
+<li>在存在一定丢包率的网络上充分利用带宽。</li>
+<li>降低网络传输中的延迟。</li>
+</ol>
+<p>它主要的策略是通过一种周期性的 ACK 及 NACK 对链路的 <code>min_rtt</code> 和 <code>max_bandwidth</code> 进行评估。</p>
+<p>而拥塞窗口大小 <code>cwnd = max_bandwidth / min_rtt</code>。</p>
+<h2 id="与-tcp-的对比">与 TCP 的对比</h2>
+<p>最后我们将 UDP 与 TCP 进行一下对比：</p>
+<p>相比 TCP 协议来说，UDP 协议有以下区别：</p>
+<ul>
+<li>TCP 是<strong>面向字节流</strong>的，它的数据是没有边界的。而 UDP 是<strong>面向报文</strong>的，它的数据是有边界的。（体现在前面一篇 TCP 的文章中提到的粘包问题上）</li>
+<li>TCP 协议可以<strong>保证数据的按序、可靠交付</strong>，UDP 无法保证数据的<strong>可靠交付</strong>。</li>
+<li>TCP 协议是面向连接的，在发送数据前要通过三次握手建立连接，关闭连接需要四次挥手，而 UDP 不需要。</li>
+<li>TCP Socket 需要通过 <code>目的、源 IP</code> 以及 <code>目的、源端口号</code> 这个四元组唯一确定，而 UDP Socket 只需要通过 <code>目的 IP</code> 以及 <code>目的端口号</code> 这个二元组即可唯一确定。</li>
+<li>TCP 为了保证可靠交付丧失了一定的传输效率，而 UDP 的传输效率更高。</li>
+<li>TCP 的首部在不包含选项字段的情况下有 20 个字节，而 UDP 的首部仅仅有 8 个字节。</li>
+<li>TCP 只支持一对一的数据传输，而 UDP 支持一对一、一对多、多对一的数据传输。</li>
+<li>TCP 具有拥塞控制，可以进尽量避免网络中出现拥塞，而 UDP 则没有拥塞控制，并不会因为中间网络的拥塞而减小占用的带宽，有可能造成加剧网络拥堵。</li>
+</ul>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-07-04
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/udp/">UDP</a>
+          <a href="https://phantommmm.github.io/tags/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">拥塞控制</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">TCP协议（上）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/%E8%B4%A3%E4%BB%BB%E9%93%BE/">
+            <span class="next-text nav-default">设计模式-责任链</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

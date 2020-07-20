@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LUA on Phantom</title>
+    <link>https://phantommmm.github.io/tags/lua/</link>
+    <description>Recent content in LUA on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Wed, 15 Jul 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/lua/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Redis LUA</title>
+      <link>https://phantommmm.github.io/post/redis-lua/</link>
+      <pubDate>Wed, 15 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/redis-lua/</guid>
+      <description>Redis LUA 背景 简单的需求如下 公司运营为了提高用户活跃而设计了一个积分策略，规定用户只要在指定时间段内上线打卡就有机会获得积分，积分可以换取礼物。每</description>
+    </item>
+    
+  </channel>
+</rss>

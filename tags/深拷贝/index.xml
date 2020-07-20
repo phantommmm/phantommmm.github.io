@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>深拷贝 on Phantom</title>
+    <link>https://phantommmm.github.io/tags/%E6%B7%B1%E6%8B%B7%E8%B4%9D/</link>
+    <description>Recent content in 深拷贝 on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Thu, 16 Jul 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/%E6%B7%B1%E6%8B%B7%E8%B4%9D/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>深拷贝与浅拷贝</title>
+      <link>https://phantommmm.github.io/post/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/</link>
+      <pubDate>Thu, 16 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/</guid>
+      <description>深拷贝与浅拷贝 创建对象的五种方式 ​ ①、通过 new 关键字 这是最常用的一种方式，通过 new 关键字调用类的有参或无参构造方法来创建对象。比如 Object obj = new Object(); ②、</description>
+    </item>
+    
+  </channel>
+</rss>

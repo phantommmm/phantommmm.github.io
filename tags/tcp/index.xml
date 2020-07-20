@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Wed, 19 Feb 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 Jul 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/tags/tcp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>TCP协议（下）</title>
+      <link>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/</link>
+      <pubDate>Thu, 09 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/</guid>
+      <description>TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包</description>
+    </item>
+    
+    <item>
+      <title>TCP协议（上）</title>
+      <link>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/</link>
+      <pubDate>Wed, 08 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/</guid>
+      <description>TCP协议（上） TCP 在 IP 协议不可靠（尽力而为也就是无服务）之上建立了可靠的全双工字节流数据传输服务。首先，它是基于字节流的，也就是说它是以字节</description>
+    </item>
     
     <item>
       <title>TCP-IP</title>

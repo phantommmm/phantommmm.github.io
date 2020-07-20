@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>QUIC协议 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="QUIC协议" />
+<meta property="og:description" content="QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/" />
+<meta property="article:published_time" content="2020-07-08T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-08T13:39:23+08:00" />
+<meta itemprop="name" content="QUIC协议">
+<meta itemprop="description" content="QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机">
+<meta itemprop="datePublished" content="2020-07-08T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-08T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="3118">
+
+
+
+<meta itemprop="keywords" content="UDP,QUIC," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="QUIC协议"/>
+<meta name="twitter:description" content="QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">QUIC协议</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-07-08" class="post-time">
+          2020-07-08
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#为什么选择-udp">为什么选择 UDP</a></li>
+    <li><a href="#相比-https-的优势">相比 HTTPS 的优势</a></li>
+    <li><a href="#连接建立">连接建立</a></li>
+    <li><a href="#优化的拥塞控制">优化的拥塞控制</a>
+      <ul>
+        <li><a href="#可插拔">可插拔</a></li>
+        <li><a href="#rtt-计算的优化">RTT 计算的优化</a></li>
+      </ul>
+    </li>
+    <li><a href="#多路复用">多路复用</a></li>
+    <li><a href="#流量控制">流量控制</a></li>
+    <li><a href="#ack-延迟问题">ACK 延迟问题</a></li>
+    <li><a href="#有序性的保证">有序性的保证</a></li>
+    <li><a href="#加密认证">加密认证</a></li>
+    <li><a href="#连接迁移">连接迁移</a></li>
+    <li><a href="#tcpudp与quic">TCP/UDP与QUIC</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="quic协议">QUIC协议</h1>
+<p><a href="https://www.chromium.org/quic">QUIC</a> （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机制从而使得它兼顾了高效与可靠两大特点。</p>
+<p>根据官方对它的描述，它是一个减少了 TCP 协议所存在的延迟的协议。表面上看 QUIC 就像是基于 UDP 实现的 TCP + TLS + HTTP/2.0 的结合体：</p>
+<blockquote>
+<p>QUIC is a new transport which reduces latency compared to that of TCP. On the surface, QUIC is very similar to TCP+TLS+HTTP/2 implemented on UDP.</p>
+</blockquote>
+<p>我们都知道 HTTP/2.0 实际上是 HTTP over SPDY，而即将到来的 HTTP/3.0，实际上就将被称为 <strong>HTTP over QUIC</strong>，甚至有人调侃道 QUIC 简直就是 TCP/2，这也侧面证明了 QUIC 的优越性。</p>
+<h2 id="为什么选择-udp">为什么选择 UDP</h2>
+<p>TCP 协议看似完美，并且已经在 HTTP 协议之下应用了非常久，但它实际上是存在很多问题的，这也是 HTTP/2 目前面临的瓶颈之所在：</p>
+<ul>
+<li><strong>网络环境的不适应</strong>：TCP 协议在网络流行的早期推出，因为那时的网络不像如今这样发达，丢包率十分之高，因此非常迫切地需要一款协议来保证数据的可靠传输。但如今的网络环境已经与当年大不相同了，相对来说非常的可靠，对于 TCP 中的一部分通过性能的损耗而保证可靠性的机制，对我们来说不再是必要的，我们更需要网络协议能带来更高的性能。</li>
+<li><strong>TCP 的更新成本过高</strong>：TCP 协议中的一些对网络的优化其实并不是最优解，在目前的角度看来实际上仍有优化的空间。但如果要修改 TCP 协议，它的代价非常之大，因为它的实现往往存在于操作系统的内核中，要对它进行修改意味着需要依赖操作系统内核的更新。</li>
+</ul>
+<p>基于以上的原因，Google 不再选择对 TCP 进行优化，而是另辟蹊径，选择了 UDP 作为其运输层协议，基于 UDP 搭建一套与 TCP 功能相近但又进行了大量优化的 QUIC 协议。它的实现存在于<strong>应用层</strong>，因此会更利于未来的更新与迭代。</p>
+<h2 id="相比-https-的优势">相比 HTTPS 的优势</h2>
+<p>QUIC 协议相比 HTTPS（TCP+TLS+HTTP/2）这样的组合，有着如下的优势：</p>
+<ol>
+<li>减少了 TCP 的三次握手以及 TLS 握手的时间。</li>
+<li>对 HTTP/2 对多路复用进行了改进。</li>
+<li>对拥塞控制机制进行了改进。</li>
+<li>RTT 计算更为精准。</li>
+<li>加密认证程度更高，相比 HTTPS 更安全。</li>
+<li>引入了前向纠错机制。</li>
+<li>连接迁移机制。</li>
+</ol>
+<h2 id="连接建立">连接建立</h2>
+<p>QUIC 协议相比 HTTPS 来说大大减少了连接建立的时延，它可以实现 0RTT 的连接建立，在 0RTT 内就可以完成运输层的连接建立以及加密层的加密连接建立，只需要进行一次 QUIC 连接建立即可，并且连接建立的过程中可以同时进行数据的传输。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/1.jpg" alt="img"></p>
+<ol>
+<li>传输层 0RTT 就能建立连接。</li>
+<li>加密层 0RTT 就能建立加密连接。</li>
+</ol>
+<p>基于UDP，同时实现了0RTT的安全握手，所以只需0RTT即可数据发送。</p>
+<h2 id="优化的拥塞控制">优化的拥塞控制</h2>
+<h3 id="可插拔">可插拔</h3>
+<p>QUIC 的拥塞控制包含了 TCP 中的四个算法：慢启动、拥塞避免、快速重传、快速恢复。它默认使用了这些算法，同时又对 BBR 等拥塞控制算法进行了支持。</p>
+<p>QUIC 最大的优化不在于拥塞控制算法本身，而是由于它是在应用层的，因此它的拥塞控制是<strong>可插拔</strong>的，可以由<strong>应用程序实现不同的拥塞控制算法</strong>，并不需要操作系统的支持，并且<strong>拥塞控制算法可以灵活地进行配置</strong>，对于不同的连接采用不同的拥塞控制算法。</p>
+<h3 id="rtt-计算的优化">RTT 计算的优化</h3>
+<p>对于 RTT 计算，QUIC 进行了一些优化，解决了 TCP 中的 RTT 计算不精确的问题。</p>
+<p><strong>RTT=请求数据包在网络中来回的时间</strong></p>
+<p><strong>RTT=传播时延（往返哒）+排队时延（路由器和交换机的）+数据处理时延（应用程序的）</strong></p>
+<h4 id="packetnumber">PacketNumber</h4>
+<p>在 TCP 中，报文中包含了序列号，而在 QUIC 中则采用了 PacketNumber 替代序列号，它们都表示了一个数据报文的编号，但仍然有一定区别。</p>
+<p>TCP 协议中如果丢包导致了重传，这个重传的报文也会采用与丢包的报文同样的编号，而对于 QUIC 协议，这个 PacketNumber 是递增的，即使重传采用的也是大于该原来编号的新的 PacketNumber。</p>
+<p>通过这样单调递增的 PacketNumber，解决了 TCP 重传存在的 RTT 计算歧义问题：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/2.jpg" alt="img"></p>
+<p>可以看到，上面左边的图片，如果以原始请求到收到 ACK 来计算 RTT，显然是大了，但它在右图这种情况中计算的 RTT 才是正确的。</p>
+<p>而在上面左图的情况如果以重传请求开始到收到 ACK 计算 RTT，左图的计算是正确的，但对于右图来说又小了。</p>
+<p>因此 TCP 这种重传采用同样的序列号会导致 RTT 计算的不正确，QUIC 通过重传采用了不同的 Packet Number 解决了这个问题。</p>
+<p>TCP seq ack机制容易导致重传歧义，即无法确定收到的响应Ack是<strong>原始请求ack</strong>还是<strong>重传请求ack</strong>，导致计算的RTT不准确。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/3.jpg" alt="img"></p>
+<p>QUIC 使用递增的Packet代替seq,即能准确判断相应是<strong>原始请求</strong>还是<strong>重传请求</strong>。</p>
+<p>由于重传报文与原报文的 PacketNumber 也不同，因此确认号也不同，从而使得发送方能够辨别究竟是原始请求的 ACK 还是重传请求的 ACK</p>
+<h2 id="多路复用">多路复用</h2>
+<p>QUIC 对 HTTP/2 的多路复用进行了改进，我们先了解一下 HTTP/2 的多路复用存在怎样的问题：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/4.jpg" alt="img"></p>
+<p>如图，这是 HTTP/2 的多路复用机制的实现，由于是通过复用同一条 TCP 连接，通过分帧的形式将 R、G、B 三个请求同时进行传输，因此它们是通过同一条 TCP 连接进行传输。</p>
+<p>根据 TCP 的特性，它们三个会按序进行确认，比如此时如果 R 请求出现了丢包，那么会导致如下的情况：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/5.jpg" alt="img"></p>
+<p>可见，R 出现了丢包，导致 TCP 不会接收后面的 G、B 数据，从而使得 G、B 的传输也受到了影响。</p>
+<p>因此 <strong>HTTP/2 的多路复用没有将多个请求的数据传输进行分离，它们都是通过同一条 TCP 连接进行传输，互相之间会相互影响</strong>。</p>
+<p>QUIC 协议则避开了 TCP，它引入了 Stream 的概念，一条 QUIC 连接可以复用多条 Stream，这些 Stream 互相独立，因此即使 R Stream的数据出现了丢包，也不会对 G、B 这两条 Stream 的传输造成影响：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/6.jpg" alt="img"></p>
+<p><strong>我们可以将 QUIC 连接看作是原来的 TCP 连接，而一个 Stream 则对应了一个 HTTP 请求</strong>。</p>
+<h2 id="流量控制">流量控制</h2>
+<p>QUIC 的流量控制就是基于前面的 QUIC 连接以及 Stream 实现的：</p>
+<p>通过 <code>window_update</code> 帧可以告诉对方自己收到的字节数，发送方就会对自己能够发送的字节数进行限制。</p>
+<p>而通过 <code>block</code> 帧可以告诉对方由于流量控制被阻塞，无法发送数据。</p>
+<p>由于 TCP 采用累积确认，因此其发送窗口的右滑长度取决于已确认的字节数。若出现了丢包，即使收到更大的报文段也不会向右滑。</p>
+<p>而 QUIC 由于没采用累积确认，因此它的窗口右滑只取决于收到的确认字节数。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/7.jpg" alt="img"></p>
+<p>对于每条 Stream:</p>
+<pre><code>可用窗口大小 = 最大窗口大小 - 已收到的最大数量（读取+收到未读取）
+</code></pre><p>对于每个 QUIC 连接：</p>
+<pre><code>可用窗口大小 = 可用窗口1 + 可用窗口2 + 可用窗口N
+</code></pre><p>并且可以发现，我们其实可以对不同的 Stream 设置不同的窗口大小。</p>
+<h2 id="ack-延迟问题">ACK 延迟问题</h2>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/8.jpg" alt="img"></p>
+<p>对于 TCP 的 RTT 计算，它只考虑了接收 ACK 的时间与发出报文的时间之差，也就是说：</p>
+<pre><code>RTT = ackTime - sendTime
+</code></pre><p>但我们知道 TCP 实际上存在一种 ACK 延迟机制，它并没有考虑 ACK 延迟机制所带来的时间延迟。显然，计算出来的 RTT 是偏长了的。</p>
+<p>而对于 QUIC，它对 ACK 延迟造成的时间差进行了考虑从而使得 RTT 的时间计算更精准</p>
+<pre><code>RTT = ackTime - sendTime - ackDelay
+</code></pre><h2 id="有序性的保证">有序性的保证</h2>
+<p>为了保证数据的有序性，QUIC 还引入了 Stream Offset。这个 Stream Offset 就是为了用来保证数据的有序性的。一个 Stream 可以由多个 Packet 进行传输，由于 PacketNumber 是单调递增的，无法表示次序，因此 QUIC 引入了 Stream Offet，通过 Offset 可以确定 Packet 的顺序，使得这个 Stream 的数据传输仍然能够按序到达。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/9.jpg" alt="img"></p>
+<p>可以看到，Stream Offset 为 x 的 Packet 进行了重发，虽然它重发的 Packet Number 并不同，但是由于 Stream Offset 是有序的，因此接收方可以根据这个 Stream Offset 将 Packet 的顺序重新组织起来。</p>
+<h2 id="加密认证">加密认证</h2>
+<p>QUIC 协议的加密认证采用了如下的方式：</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/QUIC%E5%8D%8F%E8%AE%AE/10.jpg" alt="img"></p>
+<p>如图所示，上半的红色部分为 Stream 中传输的帧的头部信息，对它进行了认证。而下半的绿色部分为 Stream 帧的内容，它经过了加密。</p>
+<h2 id="连接迁移">连接迁移</h2>
+<p>对于一条 TCP 连接，根据前面 TCP 协议的文章可以看出，它可以由 <code>[源 IP 地址、源端口号、目的 IP 地址、目的端口号]</code> 这样一个四元组唯一标示。</p>
+<p>这就意味着这个四元组中任何一个发生变化，都需要重新建立一条新的连接。</p>
+<p>QUIC 为了解决这个问题，会以一个 64 位的随机数作为 ID 来唯一标识一条连接，这样只要这个随机数 ID 不变，这条连接就会依然维持，从而很方便的支持连接的迁移。</p>
+<p>当然，提到随机大家肯定会想到冲突问题，但 64 位数冲突的概率实在是太小了，差不多是 1/2^64 的概率了。</p>
+<h2 id="tcpudp与quic">TCP/UDP与QUIC</h2>
+<p>TCP/UDP是通用协议，重在简单和通用</p>
+<p>QUIC是一种针对浏览器和HTTP Server间通讯进行优化的专用协议，基于UDP，是针对它所面对的问题域做了很多取舍的。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-07-08
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/udp/">UDP</a>
+          <a href="https://phantommmm.github.io/tags/quic/">QUIC</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">TCP协议（下）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8A/">
+            <span class="next-text nav-default">TCP协议（上）</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

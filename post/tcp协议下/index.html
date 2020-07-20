@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TCP协议（下） - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="TCP协议（下）" />
+<meta property="og:description" content="TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/tcp%E5%8D%8F%E8%AE%AE%E4%B8%8B/" />
+<meta property="article:published_time" content="2020-07-09T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-09T13:39:23+08:00" />
+<meta itemprop="name" content="TCP协议（下）">
+<meta itemprop="description" content="TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包">
+<meta itemprop="datePublished" content="2020-07-09T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-09T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="5113">
+
+
+
+<meta itemprop="keywords" content="TCP,RST," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TCP协议（下）"/>
+<meta name="twitter:description" content="TCP协议（下） RST RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">TCP协议（下）</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-07-09" class="post-time">
+          2020-07-09
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/%E7%BD%91%E7%BB%9C/"> 网络 </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#rst">RST</a>
+      <ul>
+        <li><a href="#rst包没有顺利到达对端">RST包没有顺利到达对端？</a></li>
+        <li><a href="#什么情况下会收到对端的rst包">什么情况下，会收到对端的RST包？</a></li>
+        <li><a href="#tcp连接异常断开情况">TCP连接异常断开情况</a></li>
+        <li><a href="#心跳机制">心跳机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#tcp连接">TCP连接</a>
+      <ul>
+        <li><a href="#建立连接三次握手">建立连接（三次握手）</a></li>
+        <li><a href="#三次握手存在哪些漏洞">三次握手存在哪些漏洞？</a></li>
+        <li><a href="#防范syn洪水攻击的措施">防范SYN洪水攻击的措施</a></li>
+        <li><a href="#第三次握手失败了会怎么样">第三次握手失败了会怎么样</a></li>
+        <li><a href="#为什么是三次而不是两次握手">为什么是三次而不是两次握手？</a></li>
+        <li><a href="#断开连接四次挥手">断开连接（四次挥手）</a></li>
+        <li><a href="#为什么是四次挥手">为什么是四次挥手？</a></li>
+        <li><a href="#为什么客服端最后要等待2msl">为什么客服端最后要等待2MSL？</a></li>
+        <li><a href="#time_wait">Time_wait</a></li>
+        <li><a href="#close_wait">Close_wait</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="tcp协议下">TCP协议（下）</h1>
+<h2 id="rst">RST</h2>
+<p>RST用于异常的关闭连接，发送RST包关闭连接时，不必等待缓冲区的包都发出去（例如FIN），直接丢弃缓存区的包发送RST包，而接收端收到RST包后，也不必发送ACK包确认，直接关闭连接资源即可。（然后可以重新发起连接）</p>
+<h3 id="rst包没有顺利到达对端">RST包没有顺利到达对端？</h3>
+<p>导致双方状态不同步，一方为 &ldquo;established(已建立连接)&quot;，一方为 &ldquo;closed&rdquo;。已建立连接方仍然能往closed方发送数据，就会触发closed方发送RST。</p>
+<h3 id="什么情况下会收到对端的rst包">什么情况下，会收到对端的RST包？</h3>
+<ol>
+<li>客户端<code>connect</code>一个不存在的端口，客户端会收到一条<code>RST</code>，报错<code>Connection refused</code>；</li>
+<li>程序崩溃或异常退出，会向对端发送。</li>
+<li>对端断电重启（连接断开），本端（不知道连接已经断开）<code>send</code>数据时会收到来自对端的<code>RST</code>。因为对端连接已经断开，通过RST告知异常断开情况。</li>
+<li>某些服务器对连接的IP有限制，对禁止连接的IP，会发送RST包禁止连接</li>
+<li>客户端发起TCP连接，经过服务器防火墙时，防火墙查询自己的安全策略，这是一个不被允许的连接请求，于是防火墙以服务器IP的名义，返还给用户一个Reset状态位，用户以为是服务器发的，其实服务器压根不知道，是防火墙作为中间人发的。</li>
+</ol>
+<h3 id="tcp连接异常断开情况">TCP连接异常断开情况</h3>
+<p>如果客户端异常断开而服务器未及时清理这些连接，则发生<strong>连接泄露</strong>直至服务端资源耗尽拒绝提供服务<code>connection refused exception</code></p>
+<h4 id="客户端程序崩溃或异常退出">客户端程序崩溃或异常退出</h4>
+<p>当客户端程序因未知原因崩溃或异常退出后，操作系统会给服务端发送一条<code>RST</code>消息，顺利断开连接。</p>
+<h4 id="客户端断电或网络异常无法即时发送rst">客户端断电或网络异常：无法即时发送RST</h4>
+<p>如果客户端断电或网络异常，并且连接通道内没有任何数据交互，服务端是感知不到客户端掉线的，此时需要借助<strong>心跳机制</strong>来感知这种状况，并清除以断开的连接。</p>
+<h3 id="心跳机制">心跳机制</h3>
+<h4 id="keep-alive-vs-heart-beart">keep alive VS heart beart</h4>
+<p>使用场景：客户端拔网线，服务器不知道。</p>
+<p>原理相似：都是发送一个信号给对方，如果多次发送都没有响应的话，则判断连接中断。</p>
+<p>它们的不同点在于，<strong>keepalive是tcp实现中内置的机制，是在创建tcp连接时通过设置参数启动keepalive机制</strong>；而<strong>heart-beat则需要在tcp之上的应用层实现（程序员自己实现逻辑）。</strong></p>
+<p>一个简单的heart-beat实现一般测试连接是否中断采用的时间间隔都比较短，可以很快的决定连接是否中断。并且，由于是在应用层实现，因为可以自行决定当判断连接中断后应该采取的行为，而keepalive在判断连接失败后只会将连接丢弃。</p>
+<p>Keep alive适用于清除死亡时间比较长的连接,它会先要求此连接一定时间没有活动（一般是几个小时），然后发出数据段，经过多次尝试后（每次尝试之间也有时间间隔），如果仍没有响应，则判断连接中断。可想而知，整个周期需要很长的时间。</p>
+<p>heart beart适用于快速或者实时监控连接状态的机制，分布式环境中。</p>
+<p>关于heart-beat，应该在传输真正数据的连接中发送“心跳”信号，还是可以专门创建一个发送“心跳”信号的连接呢？</p>
+<p>比如说，A，B两台机器之间通过连接m来传输数据，现在为了能够检测A，B之间的连接状态，我们是应该在连接m中传输“心跳”信号，还是创建新的连接n来专门传输“心跳”呢？</p>
+<p>我个人认为两者皆可。如果担心的是端到端的连接状态，那么就直接在该条连接中实现“心跳”。但很多时候，关注的是网络状况和两台主机间的连接状态，这种情况下， 创建专门的“心跳”连接也未尝不可。</p>
+<h2 id="tcp连接">TCP连接</h2>
+<h3 id="建立连接三次握手">建立连接（三次握手）</h3>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/TCP%E5%8D%8F%E8%AE%AE(%E4%B8%8B)/1.png" alt="img"></p>
+<p>在 TCP 连接传输数据之前，首先要在两端之间建立起一条 TCP 连接，其步骤通常如下：</p>
+<ul>
+<li>第一步：客户端向服务端发送一个 SYN 字段为 1 的 <strong>SYN 报文段</strong>。并<strong>随机</strong>选择一个初始序号（CLIENT_ISN），填入序号字段。随机的目的是安全性。</li>
+<li>第二步：服务端收到 SYN 报文段后，会向客户端发送一个 <strong>SYNACK 报文段</strong>。SYNACK 报文段不包含数据，其 SYN 字段、ACK 字段均为 1，且将确认号置为了 CLENT_ISN + 1（表示下一个想接收这个序号的报文段），并且也会生成一个<strong>随机</strong>的初始序号（SERVER_ISN）并填入序号字段。</li>
+<li>第三步：客户端收到 SYNACK 报文段后会为该连接分配缓存，并向服务端发送一个 <strong>ACK 报文段</strong>，其 ACK 字段为 1，并将序号置为了 CLIENT_ISN + 1，将确认号置为了 SERVER_ISN + 1。当服务端收到该 ACK 报文后，则会为客户端的连接分配缓存。（这个步骤的 ACK 报文是可以携带数据的）</li>
+</ul>
+<p>同时，初始序号 ISN 设置为随机主要是为了安全考虑，因为如果均为一个固定的值，那么恶意者可以通过这个已知的序号来伪装发送方或接收方的其中一方，并造成一些破坏。</p>
+<h3 id="三次握手存在哪些漏洞">三次握手存在哪些漏洞？</h3>
+<p>服务器方在收到建立连接方的 SYN 报文段时就会立即为其分配缓存，但这就存在着被 <strong>SYN 洪泛攻击</strong>的危险。如果有恶意机器发送大量的 SYN 报文段，但不完成第三次握手，则服务器会不断为这种半开的连接分配资源从而导致连接资源被消耗殆尽，从而使得服务器拒绝其他正常的连接请求。</p>
+<h3 id="防范syn洪水攻击的措施">防范SYN洪水攻击的措施</h3>
+<p><strong>缩短服务器接受客户端SYN后的等待连接时间，即</strong>SYN timeout<strong>时间</strong></p>
+<p>将SYN timeout设置的更低，便可以成倍的减少server的负荷，但是过低的SYN timeout可能会影响正常的TCP连接的建立，一旦网络不通畅便可能导致client连接请求失败</p>
+<p><strong>SYN cookie</strong></p>
+<p>当server接收到client的SYN之后，不立即分配资源，而是根据client发送过来的SYN包计算出一个cookie值，这个cookie值用来存储server返回给client的SYN+ACK数据包中的初始序列号，当client返回第三次握手的ACK包之后进行校验，如果校验成功则server分配资源，建立连接。</p>
+<p><strong>SYN proxy</strong></p>
+<p>SYN proxy代理，作为server与client连接的代理，代替server与client建立三次握手的连接，同时SYN proxy与client建立好了三次握手连接之后，确保是正常的TCP连接，而不是TCP泛洪攻击，那么SYN proxy就与server建立三次握手连接，作为代理（网关？）来连通client与server。（类似VPN？）</p>
+<h3 id="第三次握手失败了会怎么样">第三次握手失败了会怎么样</h3>
+<p><strong>客户端</strong></p>
+<p>客户端发送完ACK后，便认为连接已建立，会正常发送报文，而服务端会以RST包响应，客户端便能知道Server的错误。</p>
+<p><strong>服务端</strong></p>
+<p>会根据TCP超时重传机制，等待 3、6、12s后重写发送SYN+ACK包。默认重发5次后，关闭连接。</p>
+<h3 id="为什么是三次而不是两次握手">为什么是三次而不是两次握手？</h3>
+<p>主要是<strong>防止已经失效的连接请求报文突然又传送到了服务器，从而产生错误</strong>。</p>
+<p>如果使用的是两次握手建立连接，假设有这样一种场景，客户端发送了第一个请求连接并且没有丢失，只是因为在网络结点中滞留的时间太长了，由于TCP的客户端迟迟没有收到确认报文，以为服务器没有收到，此时重新向服务器发送这条报文，此后客户端和服务器经过两次握手完成连接，传输数据，然后关闭连接。</p>
+<p>此时此前滞留的那一次请求连接，网络通畅了到达了服务器，这个报文本该是失效的，但是，两次握手的机制将会让客户端和服务器再次建立连接，这将导致不必要的错误和资源的浪费。</p>
+<p>如果采用的是三次握手，就算是那一次失效的报文传送过来了，服务端接受到了那条失效报文并且回复了确认报文，但是客户端不会再次发出确认。由于服务器收不到确认，就知道客户端并没有请求连接。</p>
+<h3 id="断开连接四次挥手">断开连接（四次挥手）</h3>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/TCP%E5%8D%8F%E8%AE%AE(%E4%B8%8B)/2.png" alt="img"></p>
+<ul>
+<li>
+<p>第一步：客户端向服务端发送一个 FIN 报文段，表示客户端想要关闭向服务端的数据流向，不再向服务端发送数据。</p>
+</li>
+<li>
+<p>第二步：服务端收到该 FIN 报文段后，会向客户端发送一个 ACK 报文段，对该连接的关闭进行了确认，并回收为其分配的资源。</p>
+</li>
+<li>
+<p>第三步：服务端向客户端发送一个 FIN 报文段，表示服务端想要关闭向客户端的数据流向，不再向客户端发送数据。</p>
+</li>
+<li>
+<p>第四步：客户端收到该 FIN 报文段后，会向服务端发送一个 ACK 报文段，对该连接的关闭进行了确认，并回收为其分配的资源。此时，客户端就进入了TIME-WAIT（时间等待）状态。</p>
+<p><strong>注意</strong>此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。而服务端收到ACK后即进入CLOSED状态，结束TCP连接。</p>
+</li>
+</ul>
+<p>需要注意的是，在客户端向服务端发送 FIN 并收到 ACK 后，仅仅是客户端向服务端发送数据的这一条数据流向被关闭，<strong>服务端仍然能继续向客户端发送数据</strong>。</p>
+<p>这种连接一端结束发送后还能接收另一端数据的能力叫做<strong>半关闭</strong>。</p>
+<h3 id="为什么是四次挥手">为什么是四次挥手？</h3>
+<p>与建立连接的三次握手不同的是在关闭连接时，服务器收到对方的FIN报文时，仅仅表示<strong>对方不再发送数据</strong>了但是还能<strong>接收数据</strong>，而自己也未必全部数据都发送给对方了，所以己方可以立即关闭，也可以发送一些数据给对方后，再发送FIN报文给对方来表示同意现在关闭连接，因此，己方ACK和FIN一般都会分开发送，从而导致多了一次。</p>
+<h3 id="为什么客服端最后要等待2msl">为什么客服端最后要等待2MSL？</h3>
+<p>MSL（Maximum Segment Lifetime），TCP允许不同的实现可以设置不同的MSL值。</p>
+<p>MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复片段所需的最大时间</p>
+<p>**第一，**保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，站在服务器的角度看来，我已经发送了FIN+ACK报文请求断开了，客户端还没有给我回应，应该是我发送的请求断开报文它没有收到，于是服务器又会重新发送一次，而客户端就能在这个2MSL时间段内收到这个重传的报文，接着给出回应报文，并且会重启2MSL计时器。</p>
+<p><strong>第二</strong>，防止类似与“三次握手”中提到了的“已经失效的连接请求报文段”出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样新的连接中不会出现旧连接的请求报文。</p>
+<h3 id="time_wait">Time_wait</h3>
+<p>只有主动进行关闭连接的机器会进入time_wait状态。</p>
+<p>在<strong>高并发短连接</strong>的TCP服务器上，当客户端完成访问后立刻主动正常关闭连接，就会出现大量time_wait。这时该客户端在访问同一服务器，会启用另一个端口，因为刚刚那个端口处于time_wait状态。</p>
+<p>这时，如果客户端并发量持续很高，就会部分客户端连接不上。</p>
+<h4 id="大量time_wait的危害">大量Time_wait的危害</h4>
+<p><strong>1.高并发可以让客户端在短时间范围内同时占用大量端口</strong>，而端口有个0~65535的范围，并不是很多，刨除系统和其他服务要用的，剩下的就更少了。</p>
+<p><strong>2.短连接表示“业务处理+传输数据的时间 远远小于 TIMEWAIT超时的时间”的连接</strong>。</p>
+<p>比如取一个web页面，1秒钟的http短连接处理完业务，在关闭连接之后，这个业务用过的端口会停留在TIMEWAIT状态几分钟，而这几分钟，其他HTTP请求来临的时候是无法占用此端口的。</p>
+<p><strong>可优化的方案</strong></p>
+<p><strong>减小time+wait时间</strong></p>
+<pre><code>调整 time_wait时间 net.ipv4.tcp_fin_timeout=30
+
+//首先打开 timestamps
+net.ipv4.tcp_timestamps = 1
+//机器作为客户端时起作用，开启后time_wait在一秒内回收
+net.ipv4.tcp_tw_reuse = 1
+（不要开启，现在互联网NAT结构很多，可能直接无法三次握手）
+net.ipv4.tcp_tw_recycle = 0 
+
+reuse:复用time_wait连接。
+recycle:快速回收。
+</code></pre><p><strong>timestamps</strong></p>
+<p>开启timestamps时间戳，实现打开同一个IP 不同端口，同一源IP的socket connect请求中的 timestamps必须是递增的。</p>
+<p><strong>reuse</strong></p>
+<p>这是因为一来TIME_WAIT创建时间必须超过一秒才可能会被复用；二来只有连接的时间戳是递增的时候才会被复用。</p>
+<p>满足以下任意一点即可复用</p>
+<p><strong>1.初始序列号比TW老连接的末序列号大</strong>
+<strong>2.如果使能了时间戳，那么新到来的连接的时间戳比老连接的时间戳大</strong></p>
+<h3 id="close_wait">Close_wait</h3>
+<p>当客户端发送一个FIN后，服务器没有返回ACK确认。即程序没有检测到需要关闭连接。这个资源就一直被程序占着。此时<strong>服务器保持了大量的close_wait</strong></p>
+<p>占用了大量端口连接。</p>
+<p>通常来说，一个CLOSE_WAIT会维持至少2个小时的时间（系统默认超时时间的是7200秒，也就是2小时）</p>
+<p><strong>解决</strong></p>
+<p>（1）关闭正在运行的程序，这个需要视业务情况而定。
+（2）尽快的修改程序里的bug，然后测试提交到线上服务器。</p>
+<p><strong>HttpClient未释放连接，会造成close_wait</strong></p>
+<p>服务器A是一台爬虫服务器，它使用简单的HttpClient去请求资源服务器B上面的apache获取文件资源，正常情况下，如果请求成功，那么在抓取完资源后，服务器A会主动发出关闭连接的请求，这个时候就是主动关闭连接，服务器A的连接状态我们可以看到是TIME_WAIT。</p>
+<p>如果一旦发生异常呢？假设请求的资源服务器B上并不存在，那么这个时候就会由服务器B发出关闭连接的请求，服务器A就是被动的关闭了连接，如果服务器A被动关闭连接之后程序员忘了让HttpClient释放连接，那就会造成CLOSE_WAIT的状态了。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-07-09
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/tcp/">TCP</a>
+          <a href="https://phantommmm.github.io/tags/rst/">RST</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/redis-lua/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">Redis LUA</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/quic%E5%8D%8F%E8%AE%AE/">
+            <span class="next-text nav-default">QUIC协议</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SpringBoot on Phantom</title>
+    <link>https://phantommmm.github.io/tags/springboot/</link>
+    <description>Recent content in SpringBoot on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Thu, 25 Jun 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/springboot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SpringBoot-Starter</title>
+      <link>https://phantommmm.github.io/post/springbootstarter/</link>
+      <pubDate>Thu, 25 Jun 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/springbootstarter/</guid>
+      <description>SpringBoot-Starter springboot相较于spring的一大优点就是提供给我们开箱即用的一些组件，例如spring-starter依赖。它内部引入相关组件</description>
+    </item>
+    
+  </channel>
+</rss>

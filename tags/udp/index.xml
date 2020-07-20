@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>UDP on Phantom</title>
+    <link>https://phantommmm.github.io/tags/udp/</link>
+    <description>Recent content in UDP on Phantom</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Phantom</copyright>
+    <lastBuildDate>Wed, 08 Jul 2020 13:39:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://phantommmm.github.io/tags/udp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>QUIC协议</title>
+      <link>https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Wed, 08 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/quic%E5%8D%8F%E8%AE%AE/</guid>
+      <description>QUIC协议 QUIC （Quick UDP Internet Connections）协议是一个由 Google 推出的一款基于 UDP 实现的高效、可靠的网络协议，它基于 UDP 实现了一系列可靠的机</description>
+    </item>
+    
+    <item>
+      <title>UDP协议</title>
+      <link>https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Sat, 04 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/udp%E5%8D%8F%E8%AE%AE/</guid>
+      <description>UDP协议 UDP 协议相对于 TCP 来说就没有那么多复杂的功能了，它只在 IP 协议提供的不可靠服务的基础上增加了一些基本的功能。 报文格式 我们先来看看它的报文</description>
+    </item>
+    
+  </channel>
+</rss>
