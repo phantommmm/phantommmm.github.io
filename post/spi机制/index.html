@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SPI机制 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="SPI机制" />
+<meta property="og:description" content="SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/" />
+<meta property="article:published_time" content="2020-07-20T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-20T13:39:23+08:00" />
+<meta itemprop="name" content="SPI机制">
+<meta itemprop="description" content="SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，">
+<meta itemprop="datePublished" content="2020-07-20T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-20T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="3770">
+
+
+
+<meta itemprop="keywords" content="SPI机制,Dubbo," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SPI机制"/>
+<meta name="twitter:description" content="SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">SPI机制</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-07-20" class="post-time">
+          2020-07-20
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/java/"> Java </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#java-spi">Java SPI</a>
+      <ul>
+        <li><a href="#示例">示例</a></li>
+        <li><a href="#原理">原理</a></li>
+      </ul>
+    </li>
+    <li><a href="#dubbo-spi">Dubbo SPI</a>
+      <ul>
+        <li><a href="#示例-1">示例</a></li>
+        <li><a href="#原理-1">原理</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a>
+      <ul>
+        <li><a href="#java-spi与dubbo-spi对比">Java SPI与Dubbo SPI对比</a></li>
+        <li><a href="#spi优点">SPI优点</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="spi机制">SPI机制</h1>
+<p>SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，加载实现类。这样可以在运行时，动态为接口替换实现类。正因此特性，我们可以很容易的通过 SPI 机制为我们的程序提供拓展功能。</p>
+<h2 id="java-spi">Java SPI</h2>
+<h3 id="示例">示例</h3>
+<p>首先通过简单示例介绍下SPI机制。</p>
+<p><strong>1.定义接口</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Robot</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>2.编写实现类</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OptimusPrime</span> <span class="kd">implements</span> <span class="n">Robot</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello, I am Optimus Prime.&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Bumblebee</span> <span class="kd">implements</span> <span class="n">Robot</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello, I am Bumblebee.&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>3.创建以接口命名的文件</strong></p>
+<p>在resources下创建META-INF文件夹，再创建services文件夹，在services文件夹里创建文件</p>
+<p><img src="data:image/png;base64,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%0ATkSuQmCC" alt="img"></p>
+<p>内容如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">com</span><span class="o">.</span><span class="na">linjie</span><span class="o">.</span><span class="na">testSPI</span><span class="o">.</span><span class="na">Bumblebee</span>
+<span class="n">com</span><span class="o">.</span><span class="na">linjie</span><span class="o">.</span><span class="na">testSPI</span><span class="o">.</span><span class="na">OptimusPrime</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>4.测试结果</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ServiceLoader</span><span class="o">&lt;</span><span class="n">Robot</span><span class="o">&gt;</span> <span class="n">robots</span><span class="o">=</span><span class="n">ServiceLoader</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">Robot</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Robot</span> <span class="n">robot</span><span class="o">:</span><span class="n">robots</span><span class="o">)</span><span class="o">{</span>
+            <span class="n">robot</span><span class="o">.</span><span class="na">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Hello</span><span class="o">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Bumblebee</span><span class="o">.</span>
+<span class="n">Hello</span><span class="o">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Optimus</span> <span class="n">Prime</span><span class="o">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>从测试结果可以看出，我们的两个实现类被成功的加载，并输出了相应的内容。</p>
+<h3 id="原理">原理</h3>
+<p><strong>1.<code>load</code>方法首先初始化ServiceLoader，实例化成员变量</strong></p>
+<p>看下ServiceLoader类的源码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ServiceLoader</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="o">{</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PREFIX</span> <span class="o">=</span> <span class="s">&#34;META-INF/services/&#34;</span><span class="o">;</span>
+
+    <span class="c1">// 代表被加载的类或者接口
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">service</span><span class="o">;</span>
+
+    <span class="c1">// 用于定位，加载和实例化providers的类加载器
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">ClassLoader</span> <span class="n">loader</span><span class="o">;</span>
+
+    <span class="c1">// 创建ServiceLoader时采用的访问控制上下文
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">AccessControlContext</span> <span class="n">acc</span><span class="o">;</span>
+
+    <span class="c1">// 缓存providers，按实例化的顺序排列
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="n">LinkedHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">providers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+
+    <span class="c1">// 懒查找迭代器
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="n">LazyIterator</span> <span class="n">lookupIterator</span><span class="o">;</span>
+  
+    <span class="o">.</span><span class="o">.</span><span class="o">.</span><span class="o">.</span><span class="o">.</span><span class="o">.</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"> <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">ServiceLoader</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="nf">load</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">service</span><span class="o">,</span>
+                                            <span class="n">ClassLoader</span> <span class="n">loader</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ServiceLoader</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">service</span><span class="o">,</span> <span class="n">loader</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+ <span class="kd">private</span> <span class="nf">ServiceLoader</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">svc</span><span class="o">,</span> <span class="n">ClassLoader</span> <span class="n">cl</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">svc</span><span class="o">,</span> <span class="s">&#34;Service interface cannot be null&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="o">(</span><span class="n">cl</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemClassLoader</span><span class="o">(</span><span class="o">)</span> <span class="o">:</span> <span class="n">cl</span><span class="o">;</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getSecurityManager</span><span class="o">(</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="n">AccessController</span><span class="o">.</span><span class="na">getContext</span><span class="o">(</span><span class="o">)</span> <span class="o">:</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">reload</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reload</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">providers</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">lookupIterator</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LazyIterator</span><span class="o">(</span><span class="n">service</span><span class="o">,</span> <span class="n">loader</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>2.迭代器获取对象实例</strong></p>
+<p>ServiceLoader先判断成员变量providers对象中(LinkedHashMap&lt;String,S&gt;类型)是否有缓存实例对象，如果有缓存，直接返回。</p>
+<p>如果没有缓存，执行类的装载，实现如下：</p>
+<ul>
+<li>(1) 读取META-INF/services/下的配置文件，获得所有能被实例化的类的名称，值得注意的是，ServiceLoader<strong>可以跨越jar包获取META-INF下的配置文件</strong>，具体加载配置的实现代码如下：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">fullName</span> <span class="o">=</span> <span class="n">PREFIX</span> <span class="o">+</span> <span class="n">service</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">loader</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+                <span class="n">configs</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemResources</span><span class="o">(</span><span class="n">fullName</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">else</span>
+                <span class="n">configs</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="na">getResources</span><span class="o">(</span><span class="n">fullName</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">fail</span><span class="o">(</span><span class="n">service</span><span class="o">,</span> <span class="s">&#34;Error locating configuration files&#34;</span><span class="o">,</span> <span class="n">x</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>(2) 通过反射方法Class.forName()加载类对象，并用instance()方法将类实例化。</li>
+<li>(3) 把实例化后的类缓存到providers对象中，(LinkedHashMap&lt;String,S&gt;类型）
+然后返回实例对象。</li>
+</ul>
+<h2 id="dubbo-spi">Dubbo SPI</h2>
+<h3 id="示例-1">示例</h3>
+<p>Dubbo 并未使用 Java SPI，而是重新实现了一套功能更强的 SPI 机制。Dubbo SPI 的相关逻辑被封装在了 ExtensionLoader 类中，通过 ExtensionLoader，我们可以加载指定的实现类。Dubbo SPI 所需的配置文件需放置在 META-INF/dubbo 路径下，配置内容如下。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">optimusPrime</span> <span class="o">=</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">spi</span><span class="o">.</span><span class="na">OptimusPrime</span>
+<span class="n">bumblebee</span> <span class="o">=</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">spi</span><span class="o">.</span><span class="na">Bumblebee</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>与 Java SPI 实现类配置不同，Dubbo SPI 是通过键值对的方式进行配置，这样我们可以按需加载指定的实现类。另外，在测试 Dubbo SPI 时，需要在 Robot 接口上标注 @SPI 注解。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DubboSPITest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">ExtensionLoader</span><span class="o">&lt;</span><span class="n">Robot</span><span class="o">&gt;</span> <span class="n">extensionLoader</span> <span class="o">=</span> 
+            <span class="n">ExtensionLoader</span><span class="o">.</span><span class="na">getExtensionLoader</span><span class="o">(</span><span class="n">Robot</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Robot</span> <span class="n">optimusPrime</span> <span class="o">=</span> <span class="n">extensionLoader</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="s">&#34;optimusPrime&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">optimusPrime</span><span class="o">.</span><span class="na">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Robot</span> <span class="n">bumblebee</span> <span class="o">=</span> <span class="n">extensionLoader</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="s">&#34;bumblebee&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">bumblebee</span><span class="o">.</span><span class="na">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Hello</span><span class="o">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Bumblebee</span><span class="o">.</span>
+<span class="n">Hello</span><span class="o">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Optimus</span> <span class="n">Prime</span><span class="o">.</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="原理-1">原理</h3>
+<p>我们首先通过 ExtensionLoader 的 getExtensionLoader 方法获取一个 ExtensionLoader 实例，然后再通过 ExtensionLoader 的 getExtension 方法获取拓展类对象。</p>
+<p>这其中，getExtensionLoader 方法用于从缓存中获取与拓展类对应的 ExtensionLoader，若缓存未命中，则创建一个新的实例。</p>
+<p>下面我们从 ExtensionLoader 的 getExtension 方法作为入口，对拓展类对象的获取过程进行详细的分析。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">T</span> <span class="nf">getExtension</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span> <span class="o">|</span><span class="o">|</span> <span class="n">name</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;Extension name == null&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取默认的拓展实现类
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">getDefaultExtension</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// Holder，顾名思义，用于持有目标对象
+</span><span class="c1"></span>    <span class="n">Holder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">holder</span> <span class="o">=</span> <span class="n">cachedInstances</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">holder</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cachedInstances</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="k">new</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">holder</span> <span class="o">=</span> <span class="n">cachedInstances</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">Object</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">holder</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="c1">// 双重检查
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">holder</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">holder</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 创建拓展实例
+</span><span class="c1"></span>                <span class="n">instance</span> <span class="o">=</span> <span class="n">createExtension</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+                <span class="c1">// 设置实例到 holder 中
+</span><span class="c1"></span>                <span class="n">holder</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">instance</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面代码的逻辑比较简单，首先检查缓存，缓存未命中则创建拓展对象。下面我们来看一下创建拓展对象的过程是怎样的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">T</span> <span class="nf">createExtension</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 从配置文件中加载所有的拓展类，可得到“配置项名称”到“配置类”的映射关系表
+</span><span class="c1"></span>    <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">getExtensionClasses</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">clazz</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">findException</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">T</span> <span class="n">instance</span> <span class="o">=</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 通过反射创建实例
+</span><span class="c1"></span>            <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">clazz</span><span class="o">,</span> <span class="n">clazz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">EXTENSION_INSTANCES</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 向实例中注入依赖
+</span><span class="c1"></span>        <span class="n">injectExtension</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">wrapperClasses</span> <span class="o">=</span> <span class="n">cachedWrapperClasses</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">wrapperClasses</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="o">!</span><span class="n">wrapperClasses</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 循环创建 Wrapper 实例
+</span><span class="c1"></span>            <span class="k">for</span> <span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">wrapperClass</span> <span class="o">:</span> <span class="n">wrapperClasses</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 将当前 instance 作为参数传给 Wrapper 的构造方法，并通过反射创建 Wrapper 实例。
+</span><span class="c1"></span>                <span class="c1">// 然后向 Wrapper 实例中注入依赖，最后将 Wrapper 实例再次赋值给 instance 变量
+</span><span class="c1"></span>                <span class="n">instance</span> <span class="o">=</span> <span class="n">injectExtension</span><span class="o">(</span>
+                    <span class="o">(</span><span class="n">T</span><span class="o">)</span> <span class="n">wrapperClass</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="n">type</span><span class="o">)</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>createExtension 方法的逻辑稍复杂一下，包含了如下的步骤：</p>
+<ol>
+<li>通过 getExtensionClasses 获取所有的拓展类</li>
+<li>通过反射创建拓展对象</li>
+<li>向拓展对象中注入依赖</li>
+<li>将拓展对象包裹在相应的 Wrapper 对象中</li>
+</ol>
+<p>以上步骤中，第一个步骤是加载拓展类的关键，第三和第四个步骤是 Dubbo IOC 与 AOP 的具体实现。</p>
+<h4 id="获取所有扩展类">获取所有扩展类</h4>
+<p>我们在通过名称获取拓展类之前，首先需要根据配置文件解析出拓展项名称到拓展类的映射关系表（Map&lt;名称, 拓展类&gt;），之后再根据拓展项名称从映射关系表中取出相应的拓展类即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">getExtensionClasses</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 从缓存中获取已加载的拓展类
+</span><span class="c1"></span>    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">cachedClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="c1">// 双重检查
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="n">classes</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">cachedClasses</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">classes</span> <span class="o">=</span> <span class="n">cachedClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">classes</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 加载拓展类
+</span><span class="c1"></span>                <span class="n">classes</span> <span class="o">=</span> <span class="n">loadExtensionClasses</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">cachedClasses</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">classes</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">classes</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里也是先检查缓存，若缓存未命中，则通过 synchronized 加锁。加锁后再次检查缓存，并判空。此时如果 classes 仍为 null，则通过 loadExtensionClasses 加载拓展类。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">loadExtensionClasses</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 获取 SPI 注解，这里的 type 变量是在调用 getExtensionLoader 方法时传入的
+</span><span class="c1"></span>    <span class="kd">final</span> <span class="n">SPI</span> <span class="n">defaultAnnotation</span> <span class="o">=</span> <span class="n">type</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">SPI</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">defaultAnnotation</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">defaultAnnotation</span><span class="o">.</span><span class="na">value</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 对 SPI 注解内容进行切分
+</span><span class="c1"></span>            <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">NAME_SEPARATOR</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">value</span><span class="o">)</span><span class="o">;</span>
+            <span class="c1">// 检测 SPI 注解内容是否合法，不合法则抛出异常
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">names</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;more than 1 default extension name on extension...&#34;</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="c1">// 设置默认名称，参考 getDefaultExtension 方法
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">names</span><span class="o">.</span><span class="na">length</span> <span class="o">=</span><span class="o">=</span> <span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">cachedDefaultName</span> <span class="o">=</span> <span class="n">names</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="c1">// 加载指定文件夹下的配置文件
+</span><span class="c1"></span>    <span class="n">loadDirectory</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">DUBBO_INTERNAL_DIRECTORY</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">loadDirectory</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">DUBBO_DIRECTORY</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">loadDirectory</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">SERVICES_DIRECTORY</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">extensionClasses</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadExtensionClasses 方法总共做了两件事情，一是对 SPI 注解进行解析，二是调用 loadDirectory 方法加载指定文件夹配置文件。</p>
+<p>下面我们来看一下 loadDirectory 做了哪些事情。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadDirectory</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">String</span> <span class="n">dir</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// fileName = 文件夹路径 + type 全限定名 
+</span><span class="c1"></span>    <span class="n">String</span> <span class="n">fileName</span> <span class="o">=</span> <span class="n">dir</span> <span class="o">+</span> <span class="n">type</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">Enumeration</span><span class="o">&lt;</span><span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span><span class="o">&gt;</span> <span class="n">urls</span><span class="o">;</span>
+        <span class="n">ClassLoader</span> <span class="n">classLoader</span> <span class="o">=</span> <span class="n">findClassLoader</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="c1">// 根据文件名加载所有的同名文件
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">classLoader</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">urls</span> <span class="o">=</span> <span class="n">classLoader</span><span class="o">.</span><span class="na">getResources</span><span class="o">(</span><span class="n">fileName</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">urls</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemResources</span><span class="o">(</span><span class="n">fileName</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">urls</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">urls</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span> <span class="o">=</span> <span class="n">urls</span><span class="o">.</span><span class="na">nextElement</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="c1">// 加载资源
+</span><span class="c1"></span>                <span class="n">loadResource</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">classLoader</span><span class="o">,</span> <span class="n">resourceURL</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadDirectory 方法先通过 classLoader 获取所有资源链接，然后再通过 loadResource 方法加载资源。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadResource</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> 
+	<span class="n">ClassLoader</span> <span class="n">classLoader</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span>
+            <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">resourceURL</span><span class="o">.</span><span class="na">openStream</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="s">&#34;utf-8&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+            <span class="c1">// 按行读取配置内容
+</span><span class="c1"></span>            <span class="k">while</span> <span class="o">(</span><span class="o">(</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 定位 # 字符
+</span><span class="c1"></span>                <span class="kd">final</span> <span class="kt">int</span> <span class="n">ci</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;#&#39;</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">ci</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// 截取 # 之前的字符串，# 之后的内容为注释，需要忽略
+</span><span class="c1"></span>                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">ci</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;=&#39;</span><span class="o">)</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="c1">// 以等于号 = 为界，截取键与值
+</span><span class="c1"></span>                            <span class="n">name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">)</span><span class="o">.</span><span class="na">trim</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="c1">// 加载类，并通过 loadClass 方法对类进行缓存
+</span><span class="c1"></span>                            <span class="n">loadClass</span><span class="o">(</span><span class="n">extensionClasses</span><span class="o">,</span> <span class="n">resourceURL</span><span class="o">,</span> 
+                                      <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">line</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">classLoader</span><span class="o">)</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">IllegalStateException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;Failed to load extension class...&#34;</span><span class="o">)</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">reader</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Exception when load extension class...&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>loadResource 方法用于读取和解析配置文件，并通过反射加载类，最后调用 loadClass 方法进行其他操作。loadClass 方法用于主要用于操作缓存，该方法的逻辑如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadClass</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">extensionClasses</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">URL</span> <span class="n">resourceURL</span><span class="o">,</span> 
+    <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">clazz</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchMethodException</span> <span class="o">{</span>
+    
+    <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">type</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 检测目标类上是否有 Adaptive 注解
+</span><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="n">clazz</span><span class="o">.</span><span class="na">isAnnotationPresent</span><span class="o">(</span><span class="n">Adaptive</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">cachedAdaptiveClass</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 设置 cachedAdaptiveClass缓存
+</span><span class="c1"></span>            <span class="n">cachedAdaptiveClass</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">cachedAdaptiveClass</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        
+    <span class="c1">// 检测 clazz 是否是 Wrapper 类型
+</span><span class="c1"></span>    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">isWrapperClass</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">wrappers</span> <span class="o">=</span> <span class="n">cachedWrapperClasses</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">wrappers</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cachedWrapperClasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConcurrentHashSet</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">wrappers</span> <span class="o">=</span> <span class="n">cachedWrapperClasses</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 存储 clazz 到 cachedWrapperClasses 缓存中
+</span><span class="c1"></span>        <span class="n">wrappers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+        
+    <span class="c1">// 程序进入此分支，表明 clazz 是一个普通的拓展类
+</span><span class="c1"></span>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="c1">// 检测 clazz 是否有默认的构造方法，如果没有，则抛出异常
+</span><span class="c1"></span>        <span class="n">clazz</span><span class="o">.</span><span class="na">getConstructor</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span> <span class="o">|</span><span class="o">|</span> <span class="n">name</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 如果 name 为空，则尝试从 Extension 注解中获取 name，或使用小写的类名作为 name
+</span><span class="c1"></span>            <span class="n">name</span> <span class="o">=</span> <span class="n">findAnnotationName</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 切分 name
+</span><span class="c1"></span>        <span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">NAME_SEPARATOR</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">name</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">names</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">names</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Activate</span> <span class="n">activate</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">Activate</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">activate</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 如果类上有 Activate 注解，则使用 names 数组的第一个元素作为键，
+</span><span class="c1"></span>                <span class="c1">// 存储 name 到 Activate 注解对象的映射关系
+</span><span class="c1"></span>                <span class="n">cachedActivates</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">names</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">,</span> <span class="n">activate</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">n</span> <span class="o">:</span> <span class="n">names</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">cachedNames</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">clazz</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// 存储 Class 到名称的映射关系
+</span><span class="c1"></span>                    <span class="n">cachedNames</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">clazz</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">Class</span><span class="o">&lt;</span><span class="o">?</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">extensionClasses</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">n</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// 存储名称到 Class 的映射关系
+</span><span class="c1"></span>                    <span class="n">extensionClasses</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">clazz</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">!</span><span class="o">=</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;...&#34;</span><span class="o">)</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如上，loadClass 方法操作了不同的缓存，比如 cachedAdaptiveClass、cachedWrapperClasses 和 cachedNames 等等。</p>
+<h2 id="总结">总结</h2>
+<h3 id="java-spi与dubbo-spi对比">Java SPI与Dubbo SPI对比</h3>
+<p><strong>Java</strong></p>
+<p>只能遍历所有的实现，并全部实例化。</p>
+<p>配置文件中只是简单的列出了所有的扩展实现，而没有给他们命名。导致在程序中很难去准确的引用它们。</p>
+<p>扩展如果依赖其他的扩展，做不到自动注入和装配。</p>
+<p><strong>Dubbo</strong></p>
+<p>通过键值对方式配置，因此可以按需加载指定的实现类。</p>
+<p>支持IOC AOP等功能</p>
+<h3 id="spi优点">SPI优点</h3>
+<p>使用Java SPI机制的优势是<strong>实现解耦</strong>，不需要改动源码就可以实现扩展，使得第三方服务模块的装配控制的逻辑与调用者的业务代码分离，而不是耦合在一起。</p>
+<p>通过SPI的方式，第三方服务模块实现接口后，在第三方的项目代码的META-INF/services目录下的配置文件指定实现类的全路径名，源码框架即可找到实现类</p>
+<p>举个例子，当我们引入别人的开源框架，例如dubbo，我们想添加一些自定义的扩展点，例如自定义权限校验逻辑，加解密实现，如果开源框架有预留SPI扩展点，就很容易实现，否则可能要改它的源码，dubbo就有预留这种扩展点</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-07-20
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/spi%E6%9C%BA%E5%88%B6/">SPI机制</a>
+          <a href="https://phantommmm.github.io/tags/dubbo/">Dubbo</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/dubbo%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">Dubbo服务发布</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+            <span class="next-text nav-default">分布式锁</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

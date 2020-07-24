@@ -7,10 +7,46 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Sat, 18 Jul 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Jul 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Dubbo服务引用</title>
+      <link>https://phantommmm.github.io/post/dubbo%E6%9C%8D%E5%8A%A1%E5%BC%95%E7%94%A8/</link>
+      <pubDate>Wed, 22 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/dubbo%E6%9C%8D%E5%8A%A1%E5%BC%95%E7%94%A8/</guid>
+      <description>Dubbo服务引用 原理介绍 Dubbo 服务引用的时机有两个，第一个是在 Spring 容器调用 ReferenceBean 的 afterPropertiesSet 方法时引用服务，第二个是在 ReferenceBean 对应的服务被注入到其他类中时引用。这</description>
+    </item>
+    
+    <item>
+      <title>Dubbo服务发布</title>
+      <link>https://phantommmm.github.io/post/dubbo%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Tue, 21 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/dubbo%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83/</guid>
+      <description>Dubbo服务发布 检查配置和URL装配 在发布服务之前，Dubbo 需要检查用户的配置是否合理，或者为用户补充缺省配置。配置检查完成后，接下来需</description>
+    </item>
+    
+    <item>
+      <title>SPI机制</title>
+      <link>https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Mon, 20 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/</guid>
+      <description>SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，</description>
+    </item>
+    
+    <item>
+      <title>分布式锁</title>
+      <link>https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</link>
+      <pubDate>Sun, 19 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</guid>
+      <description>分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署</description>
+    </item>
     
     <item>
       <title>Netty中的Reactor模型</title>
@@ -19,6 +55,15 @@
       
       <guid>https://phantommmm.github.io/post/netty%E4%B8%AD%E7%9A%84-reactor%E6%A8%A1%E5%9E%8B/</guid>
       <description>Netty中的Reactor模型 前面文章介绍了三种 Reactor 的线程模型, 那么它们和 NioEventLoopGroup 又有什么关系呢? 其实, 不同的设置 NioEventLoopGroup 的方式就对应了不同的 Reactor 的线程模</description>
+    </item>
+    
+    <item>
+      <title>设计模式-代理模式</title>
+      <link>https://phantommmm.github.io/post/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Fri, 17 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</guid>
+      <description>代理模式 为其他对象提供一种代理以控制对这个对象的访问。在某些情况下，一个对象不适合或者不能直接引用另一个对象，而代理对象可以在客户端和目标对</description>
     </item>
     
     <item>
@@ -46,6 +91,15 @@
       
       <guid>https://phantommmm.github.io/post/redis-lua/</guid>
       <description>Redis LUA 背景 简单的需求如下 公司运营为了提高用户活跃而设计了一个积分策略，规定用户只要在指定时间段内上线打卡就有机会获得积分，积分可以换取礼物。每</description>
+    </item>
+    
+    <item>
+      <title>设计模式-单例模式</title>
+      <link>https://phantommmm.github.io/post/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Tue, 14 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</guid>
+      <description>单例模式 单例模式是 Java 中最简单的设计模式之一。表明某个类只能有一个实例，提供一个全局访问点。 饿汉式 1 2 3 4 5 6 7 public class Singleton { private static Singleton instance = new Singleton(); private Singleton (){} public</description>
     </item>
     
     <item>
@@ -136,60 +190,6 @@
       
       <guid>https://phantommmm.github.io/post/reactor%E6%A8%A1%E5%BC%8F/</guid>
       <description>Reactor模式 Reactor模式也叫反应器模式，大多数IO相关组件如Netty、Redis在使用的IO模式，为什么需要这种模式，它是如何</description>
-    </item>
-    
-    <item>
-      <title>负载均衡算法</title>
-      <link>https://phantommmm.github.io/post/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/</link>
-      <pubDate>Sat, 13 Jun 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95/</guid>
-      <description>负载均衡算法 负载均衡建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高</description>
-    </item>
-    
-    <item>
-      <title>Redis是单线程？</title>
-      <link>https://phantommmm.github.io/post/redis6.0/</link>
-      <pubDate>Sat, 06 Jun 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/redis6.0/</guid>
-      <description>Redis是单线程？ Redis 6.0之前 单线程 如何理解Redis单线程？ 单线程指的是网络请求模块使用了一个线程（所以不需考虑并发安全性），即一个线程</description>
-    </item>
-    
-    <item>
-      <title>HTTP</title>
-      <link>https://phantommmm.github.io/post/http/</link>
-      <pubDate>Thu, 20 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/http/</guid>
-      <description>网络 HTTP HTTP是一种不保存状态的协议，即协议对于发送过的请求和接受的响应都不做持久化的处理 HTTP是 明文协议。每个HTTP请求和返回的每个b</description>
-    </item>
-    
-    <item>
-      <title>TCP-IP</title>
-      <link>https://phantommmm.github.io/post/tcp-ip/</link>
-      <pubDate>Wed, 19 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/tcp-ip/</guid>
-      <description>TCP首部格式 三次握手过程中的报文是不含数据的，只包含tcp协议首部。 序号： seq 占4字节。序号范围是 0 到 2的32次方-1 ，序号增加到 2的32次</description>
-    </item>
-    
-    <item>
-      <title>IO模型</title>
-      <link>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</link>
-      <pubDate>Sun, 16 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/io%E6%A8%A1%E5%9E%8B/</guid>
-      <description>五种主要的IO模型 同步阻塞IO （Blocking IO） （1）当用户线程调用了read系统调用，内核就开始了IO的第一个阶段：准备数据（即系统</description>
-    </item>
-    
-    <item>
-      <title>进程与线程</title>
-      <link>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</link>
-      <pubDate>Sat, 15 Feb 2020 13:39:23 +0800</pubDate>
-      
-      <guid>https://phantommmm.github.io/post/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</guid>
-      <description>进程和线程 基本概念 串行 多个任务执行，一个执行完再执行另外一个。 并发(concurrency) 多个线程在单个核心运行，同一时间一个线程运行，系</description>
     </item>
     
   </channel>

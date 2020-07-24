@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Fri, 03 Jul 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 17 Jul 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>设计模式-代理模式</title>
+      <link>https://phantommmm.github.io/post/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Fri, 17 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</guid>
+      <description>代理模式 为其他对象提供一种代理以控制对这个对象的访问。在某些情况下，一个对象不适合或者不能直接引用另一个对象，而代理对象可以在客户端和目标对</description>
+    </item>
+    
+    <item>
+      <title>设计模式-单例模式</title>
+      <link>https://phantommmm.github.io/post/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Tue, 14 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</guid>
+      <description>单例模式 单例模式是 Java 中最简单的设计模式之一。表明某个类只能有一个实例，提供一个全局访问点。 饿汉式 1 2 3 4 5 6 7 public class Singleton { private static Singleton instance = new Singleton(); private Singleton (){} public</description>
+    </item>
     
     <item>
       <title>设计模式-责任链</title>

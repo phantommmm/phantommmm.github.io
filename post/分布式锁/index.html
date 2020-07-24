@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>分布式锁 - Phantom</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="phantom" />
+  <meta name="description" content="分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署" />
+
+  <meta name="keywords" content="Hugo, theme, Phantom" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.64.1" />
+
+
+<link rel="canonical" href="https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="分布式锁" />
+<meta property="og:description" content="分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" />
+<meta property="article:published_time" content="2020-07-19T13:39:23+08:00" />
+<meta property="article:modified_time" content="2020-07-19T13:39:23+08:00" />
+<meta itemprop="name" content="分布式锁">
+<meta itemprop="description" content="分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署">
+<meta itemprop="datePublished" content="2020-07-19T13:39:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-19T13:39:23&#43;08:00" />
+<meta itemprop="wordCount" content="4629">
+
+
+
+<meta itemprop="keywords" content="分布式锁,Redisson,ZooKeeper," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式锁"/>
+<meta name="twitter:description" content="分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', '1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Phantom</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Phantom
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/">主页</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/post/">归档</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/tags/">标签</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/categories/">分类</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://phantommmm.github.io/%E5%85%B3%E4%BA%8E/">关于</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">分布式锁</h1>
+      
+      <div class="post-meta">
+        <time datetime="2020-07-19" class="post-time">
+          2020-07-19
+        </time>
+        <div class="post-category">
+            <a href="https://phantommmm.github.io/categories/java/"> Java </a>
+            
+          </div>
+        
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基于缓存">基于缓存</a>
+      <ul>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#lua">LUA</a></li>
+        <li><a href="#锁互斥机制">锁互斥机制</a></li>
+        <li><a href="#可重入机制">可重入机制</a></li>
+        <li><a href="#释放锁机制">释放锁机制</a></li>
+        <li><a href="#自动延期机制">自动延期机制</a></li>
+        <li><a href="#缺点">缺点</a></li>
+        <li><a href="#red-lock">Red Lock</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于zookeeper">基于ZooKeeper</a>
+      <ul>
+        <li><a href="#获取锁">获取锁</a></li>
+        <li><a href="#重试">重试</a></li>
+        <li><a href="#释放锁">释放锁</a></li>
+        <li><a href="#使用">使用</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于mysql">基于Mysql</a>
+      <ul>
+        <li><a href="#基于表记录">基于表记录</a></li>
+        <li><a href="#乐观锁">乐观锁</a></li>
+        <li><a href="#悲观锁">悲观锁</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="分布式锁">分布式锁</h1>
+<p>随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署情况下的并发控制锁策略失效，单纯的Java API并不能提供分布式锁的能力。为了解决这个问题就需要一种跨JVM的互斥机制来控制共享资源的访问，这就是分布式锁要解决的问题。</p>
+<p><strong>分布式锁应该具备以下条件</strong></p>
+<p>1、在分布式系统环境下，一个方法在同一时间只能被一个机器的一个线程执行； 
+2、高可用的获取锁与释放锁； 
+3、高性能的获取锁与释放锁； 
+4、具备可重入特性； 
+5、具备锁失效机制，防止死锁； 
+6、具备非阻塞锁特性，即没有获取到锁将直接返回获取锁失败。</p>
+<p>而常见的分布式锁为以下几种</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">基于数据库实现分布式锁</span><span class="err">；</span> 
+<span class="n">基于缓存</span><span class="err">（</span><span class="n">Redis等</span><span class="err">）</span><span class="n">实现分布式锁</span><span class="err">；</span> 
+<span class="n">基于Zookeeper实现分布式锁</span><span class="err">；</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="基于缓存">基于缓存</h2>
+<p>Redis提供了Redisson作为分布式锁</p>
+<h3 id="原理"><strong>原理</strong></h3>
+<p>用setnx来创建锁并设置锁的过期时间，然后有一个watchdog来对锁进行加时，防止锁到期请求还没处理完的情况，最后使用lua脚本将判断锁和删除锁写一起使其变成一个原子操作来完成锁的释放。</p>
+<p><img src="https://gitee.com/phantommm/blog-img/raw/master/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/1.png" alt="img"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="sr">/</span><span class="sr">/</span><span class="err">默</span><span class="err">认</span><span class="err">是</span><span class="err">可</span><span class="err">重</span><span class="err">入</span><span class="err">锁</span>
+<span class="no">RLock</span> <span class="n">mylock</span><span class="o">=</span><span class="n">redission</span><span class="o">.</span><span class="n">getLock</span><span class="p">(</span><span class="n">goodsLock</span><span class="p">)</span><span class="p">;</span>
+<span class="n">mylock</span><span class="o">.</span><span class="n">lock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="n">redis</span><span class="o">.</span><span class="n">getAndSet</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="o">/</span><span class="o">/</span><span class="err">查</span><span class="err">看</span><span class="err">并</span><span class="err">且</span> <span class="err">减</span><span class="err">操</span><span class="err">作</span><span class="o">/</span><span class="err">返</span><span class="err">回</span><span class="err">操</span><span class="err">作</span>
+<span class="n">mylock</span><span class="o">.</span><span class="n">unlock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="err">只</span><span class="err">有</span><span class="err">当</span><span class="err">客</span><span class="err">户</span><span class="err">端</span><span class="no">A释放了锁后其它客户端才能获取到锁</span><span class="err">，</span><span class="err">执</span><span class="err">行</span><span class="err">操</span><span class="err">作</span><span class="err">。</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意 锁的本质是一个redis key 数据结构为hash 分别存储 持有锁id 以及 次数</strong></p>
+<h3 id="lua">LUA</h3>
+<p>复杂的业务逻辑封装在LUA脚本中发送给Redis，可以保证执行的原子性。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="sr">/</span><span class="sr">/</span><span class="err">判</span><span class="err">断</span><span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="err">锁</span><span class="err">是</span><span class="err">否</span><span class="err">存</span><span class="err">在</span><span class="err">，</span><span class="err">不</span><span class="err">存</span><span class="err">在</span><span class="err">则</span><span class="err">加</span><span class="err">锁</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;exists&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o"></span><span class="p">)</span> <span class="k">then</span> 
+<span class="sr">/</span><span class="sr">/</span><span class="err">锁</span><span class="err">名</span> <span class="err">客</span><span class="err">户</span><span class="err">端</span><span class="nb">id</span> <span class="err">次</span><span class="err">数</span>
+<span class="sr">/</span><span class="sr">/</span><span class="n">hset</span> <span class="n">myLock</span> <span class="mi">8743</span><span class="o"></span><span class="n">c9c0</span><span class="o">-</span><span class="mo">07</span><span class="o"></span><span class="mi">95</span><span class="o"></span><span class="o">-</span><span class="mi">4907</span><span class="o"></span><span class="o">-</span><span class="mi">87</span><span class="o"></span><span class="n">fd</span><span class="o">-</span><span class="mi">6</span><span class="o"></span><span class="ss">c719a6b4586</span><span class="p">:</span><span class="mi">1</span> <span class="o"></span><span class="mi">1</span>
+        <span class="o"></span><span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;hset&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o"></span><span class="p">)</span><span class="p">;</span>
+        <span class="sr">/</span><span class="sr">/</span><span class="err">设</span><span class="err">置</span><span class="err">锁</span><span class="err">存</span><span class="err">在</span><span class="err">时</span><span class="err">间</span> 
+         <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;pexpire&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span> 
+         <span class="k">return</span> <span class="kp">nil</span><span class="p">;</span>
+          <span class="k">end</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;hexists&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o"></span><span class="p">)</span> <span class="k">then</span>
+        <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;hincrby&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o"></span><span class="p">)</span><span class="p">;</span>
+        <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;pexpire&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span> 
+        <span class="k">return</span> <span class="kp">nil</span><span class="p">;</span>
+        <span class="k">end</span><span class="p">;</span>
+<span class="k">return</span> <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;pttl&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="锁互斥机制">锁互斥机制</h3>
+<p>当某个锁已经被持有后</p>
+<p>如果在这个时候，另一个客户端(客户端2)来尝试加锁，执行了同样的一段lua脚本，会怎样呢？</p>
+<p>第一个if判断会执行“exists myLock”，发现myLock这个锁key已经存在了。</p>
+<p>接着第二个if判断会执行“hexists mylock 客户端id”，来判断myLock锁key的hash数据结构中，是否包含客户端2的ID，但是明显不是的，因为那里包含的是客户端1的ID。</p>
+<p>所以，客户端2会获取到pttl myLock返回的一个数字，这个数字代表了myLock这个锁key的剩余生存时间。</p>
+<p>比如还剩15000毫秒的生存时间。此时客户端2会进入一个while循环，不停的尝试加锁。</p>
+<h3 id="可重入机制">可重入机制</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="c1">#重入加锁</span>
+<span class="no">RLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="n">redisson</span><span class="o">.</span><span class="n">getLock</span><span class="p">(</span><span class="s2">&#34;</span><span class="s2">myLock</span><span class="s2">&#34;</span><span class="p">)</span>
+<span class="n">lock</span><span class="o">.</span><span class="n">lock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="o">/</span><span class="o">/</span><span class="err">加</span><span class="err">锁</span>
+<span class="sr">/</span><span class="sr">/</span><span class="err">业</span><span class="err">务</span><span class="err">代</span><span class="err">码</span>
+<span class="n">lock</span><span class="o">.</span><span class="n">lock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="o">/</span><span class="o">/</span><span class="err">加</span><span class="err">锁</span>
+<span class="sr">/</span><span class="sr">/</span><span class="err">业</span><span class="err">务</span><span class="err">代</span><span class="err">码</span>
+<span class="n">lock</span><span class="o">.</span><span class="n">unlock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="n">lock</span><span class="o">.</span><span class="n">unlock</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="n">incrby</span> <span class="n">myLock</span> <span class="mi">8743</span><span class="o"></span><span class="n">c9c0</span><span class="o">-</span><span class="mo">07</span><span class="o"></span><span class="mi">95</span><span class="o"></span><span class="o">-</span><span class="mi">4907</span><span class="o"></span><span class="o">-</span><span class="mi">87</span><span class="o"></span><span class="n">fd</span><span class="o">-</span><span class="mi">6</span><span class="o"></span><span class="ss">c71a6b4586</span><span class="p">:</span><span class="mi">1</span>  <span class="o"></span><span class="mi">1</span>
+<span class="o"></span><span class="ss">myLock</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="mi">8743</span><span class="o"></span><span class="n">c9c0</span><span class="o">-</span><span class="mo">07</span><span class="o"></span><span class="mi">95</span><span class="o"></span><span class="o">-</span><span class="mi">4907</span><span class="o"></span><span class="o">-</span><span class="mi">87</span><span class="o"></span><span class="n">fd</span><span class="o">-</span><span class="mi">6</span><span class="o"></span><span class="ss">c719a6b4586</span><span class="p">:</span><span class="mi">1</span>  <span class="o"></span><span class="mi">2</span>
+    <span class="o"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>redis hash field 中的value 存储锁次数</strong></p>
+<h3 id="释放锁机制">释放锁机制</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="k">if</span> <span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;exists&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o"></span><span class="p">)</span> <span class="k">then</span>
+       <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;publish&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o"></span><span class="p">;</span> 
+        <span class="k">end</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;hexists&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">3</span><span class="o"></span><span class="o">]</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o"></span><span class="p">)</span> <span class="k">then</span> 
+     <span class="k">return</span> <span class="kp">nil</span><span class="p">;</span>
+     <span class="k">end</span><span class="p">;</span>
+<span class="n">local</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;hincrby&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">3</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o"></span><span class="p">)</span><span class="p">;</span> 
+<span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o"></span><span class="p">)</span> <span class="k">then</span>
+     <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;pexpire&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span> 
+     <span class="k">return</span> <span class="mi">0</span><span class="o"></span><span class="p">;</span> 
+<span class="k">else</span> <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;del&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span> 
+     <span class="n">redis</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;publish&#39;</span><span class="p">,</span> <span class="no">KEYS</span><span class="o">[</span><span class="mi">2</span><span class="o"></span><span class="o">]</span><span class="p">,</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o"></span><span class="o">]</span><span class="p">)</span><span class="p">;</span> 
+     <span class="k">return</span> <span class="mi">1</span><span class="o"></span><span class="p">;</span>
+     <span class="k">end</span><span class="p">;</span>
+<span class="k">return</span> <span class="kp">nil</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>执行<code>unlock</code>释放，每次对锁的次数-1直到发送锁次数为0执行del myLock 删除锁</p>
+<h3 id="自动延期机制">自动延期机制</h3>
+<p><strong>客户端1加锁时间默认为30s，若30s后客户端1还未操作完成怎么办？</strong></p>
+<p>redission启动watch dog机制，一旦加锁成功就会开启一个后台线程watch dog每隔10s检测一次 若锁仍然存在则续期（默认是30s）</p>
+<h3 id="缺点">缺点</h3>
+<p><strong>主从宕机导致多客户端同时获取锁</strong></p>
+<p>如果你对某个redis master实例，写入了myLock这种锁，此时会异步复制给对应的master slave实例，但是这个过程中（slave还未写入锁）一旦发生redis master宕机，主备切换，redis slave变为了redis master。</p>
+<p>接着就会导致，客户端2来尝试加锁的时候，在新的redis master上完成了加锁，而客户端1也以为自己成功加了锁。</p>
+<p>此时就会导致<strong>多个客户端对一个分布式锁完成了加锁</strong>。这时系统在业务上一定会出现问题，导致脏数据的产生。所以这个就是redis cluster，或者是redis master-slave架构的主从异步复制导致的redis分布式锁的最大缺陷：在redis master实例宕机的时候，可能导致多个客户端同时完成加锁。</p>
+<p><strong>通过 redLock 解决该问题</strong></p>
+<h3 id="red-lock">Red Lock</h3>
+<p>红锁Red Lock基于多个Redis节点，每次获取锁时，对集群中大部分master（集群master数量 n/2 +1）获取锁，只有在规定时间内成功获取到大部分锁才算真正的获取锁成功。</p>
+<p><strong>怎么解决上面的问题？</strong></p>
+<p>假如某个Master挂了，Slave上来后没有保存之前的key,因为redlock要获取大部分Master成功才算成功，所以即时少数Master挂了也不会影响到，除非同时大量都挂了。</p>
+<p><strong>获取锁流程</strong></p>
+<p><strong>1.</strong> 获取当前时间（毫秒数）。
+<strong>2.</strong> 按顺序依次向N个Redis节点执行获取锁的操作。为了保证在某个Redis节点不可用的时候算法能够继续运行，这个获取锁的操作还有一个超时时间(time out)，它要远小于锁的有效时间（几十毫秒量级）。客户端在向某个Redis节点获取锁失败以后，应该立即尝试下一个Redis节点。
+<strong>3.</strong> 计算整个获取锁的过程总共消耗了多长时间，计算方法是用当前时间减去第1步记录的时间。如果客户端从大多数Redis节点（&gt;= N/2+1）成功获取到了锁，并且获取锁总共消耗的时间没有超过锁的有效时间(lock validity time)，那么这时客户端才认为最终获取锁成功；否则，认为最终获取锁失败。
+<strong>4.</strong> 如果最终获取锁成功了，那么这个锁的有效时间应该重新计算，它等于最初的锁的有效时间减去第3步计算出来的获取锁消耗的时间。
+<strong>5.</strong> 如果最终获取锁失败了（可能由于获取到锁的Redis节点个数少于N/2+1，或者整个获取锁的过程消耗的时间超过了锁的最初有效时间），那么客户端应该立即向所有Redis节点发起释放锁的操作（即前面介绍的Redis Lua脚本）。</p>
+<p><strong>释放红锁：</strong> 客户端向所有Redis节点发起释放锁的操作，不管这些节点当时在获取锁的时候成功与否。</p>
+<p><strong>红锁失效主要三种情况：</strong></p>
+<ul>
+<li>时钟发生跳跃。</li>
+<li>长时间的GC pause。</li>
+<li>长时间的网络延迟。</li>
+</ul>
+<h2 id="基于zookeeper">基于ZooKeeper</h2>
+<p>在介绍ZK分布式锁前首先介绍下ZK节点类型</p>
+<ul>
+<li>持久节点（zk断开节点还在，知道主动删除）</li>
+<li>持久顺序编号节点（拥有持久节点特性，并且有顺序编号）</li>
+<li>临时节点（客户端断开后节点就删除了）</li>
+<li>临时编号节点（拥有临时节点特性，并且有顺序编号）</li>
+</ul>
+<p><strong>注意 ZK有个唯一特性，即创建过的节点再次创建是会报错的，因此我们可以利用该特性实现</strong></p>
+<h3 id="获取锁">获取锁</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">lock</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tryLock</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;获得锁&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">// 尝试加锁
+</span><span class="c1"></span>            <span class="c1">// 进入等待 监听
+</span><span class="c1"></span>            <span class="n">waitForLock</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="c1">// 再次尝试
+</span><span class="c1"></span>            <span class="n">lock</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">tryLock</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 第一次就进来创建自己的临时节点
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isBlank</span><span class="o">(</span><span class="n">path</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">zkClient</span><span class="o">.</span><span class="na">createEphemeralSequential</span><span class="o">(</span><span class="n">Z_NODE</span> <span class="o">+</span> <span class="s">&#34;/&#34;</span><span class="o">,</span> <span class="s">&#34;lock&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 对节点排序
+</span><span class="c1"></span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">children</span> <span class="o">=</span> <span class="n">zkClient</span><span class="o">.</span><span class="na">getChildren</span><span class="o">(</span><span class="n">Z_NODE</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">children</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="c1">// 当前的是最小节点就返回加锁成功
+</span><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">path</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">Z_NODE</span> <span class="o">+</span> <span class="s">&#34;/&#34;</span> <span class="o">+</span> <span class="n">children</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">0</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34; i am true&#34;</span><span class="o">)</span><span class="o">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">// 不是最小节点 就找到自己的前一个 依次类推 释放也是一样
+</span><span class="c1"></span>            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">binarySearch</span><span class="o">(</span><span class="n">children</span><span class="o">,</span> <span class="n">path</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">Z_NODE</span><span class="o">.</span><span class="na">length</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">beforePath</span> <span class="o">=</span> <span class="n">Z_NODE</span> <span class="o">+</span> <span class="s">&#34;/&#34;</span> <span class="o">+</span> <span class="n">children</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">1</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>获取锁的逻辑如上，注意几个点。</p>
+<p><strong>临时节点</strong></p>
+<p>临时节点的目的是防止某个客户端获取锁成功后，服务器宕机了，导致节点无法删除即锁被永远持有，使用临时节点当客户端连接断开时，自动删除节点即可解决该问题。</p>
+<p><strong>羊群效应</strong></p>
+<p>若使用的是非顺序节点，监听是所有服务监听一个节点，当节点释放时也会通知所有的服务器，当服务器数量大时，一个释放消息会占用大量资源，对服务器是个大挑战。</p>
+<p><strong>顺序节点</strong></p>
+<p>使用顺序节点，每次监听只监听前一个节点，依次下去，释放也是一个个释放，即可避免羊群效应。</p>
+<p>具体操作为 对节点排序，只有最小节点获取锁成功，否则监听前一个节点。</p>
+<h3 id="重试">重试</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">waitForLock</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">IZkDataListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IZkDataListener</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleDataChange</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+            <span class="o">}</span>
+
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleDataDeleted</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;:监听到节点删除事件！---------------------------&#34;</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">cdl</span><span class="o">.</span><span class="na">countDown</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="o">;</span>
+        <span class="c1">// 监听
+</span><span class="c1"></span>        <span class="k">this</span><span class="o">.</span><span class="na">zkClient</span><span class="o">.</span><span class="na">subscribeDataChanges</span><span class="o">(</span><span class="n">beforePath</span><span class="o">,</span> <span class="n">listener</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">zkClient</span><span class="o">.</span><span class="na">exists</span><span class="o">(</span><span class="n">beforePath</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;加锁失败 等待&#34;</span><span class="o">)</span><span class="o">;</span>
+                <span class="n">cdl</span><span class="o">.</span><span class="na">await</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 释放监听
+</span><span class="c1"></span>        <span class="n">zkClient</span><span class="o">.</span><span class="na">unsubscribeDataChanges</span><span class="o">(</span><span class="n">beforePath</span><span class="o">,</span> <span class="n">listener</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用 <code>CountDownLatch</code> 监听直到释放锁</p>
+<h3 id="释放锁">释放锁</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">unlock</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">zkClient</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">path</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>释放锁即删除对应节点即可</p>
+<h3 id="使用">使用</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">try</span> <span class="o">{</span>
+                            <span class="n">zk</span><span class="o">.</span><span class="na">lock</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                            <span class="n">zk</span><span class="o">.</span><span class="na">unlock</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+                            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;释放锁&#34;</span><span class="o">)</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="o">)</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="总结">总结</h3>
+<p>Zk性能上可能并没有缓存服务那么高，因为每次在创建锁和释放锁的过程中，都要动态创建、销毁瞬时节点来实现锁功能。</p>
+<p>使用Zookeeper也有可能带来并发问题，只是并不常见而已。</p>
+<p>由于网络抖动，客户端可ZK集群的session连接断了，那么zk以为客户端挂了，就会删除临时节点，这时候其他客户端就可以获取到分布式锁了。</p>
+<p>就可能产生并发问题了，这个问题不常见是因为zk有重试机制，一旦zk集群检测不到客户端的心跳，就会重试，</p>
+<p>多次重试之后还不行的话才会删除临时节点。</p>
+<h2 id="基于mysql">基于Mysql</h2>
+<h3 id="基于表记录">基于表记录</h3>
+<p>创建一张锁表，想要获取锁时，在表中增加一条记录，想要释放锁时，就删除相应的记录。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="n">database_lock</span><span class="o">`</span> <span class="p">(</span>
+	<span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">BIGINT</span> <span class="p"></span><span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+	<span class="o">`</span><span class="n">resource</span><span class="o">`</span> <span class="kt">int</span> <span class="p"></span><span class="k">NOT</span> <span class="no">NULL</span> <span class="n">COMMENT</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">锁定的资源</span><span class="s1">&#39;</span><span class="p">,</span>
+	<span class="o">`</span><span class="n">description</span><span class="o">`</span> <span class="kt">varchar</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="k">DEFAULT</span> <span class="sa"></span><span class="s2">&#34;</span><span class="s2">&#34;</span> <span class="n">COMMENT</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">描述</span><span class="s1">&#39;</span><span class="p">,</span>
+	<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span><span class="p">,</span>
+	<span class="k">UNIQUE</span> <span class="k">KEY</span> <span class="o">`</span><span class="n">uiq_idx_resource</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">resource</span><span class="o">`</span><span class="p">)</span> <span class="o">/</span><span class="o">/</span><span class="err">添</span><span class="err">加</span><span class="err">唯</span><span class="err">一</span><span class="err">约</span><span class="err">束</span><span class="err">，</span><span class="err">防</span><span class="err">止</span><span class="err">多</span><span class="err">个</span><span class="err">操</span><span class="err">作</span><span class="err">。</span>
+<span class="p">)</span> <span class="kp">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="kp">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span> <span class="n">COMMENT</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">数据库分布式锁表</span><span class="s1">&#39;</span><span class="p">;</span>
+
+
+<span class="o">/</span><span class="o">/</span><span class="err">获</span><span class="err">取</span><span class="err">锁</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">database_lock</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">lock</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="o">/</span><span class="o">/</span><span class="err">释</span><span class="err">放</span><span class="err">锁</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">database_lock</span> <span class="k">WHERE</span> <span class="n">resource</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong></p>
+<p><strong>1.</strong> 这种锁没有失效时间，一旦释放锁的操作失败就会导致锁记录一直在数据库中，其它线程无法获得锁。这个缺陷也很好解决，比如可以做一个定时任务去定时清理。
+<strong>2.</strong> 这种锁的可靠性依赖于数据库。建议设置备库，避免单点，进一步提高可靠性。
+<strong>3.</strong> 这种锁是非阻塞的，因为插入数据失败之后会直接报错，想要获得锁就需要再次操作。如果需要阻塞式的，可以弄个for循环、while循环之类的，直至INSERT成功再返回。
+<strong>4.</strong> 这种锁也是非可重入的，因为同一个线程在没有释放锁之前无法再次获得锁，因为数据库中已经存在同一份记录了。</p>
+<p>想要实现可重入锁，可以在数据库中添加一些字段，比如获得锁的主机信息、线程信息和锁次数等，那么在再次获得锁的时候可以先查询数据，如果当前的主机信息和线程信息等能被查到的话，可以直接把锁分配给它。</p>
+<h3 id="乐观锁">乐观锁</h3>
+<p>添加version（版本号）</p>
+<p><strong>id 表示主键 resource表示资源，不同的资源对应不同的主键</strong></p>
+<p><strong>1.</strong> 获取资源： SELECT resource, version FROM optimistic_lock WHERE id = 1
+<strong>2.</strong> 执行业务逻辑
+<strong>3.</strong> 更新资源：UPDATE optimistic_lock SET resource = resource -1, version = version + 1 WHERE id = 1 AND version = oldVersion</p>
+<p>更新时，对此版本号加一。此时，将该版本号与数据库表对应记录的版本号进行比对，如果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。</p>
+<p><strong>缺点</strong></p>
+<p>当并发量高时，会导致大量请求失败，并且会对数据库产生较大的压力，因此乐观锁适用于 并发量小，写操作不频繁场景</p>
+<h3 id="悲观锁">悲观锁</h3>
+<p>通过数据库自带悲观锁  for update。必须指定索引，否则会锁表。</p>
+<p><strong>首先要关闭Mysql的自动提交属性 set autocommit=0</strong></p>
+<p><strong>1.</strong>  获取锁：SELECT * FROM database_lock WHERE id = 1 FOR UPDATE;。</p>
+<p><strong>2.</strong>  执行业务逻辑。</p>
+<p><strong>3.</strong>  释放锁：COMMIT。</p>
+<p><strong>线程B在等待线程A释放锁之前执行STEP1，会堵塞，直到A释放锁。如果A长时间不释放锁，B会报错（只会堵塞一段时间）</strong></p>
+<p><strong>缺点</strong></p>
+<p>每次请求都会额外产生加锁的开销且未获取到锁的请求将会阻塞等待锁的获取，在高并发环境下，容易造成大量请求阻塞，影响系统可用性。另外，悲观锁使用不当还可能产生死锁的情况</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">phantom</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2020-07-19
+      
+    </span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://phantommmm.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">分布式锁</a>
+          <a href="https://phantommmm.github.io/tags/redisson/">Redisson</a>
+          <a href="https://phantommmm.github.io/tags/zookeeper/">ZooKeeper</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/spi%E6%9C%BA%E5%88%B6/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">SPI机制</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/netty%E4%B8%AD%E7%9A%84-reactor%E6%A8%A1%E5%9E%8B/">
+            <span class="next-text nav-default">Netty中的Reactor模型</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+  
+    <a href="https://github.com/phantommmm" rel="me noopener" class="iconfont"
+      title="github"  target="_blank"
+      >
+      <svg class="icon" style="" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="36" height="36">
+  <path d="M512 12.672c-282.88 0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667 0-12.16-0.426667-44.373333-0.64-87.04-142.421333 30.890667-172.458667-68.693333-172.458667-68.693333C188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333 0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333 0 0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52 0.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667 0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72 0 68.522667-0.64 123.562667-0.64 140.202666 0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"></path>
+</svg>
+
+    </a>
+
+
+<a href="https://phantommmm.github.io/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2020
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Phantom
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.8e749fab1fc6ce5ab7c22c4944491b9b400862abda01eb0d59f8acc1aa6eb123.js" integrity="sha256-jnSfqx/Gzlq3wixJREkbm0AIYqvaAesNWfiswapusSM=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

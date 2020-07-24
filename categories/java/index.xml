@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Phantom</copyright>
-    <lastBuildDate>Thu, 16 Jul 2020 13:39:23 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 20 Jul 2020 13:39:23 +0800</lastBuildDate>
     
 	<atom:link href="https://phantommmm.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SPI机制</title>
+      <link>https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Mon, 20 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/spi%E6%9C%BA%E5%88%B6/</guid>
+      <description>SPI机制 SPI 全称为 Service Provider Interface，是一种服务发现机制。SPI 的本质是将接口实现类的全限定名配置在文件中，并由服务加载器读取配置文件，</description>
+    </item>
+    
+    <item>
+      <title>分布式锁</title>
+      <link>https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</link>
+      <pubDate>Sun, 19 Jul 2020 13:39:23 +0800</pubDate>
+      
+      <guid>https://phantommmm.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</guid>
+      <description>分布式锁 随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署</description>
+    </item>
     
     <item>
       <title>Java假泛型</title>
